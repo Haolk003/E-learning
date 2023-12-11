@@ -25,6 +25,7 @@ import _ from "lodash";
 import SlideVideo from "./slide/SlideVideo";
 import SlideVolume from "./slide/SlideVolume";
 import PopoverSettingVideo from "./PopoverSettingVideo";
+import ConvertDuratonVideo from "@/utils/convertDuratonVideo";
 // import CommentSection from './CommentSection'; // Component for comment section
 // import RelatedVideos from './RelatedVideos'; // Component for related videos
 
@@ -35,6 +36,7 @@ const CustomVideoPlayer: React.FC = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isExpandedView, setIsExpandedView] = useState(false);
   const [isOpenSetting, setIsOpenSetting] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
   const [loaded, setLoaded] = useState(0);
   const [volume, setVolume] = useState(1);
   const [showAnimation, setShowAnimation] = useState(false);
@@ -58,18 +60,32 @@ const CustomVideoPlayer: React.FC = () => {
   }, []);
   const playerRef = useRef<ReactPlayer>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-
+  const hoverTimeoutRef = useRef<any>(null);
   const handlePlay = () => {
     setPlaying(!playing);
   };
 
   const handleProgress = (state: { played: number; loaded: number }) => {
     if (!seeking) {
+      console.log(duration);
       setPlayed(state.played);
       setLoaded(state.loaded);
     }
   };
 
+  const handleMouseEnter = () => {
+    if (hoverTimeoutRef.current) {
+      clearTimeout(hoverTimeoutRef.current);
+      hoverTimeoutRef.current = null;
+    }
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    hoverTimeoutRef.current = setTimeout(() => {
+      setIsHovering(false);
+    }, 1000); // 1000 ms = 1s delay
+  };
   const toggleFullScreen = () => {
     const isFullscreen = document.fullscreenElement;
     if (!isFullScreen) {
@@ -143,7 +159,6 @@ const CustomVideoPlayer: React.FC = () => {
     []
   );
   const handleChangeVolume = (value: number) => {
-    console.log(value);
     setVolume(value / 100);
   };
 
@@ -167,12 +182,12 @@ const CustomVideoPlayer: React.FC = () => {
       <div
         className={`relative ${
           isFullScreen ? "w-screen h-screen" : "w-[800px]"
-        } group  mx-auto`}
+        } group h  mx-auto`}
       >
         <div
           className={`${
             isFullScreen ? "w-screen h-screen" : "w-[800px]"
-          }  cursor-pointer`}
+          }  cursor-pointer `}
           onClick={handleVideoClick}
         >
           <ReactPlayer
@@ -191,161 +206,180 @@ const CustomVideoPlayer: React.FC = () => {
           />
         </div>
         <div
-          className={`absolute opacity-0 group-hover:opacity-100 ${
-            (isOpenVolumeCard || isOpenSetting) && "opacity-100"
-          }  bottom-0 left-0 w-full p-4 transition-opacity duration-300 `}
-        >
-          <SlideVideo
-            loaded={loaded}
-            handleChange={handleSeekChange}
-            handleMouseDown={handleSeekMouseDown}
-            handleMouseUp={handleSeekMouseUp}
-            value={played}
-          />
-          <div className="flex  items-center justify-between mt-2">
-            <div className="flex items-center gap-[10px]">
-              <button onClick={handlePlay} className="text-3xl">
-                {playing ? <MdOutlinePause /> : <MdPlayArrow />}
-              </button>
-              <button className="text-2xl" onClick={handleBackwind}>
-                <TbRewindBackward5 />
-              </button>
-              <div>
-                <Select.Root
-                  value={playbackRate}
-                  onValueChange={(value) => setPlayBackRate(value)}
-                >
-                  <Select.Trigger
-                    aria-label="playback-rate"
-                    className="bg-white h-[25px] w-[70px] text-black"
-                  >
-                    <Select.Value placeholder="1x" />
-                  </Select.Trigger>
-                  <Select.Portal>
-                    <Select.Content
-                      className="overflow-hidden bg-black px-4 py-4 absolute bottom-12 left-0"
-                      position="popper"
-                    >
-                      <Select.Viewport>
-                        <Select.Item
-                          value="2"
-                          className="text-[13px] cursor-pointer leading-none text-white flex items-center gap-4 h-[35px]"
-                        >
-                          <Select.ItemText>2x</Select.ItemText>
-                          <Select.ItemIndicator className="text-violet11">
-                            <PiCircleFill />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                        <Select.Item
-                          value="1.75"
-                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                        >
-                          <Select.ItemText>1.75x</Select.ItemText>
-                          <Select.ItemIndicator className="text-violet11">
-                            <PiCircleFill />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                        <Select.Item
-                          value="1.5"
-                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                        >
-                          <Select.ItemText>1.5x</Select.ItemText>
-                          <Select.ItemIndicator className="text-violet11">
-                            <PiCircleFill />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                        <Select.Item
-                          value="1.25"
-                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                        >
-                          <Select.ItemText>1.25x</Select.ItemText>
-                          <Select.ItemIndicator className="text-violet11">
-                            <PiCircleFill />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                        <Select.Item
-                          value="1"
-                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                        >
-                          <Select.ItemText>1x</Select.ItemText>
-                          <Select.ItemIndicator className="text-violet11">
-                            <PiCircleFill />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                        <Select.Item
-                          value="0.75"
-                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                        >
-                          <Select.ItemText>0.75x</Select.ItemText>
-                          <Select.ItemIndicator className="text-violet11">
-                            <PiCircleFill />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                        <Select.Item
-                          value="0.5"
-                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                        >
-                          <Select.ItemText>0.5x</Select.ItemText>
-                          <Select.ItemIndicator className="text-violet11">
-                            <PiCircleFill />
-                          </Select.ItemIndicator>
-                        </Select.Item>
-                      </Select.Viewport>
-                    </Select.Content>
-                  </Select.Portal>
-                </Select.Root>
-              </div>
-              <button className="text-2xl" onClick={handleForward}>
-                <TbRewindForward5 />
-              </button>
-              <button className="text-3xl ml-2">
-                <MdOutlineEditNote />
-              </button>
-            </div>
-            <div className="flex items-center gap-4">
-              <div className="">
-                <HoverCard.Root onOpenChange={handelOpenVolumeChange}>
-                  <HoverCard.Trigger asChild>
-                    <div className="text-2xl  mx-auto flex items-center justify-center">
-                      {volume >= 0.75 && <IoVolumeHigh />}
-                      {volume < 0.75 && volume >= 0.5 && <IoVolumeMedium />}
-                      {volume < 0.5 && volume > 0 && <IoVolumeLow />}
-                      {volume <= 0 && <IoVolumeMute />}
-                    </div>
-                  </HoverCard.Trigger>
-                  <HoverCard.Portal>
-                    <HoverCard.Content className="absolute -bottom-10 left-[50%] -translate-x-1/2">
-                      <div>
-                        <SlideVolume
-                          value={volume}
-                          handleChange={handleChangeVolume}
-                        />
-                      </div>
-                    </HoverCard.Content>
-                  </HoverCard.Portal>
-                </HoverCard.Root>
-              </div>
-
-              <PopoverSettingVideo
-                handleChangeOpen={handleChangeOpenSetting}
-                fullscreenElement={fullScreenElement}
-              />
-
-              {!isFullScreen && (
-                <button className="text-2xl" onClick={toggleExpandedView}>
-                  <LiaExpandSolid />
+          className="z-30 absolute bottom-0 left-0 h-[50px] w-full"
+          onMouseEnter={handleMouseEnter}
+        />
+        {isHovering && (
+          <div className="z-40 bottom-0 left-0 absolute h-[1px] w-full bg-gradient-to-t from-blackA10 to-blackA1"></div>
+        )}
+        {(isHovering || isOpenSetting || isOpenVolumeCard) && (
+          <div
+            className={`absolute  z-40 group-hover:opacity-100 
+             bottom-0 left-0 w-full p-4 transition-opacity duration-300 `}
+            onMouseLeave={handleMouseLeave}
+          >
+            <SlideVideo
+              loaded={loaded}
+              handleChange={handleSeekChange}
+              handleMouseDown={handleSeekMouseDown}
+              handleMouseUp={handleSeekMouseUp}
+              value={played}
+            />
+            <div className="flex  items-center justify-between mt-2">
+              <div className="flex items-center gap-[10px]">
+                <button onClick={handlePlay} className="text-3xl">
+                  {playing ? <MdOutlinePause /> : <MdPlayArrow />}
                 </button>
-              )}
-              <button onClick={toggleFullScreen} className="">
-                {isFullScreen ? (
-                  <MdFullscreenExit className="text-2xl" />
-                ) : (
-                  <SlSizeFullscreen />
+                <button className="text-2xl" onClick={handleBackwind}>
+                  <TbRewindBackward5 />
+                </button>
+                <div>
+                  <Select.Root
+                    value={playbackRate}
+                    onValueChange={(value) => setPlayBackRate(value)}
+                  >
+                    <Select.Trigger
+                      aria-label="playback-rate"
+                      className="bg-white h-[25px] w-[70px] text-black"
+                    >
+                      <Select.Value placeholder="1x" />
+                    </Select.Trigger>
+                    <Select.Portal>
+                      <Select.Content
+                        className="overflow-hidden bg-black px-4 py-4 absolute bottom-12 left-0"
+                        position="popper"
+                      >
+                        <Select.Viewport>
+                          <Select.Item
+                            value="2"
+                            className="text-[13px] cursor-pointer leading-none text-white flex items-center gap-4 h-[35px]"
+                          >
+                            <Select.ItemText>2x</Select.ItemText>
+                            <Select.ItemIndicator className="text-violet11">
+                              <PiCircleFill />
+                            </Select.ItemIndicator>
+                          </Select.Item>
+                          <Select.Item
+                            value="1.75"
+                            className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                          >
+                            <Select.ItemText>1.75x</Select.ItemText>
+                            <Select.ItemIndicator className="text-violet11">
+                              <PiCircleFill />
+                            </Select.ItemIndicator>
+                          </Select.Item>
+                          <Select.Item
+                            value="1.5"
+                            className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                          >
+                            <Select.ItemText>1.5x</Select.ItemText>
+                            <Select.ItemIndicator className="text-violet11">
+                              <PiCircleFill />
+                            </Select.ItemIndicator>
+                          </Select.Item>
+                          <Select.Item
+                            value="1.25"
+                            className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                          >
+                            <Select.ItemText>1.25x</Select.ItemText>
+                            <Select.ItemIndicator className="text-violet11">
+                              <PiCircleFill />
+                            </Select.ItemIndicator>
+                          </Select.Item>
+                          <Select.Item
+                            value="1"
+                            className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                          >
+                            <Select.ItemText>1x</Select.ItemText>
+                            <Select.ItemIndicator className="text-violet11">
+                              <PiCircleFill />
+                            </Select.ItemIndicator>
+                          </Select.Item>
+                          <Select.Item
+                            value="0.75"
+                            className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                          >
+                            <Select.ItemText>0.75x</Select.ItemText>
+                            <Select.ItemIndicator className="text-violet11">
+                              <PiCircleFill />
+                            </Select.ItemIndicator>
+                          </Select.Item>
+                          <Select.Item
+                            value="0.5"
+                            className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                          >
+                            <Select.ItemText>0.5x</Select.ItemText>
+                            <Select.ItemIndicator className="text-violet11">
+                              <PiCircleFill />
+                            </Select.ItemIndicator>
+                          </Select.Item>
+                        </Select.Viewport>
+                      </Select.Content>
+                    </Select.Portal>
+                  </Select.Root>
+                </div>
+                <button className="text-2xl" onClick={handleForward}>
+                  <TbRewindForward5 />
+                </button>
+                {/* duration video */}
+                <div className="flex items-center gap-2">
+                  <p>
+                    <ConvertDuratonVideo duration={duration * played} />
+                  </p>
+                  <p>/</p>
+                  <p>
+                    <ConvertDuratonVideo duration={duration} />
+                  </p>
+                </div>
+                <button className="text-3xl ml-2">
+                  <MdOutlineEditNote />
+                </button>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="">
+                  <HoverCard.Root onOpenChange={handelOpenVolumeChange}>
+                    <HoverCard.Trigger asChild>
+                      <div className="text-2xl  mx-auto flex items-center justify-center">
+                        {volume >= 0.75 && <IoVolumeHigh />}
+                        {volume < 0.75 && volume >= 0.5 && <IoVolumeMedium />}
+                        {volume < 0.5 && volume > 0 && <IoVolumeLow />}
+                        {volume <= 0 && <IoVolumeMute />}
+                      </div>
+                    </HoverCard.Trigger>
+                    <HoverCard.Portal>
+                      <HoverCard.Content className="absolute -bottom-10 left-[50%] -translate-x-1/2">
+                        <div>
+                          <SlideVolume
+                            value={volume}
+                            handleChange={handleChangeVolume}
+                          />
+                        </div>
+                      </HoverCard.Content>
+                    </HoverCard.Portal>
+                  </HoverCard.Root>
+                </div>
+
+                <PopoverSettingVideo
+                  handleChangeOpen={handleChangeOpenSetting}
+                  fullscreenElement={fullScreenElement}
+                />
+
+                {!isFullScreen && (
+                  <button className="text-2xl" onClick={toggleExpandedView}>
+                    <LiaExpandSolid />
+                  </button>
                 )}
-              </button>
+                <button onClick={toggleFullScreen} className="">
+                  {isFullScreen ? (
+                    <MdFullscreenExit className="text-2xl" />
+                  ) : (
+                    <SlSizeFullscreen />
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        )}
         {showAnimation && (
           <div
             className={`absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2  animate-hideVideo opacity-0 flex items-center justify-center text-4xl bg-blackA7 rounded-full w-[80px] h-[80px]`}

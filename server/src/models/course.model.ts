@@ -85,14 +85,6 @@ const courseDataShema = new Schema<ICourseData>(
         title: String,
         duration: Number,
         videoUrl: { public_id: String, url: String },
-        lengthWatched: {
-          type: Number,
-          default: 0,
-        },
-        isCompleted: {
-          type: Boolean,
-          default: false,
-        },
       },
     ],
     videoSection: String,

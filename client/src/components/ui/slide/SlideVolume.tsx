@@ -12,7 +12,7 @@ const SlideVolume: FC<Props> = ({ handleChange, value }) => {
       max={100}
       value={[value * 100]}
       onValueChange={(value) => handleChange(value[0])}
-      className="w-[25px] h-[150px]  relative flex items-center select-node touch-none cursor-grab"
+      className="w-[25px] h-[150px]  relative bottom-20 flex items-center select-node touch-none cursor-pointer"
     >
       <Slide.Track className="bg-white relative w-full h-[150px]">
         <Slide.Range className="absolute  bg-violet11 w-full" />
