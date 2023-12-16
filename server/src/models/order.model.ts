@@ -6,6 +6,7 @@ interface IOrderShema extends Document {
   payment_info: object;
   payment_method: object;
   payment_stripe_id: string;
+  lectureId: string;
 }
 const orderShema = new mongoose.Schema<IOrderShema>({
   userId: {
@@ -17,6 +18,9 @@ const orderShema = new mongoose.Schema<IOrderShema>({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Course",
     required: true,
+  },
+  lectureId: {
+    type: String,
   },
   payment_info: {
     type: Object,

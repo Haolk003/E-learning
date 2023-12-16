@@ -1,3 +1,4 @@
+import { string } from "yup";
 import apiSlice from "../api/apiSlice";
 
 export const courseApi = apiSlice.injectEndpoints({
@@ -99,6 +100,29 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    updateLengthWatched: build.mutation({
+      query: ({ lectureId, courseId, lengthWatched }) => ({
+        url: "update-lengthWatched-video",
+        method: "PUT",
+        body: { lectureId, courseId, lengthWatched },
+        credentials: "include" as const,
+      }),
+    }),
+    updateIsCompleted: build.mutation({
+      query: ({ lectureId, courseId, isCompleted }) => ({
+        url: "update-isCompleted-video",
+        method: "PUT",
+        body: { lectureId, courseId, isCompleted },
+        credentials: "include" as const,
+      }),
+    }),
+    getProgressLecture: build.query({
+      query: (courseId: string) => ({
+        url: `get-progress-lecture/${courseId}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -116,4 +140,7 @@ export const {
   useGetMyCourseByIntructorQuery,
   useGetCourseByIdPublicQuery,
   useGetpurchaserCourseQuery,
+  useUpdateIsCompletedMutation,
+  useUpdateLengthWatchedMutation,
+  useGetProgressLectureQuery,
 } = courseApi;

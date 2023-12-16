@@ -77,7 +77,6 @@ const createEditCourseStep2 = async (
   data: CreateCoursseStep2,
   courseId: string
 ) => {
-  console.log(data);
   const updateCourse = await courseModel.findByIdAndUpdate(
     courseId,
     { $set: { prerequisites: data.prerequisites, benefits: data.benefits } },
@@ -87,7 +86,6 @@ const createEditCourseStep2 = async (
 };
 
 const createEditCourseStep3 = async (data: ICourseData[], courseId: string) => {
-  console.log(data);
   const newData = data.map((item, index) => {
     const totalCourseLength = item.lectures.reduce((total, item) => {
       return total + item.duration;

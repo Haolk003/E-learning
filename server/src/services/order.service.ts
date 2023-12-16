@@ -3,6 +3,7 @@ import orderModel from "../models/order.model";
 import Stripe from "stripe";
 import ErrorHandle from "../utils/errorHandle";
 import courseModel from "../models/course.model";
+import UserCourseProgressModel from "../models/userCourseProgress.model";
 
 const stripe = new Stripe(process.env.SECRECT_STRIPE_KEY as string, {
   apiVersion: "2023-10-16",
@@ -39,9 +40,13 @@ const newOrder = async (
     userId: userId,
     payment_info: paymentIntent,
   });
-  findCourse.purchased = Number(findCourse.purchased) + 1;
-
+  findCourse.sold = Number(findCourse.sold) + 1;
   await findCourse.save();
+  await UserCourseProgressModel.create({
+    userId,
+    courseId,
+    lastWatchedLectureId: findCourse.courseData[0].lectures[0]._id,
+  });
   return newOrder;
 };
 

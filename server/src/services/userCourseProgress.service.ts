@@ -1,4 +1,5 @@
 import UserCourseProgressModel from "../models/userCourseProgress.model";
+import ErrorHandle from "../utils/errorHandle";
 
 type updateLengthWatchedType = {
   userId: string;
@@ -15,19 +16,23 @@ const updateLenghtWatched = async ({
   let userProgress = await UserCourseProgressModel.findOne({
     userId,
     courseId,
-    lectureId,
   });
   if (!userProgress) {
-    const newProgress = await UserCourseProgressModel.create({
-      userId,
-      courseId,
+    throw new ErrorHandle(400, "Can not find User Progress");
+  }
+  const checkLecture = userProgress.progress.find(
+    (item) => item.lectureId === lectureId
+  );
+  if (!checkLecture) {
+    userProgress.progress.push({
       lectureId,
       lengthWatched,
+      isCompleted: false,
     });
-    return newProgress;
+  } else {
+    checkLecture.lengthWatched = lengthWatched;
   }
-  userProgress.lengthWatched = lengthWatched;
-  await userProgress.save();
+  userProgress.save();
   return userProgress;
 };
 type UpdateIsCompletedType = {
@@ -45,21 +50,43 @@ const updateIsCompleted = async ({
   let userProgress = await UserCourseProgressModel.findOne({
     userId,
     courseId,
-    lectureId,
   });
   if (!userProgress) {
-    const newProgress = await UserCourseProgressModel.create({
-      userId,
-      courseId,
-      lectureId,
-      isCompleted,
-    });
-    return newProgress;
+    throw new ErrorHandle(400, "Can not find User Progress");
   }
-  userProgress.isCompleted = isCompleted;
-  await userProgress.save();
+  const checkLecture = userProgress.progress.find(
+    (item) => item.lectureId === lectureId
+  );
+  if (!checkLecture) {
+    userProgress.progress.push({
+      lectureId,
+      lengthWatched: 0,
+      isCompleted: isCompleted,
+    });
+  } else {
+    checkLecture.isCompleted = isCompleted;
+  }
+  userProgress.save();
   return userProgress;
 };
-const userCourseProgressService = { updateIsCompleted, updateLenghtWatched };
+
+const getProgressLectureUserByCourseId = async ({
+  courseId,
+  userId,
+}: {
+  courseId: string;
+  userId: string;
+}) => {
+  const userProgress = await UserCourseProgressModel.findOne({
+    courseId,
+    userId,
+  });
+  return userProgress;
+};
+const userCourseProgressService = {
+  updateIsCompleted,
+  updateLenghtWatched,
+  getProgressLectureUserByCourseId,
+};
 
 export default userCourseProgressService;

@@ -234,7 +234,10 @@ const CourseLayout = ({ id }: { id: string }) => {
                 </p>
               </div>
               {isPurchased && isPurchased.data ? (
-                <Link href={`/course-access/${id}`} className=" text-white  ">
+                <Link
+                  href={`/course-access/${id}/lecture/${course.courseData[0].lectures[0]._id}`}
+                  className=" text-white  "
+                >
                   <button className="!w-[180px] !h-[50px] bg-ruby11 !mt-5 rounded-[50px]">
                     Enter to Course
                   </button>

@@ -46,8 +46,7 @@ export interface ICourseData {
       public_id: string;
       url: string;
     };
-    lenghtWatched: number;
-    isCompleted: boolean;
+    _id: string;
   }[];
   questions?: [
     {
