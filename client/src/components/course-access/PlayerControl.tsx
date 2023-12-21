@@ -22,7 +22,9 @@ import * as HoverCard from "@radix-ui/react-hover-card";
 import SlideVolume from "../ui/slide/SlideVolume";
 import PopoverSettingVideo from "../ui/PopoverSettingVideo";
 import ConvertDuratonVideo from "@/utils/convertDuratonVideo";
-// import necessary icons and components
+
+import TooltipDemo from "../ui/Tootip";
+
 type Props = {
   playing: boolean;
   handlePlay: () => void;
@@ -39,126 +41,137 @@ type Props = {
   toggleFullScreen: () => void;
   isFullScreen: boolean;
   handelOpenVolumeChange: (open: boolean) => void;
-
   handleChangeOpenSetting: (open: boolean) => void;
+  handleIsOpenVolume: () => void;
 };
 const PlayerControls: React.FC<Props> = ({
+  isFullScreen,
+  playbackRate,
+  played,
+  duration,
   playing,
+  volume,
   handlePlay,
   handleBackwind,
   handleForward,
-  playbackRate,
   setPlayBackRate,
-  played,
-  duration,
   handleSeekChange,
-  volume,
   handleChangeVolume,
   toggleExpandedView,
   toggleFullScreen,
   handelOpenVolumeChange,
   handleChangeOpenSetting,
-  isFullScreen,
+  handleIsOpenVolume,
 }) => {
   // Player control logic and JSX
   return (
-    <div className="player-controls">
+    <div className="player-controls duration-300">
       <div className="flex  items-center justify-between mt-2">
         <div className="flex items-center gap-[10px]">
-          <button onClick={handlePlay} className="text-3xl">
-            {playing ? <MdOutlinePause /> : <MdPlayArrow />}
-          </button>
-          <button className="text-2xl" onClick={handleBackwind}>
-            <TbRewindBackward5 />
-          </button>
-          <div>
-            <Select.Root
-              value={playbackRate}
-              onValueChange={(value) => setPlayBackRate(value)}
-            >
-              <Select.Trigger
-                aria-label="playback-rate"
-                className="bg-white h-[25px] w-[70px] text-black"
+          <TooltipDemo content={playing ? "Pause" : "Play"} side="top">
+            <button onClick={handlePlay} className="text-3xl">
+              {playing ? <MdOutlinePause /> : <MdPlayArrow />}
+            </button>
+          </TooltipDemo>
+
+          <TooltipDemo content="Rewind 5s" side="top">
+            <button className="text-2xl" onClick={handleBackwind}>
+              <TbRewindBackward5 />
+            </button>
+          </TooltipDemo>
+
+          <TooltipDemo content="Playback rate" side="top">
+            <div>
+              <Select.Root
+                value={playbackRate}
+                onValueChange={(value) => setPlayBackRate(value)}
               >
-                <Select.Value placeholder="1x" />
-              </Select.Trigger>
-              <Select.Portal>
-                <Select.Content
-                  className="overflow-hidden bg-black px-4 py-4 absolute bottom-12 left-0"
-                  position="popper"
+                <Select.Trigger
+                  aria-label="playback-rate"
+                  className="bg-white h-[25px] w-[70px] text-black"
                 >
-                  <Select.Viewport>
-                    <Select.Item
-                      value="2"
-                      className="text-[13px] cursor-pointer leading-none text-white flex items-center gap-4 h-[35px]"
-                    >
-                      <Select.ItemText>2x</Select.ItemText>
-                      <Select.ItemIndicator className="text-violet11">
-                        <PiCircleFill />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                    <Select.Item
-                      value="1.75"
-                      className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                    >
-                      <Select.ItemText>1.75x</Select.ItemText>
-                      <Select.ItemIndicator className="text-violet11">
-                        <PiCircleFill />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                    <Select.Item
-                      value="1.5"
-                      className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                    >
-                      <Select.ItemText>1.5x</Select.ItemText>
-                      <Select.ItemIndicator className="text-violet11">
-                        <PiCircleFill />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                    <Select.Item
-                      value="1.25"
-                      className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                    >
-                      <Select.ItemText>1.25x</Select.ItemText>
-                      <Select.ItemIndicator className="text-violet11">
-                        <PiCircleFill />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                    <Select.Item
-                      value="1"
-                      className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                    >
-                      <Select.ItemText>1x</Select.ItemText>
-                      <Select.ItemIndicator className="text-violet11">
-                        <PiCircleFill />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                    <Select.Item
-                      value="0.75"
-                      className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                    >
-                      <Select.ItemText>0.75x</Select.ItemText>
-                      <Select.ItemIndicator className="text-violet11">
-                        <PiCircleFill />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                    <Select.Item
-                      value="0.5"
-                      className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                    >
-                      <Select.ItemText>0.5x</Select.ItemText>
-                      <Select.ItemIndicator className="text-violet11">
-                        <PiCircleFill />
-                      </Select.ItemIndicator>
-                    </Select.Item>
-                  </Select.Viewport>
-                </Select.Content>
-              </Select.Portal>
-            </Select.Root>
-          </div>
-          <button className="text-2xl" onClick={handleForward}>
-            <TbRewindForward5 />
-          </button>
+                  <Select.Value placeholder="1x" />
+                </Select.Trigger>
+                <Select.Portal>
+                  <Select.Content
+                    className="overflow-hidden bg-black px-4 py-4 absolute bottom-12 left-0"
+                    position="popper"
+                  >
+                    <Select.Viewport>
+                      <Select.Item
+                        value="2"
+                        className="text-[13px] cursor-pointer leading-none text-white flex items-center gap-4 h-[35px]"
+                      >
+                        <Select.ItemText>2x</Select.ItemText>
+                        <Select.ItemIndicator className="text-violet11">
+                          <PiCircleFill />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                      <Select.Item
+                        value="1.75"
+                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                      >
+                        <Select.ItemText>1.75x</Select.ItemText>
+                        <Select.ItemIndicator className="text-violet11">
+                          <PiCircleFill />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                      <Select.Item
+                        value="1.5"
+                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                      >
+                        <Select.ItemText>1.5x</Select.ItemText>
+                        <Select.ItemIndicator className="text-violet11">
+                          <PiCircleFill />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                      <Select.Item
+                        value="1.25"
+                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                      >
+                        <Select.ItemText>1.25x</Select.ItemText>
+                        <Select.ItemIndicator className="text-violet11">
+                          <PiCircleFill />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                      <Select.Item
+                        value="1"
+                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                      >
+                        <Select.ItemText>1x</Select.ItemText>
+                        <Select.ItemIndicator className="text-violet11">
+                          <PiCircleFill />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                      <Select.Item
+                        value="0.75"
+                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                      >
+                        <Select.ItemText>0.75x</Select.ItemText>
+                        <Select.ItemIndicator className="text-violet11">
+                          <PiCircleFill />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                      <Select.Item
+                        value="0.5"
+                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                      >
+                        <Select.ItemText>0.5x</Select.ItemText>
+                        <Select.ItemIndicator className="text-violet11">
+                          <PiCircleFill />
+                        </Select.ItemIndicator>
+                      </Select.Item>
+                    </Select.Viewport>
+                  </Select.Content>
+                </Select.Portal>
+              </Select.Root>
+            </div>
+          </TooltipDemo>
+          <TooltipDemo content="Forward 5s" side="top">
+            <button className="text-2xl" onClick={handleForward}>
+              <TbRewindForward5 />
+            </button>
+          </TooltipDemo>
           {/* duration video */}
           <div className="flex items-center gap-2">
             <p>
@@ -169,20 +182,25 @@ const PlayerControls: React.FC<Props> = ({
               <ConvertDuratonVideo duration={duration} />
             </p>
           </div>
-          <button className="text-3xl ml-2">
-            <MdOutlineEditNote />
-          </button>
+          <TooltipDemo content="Add a note" side="top">
+            <button className="text-3xl ml-2">
+              <MdOutlineEditNote />
+            </button>
+          </TooltipDemo>
         </div>
         <div className="flex items-center gap-4">
           <div className="">
             <HoverCard.Root onOpenChange={handelOpenVolumeChange}>
               <HoverCard.Trigger asChild>
-                <div className="text-2xl  mx-auto flex items-center justify-center">
+                <button
+                  className="text-2xl  mx-auto flex items-center justify-center"
+                  onClick={handleIsOpenVolume}
+                >
                   {volume >= 0.75 && <IoVolumeHigh />}
                   {volume < 0.75 && volume >= 0.5 && <IoVolumeMedium />}
                   {volume < 0.5 && volume > 0 && <IoVolumeLow />}
                   {volume <= 0 && <IoVolumeMute />}
-                </div>
+                </button>
               </HoverCard.Trigger>
               <HoverCard.Portal>
                 <HoverCard.Content className="absolute -bottom-10 left-[50%] -translate-x-1/2">
@@ -200,17 +218,21 @@ const PlayerControls: React.FC<Props> = ({
           <PopoverSettingVideo handleChangeOpen={handleChangeOpenSetting} />
 
           {!isFullScreen && (
-            <button className="text-2xl" onClick={toggleExpandedView}>
-              <LiaExpandSolid />
-            </button>
+            <TooltipDemo content="Expanded view" side="top">
+              <button className="text-2xl" onClick={toggleExpandedView}>
+                <LiaExpandSolid />
+              </button>
+            </TooltipDemo>
           )}
-          <button onClick={toggleFullScreen} className="">
-            {isFullScreen ? (
-              <MdFullscreenExit className="text-2xl" />
-            ) : (
-              <SlSizeFullscreen />
-            )}
-          </button>
+          <TooltipDemo content="Fullscreen" side="top">
+            <button onClick={toggleFullScreen} className="">
+              {isFullScreen ? (
+                <MdFullscreenExit className="text-2xl" />
+              ) : (
+                <SlSizeFullscreen />
+              )}
+            </button>
+          </TooltipDemo>
         </div>
       </div>
     </div>

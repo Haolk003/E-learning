@@ -33,7 +33,7 @@ const CoureAccessLectureList: FC<Props> = ({
 }) => {
   const [updateIsCompletedLecture, { error, isLoading, isSuccess }] =
     useUpdateIsCompletedMutation();
-  const [isCollapped, setIsCollapped] = useState<boolean[]>(Array());
+  const [isCollapped, setIsCollapped] = useState<boolean[]>([]);
   const handleChangeOpen = (open: boolean, index: number) => {
     const newIsCollappsed = [...isCollapped];
     newIsCollappsed[index] = open;
@@ -52,6 +52,21 @@ const CoureAccessLectureList: FC<Props> = ({
       toast.error(errMessage.message);
     }
   }, [error]);
+  useEffect(() => {
+    if (courseContentData) {
+      const newCollapse: boolean[] = courseContentData.map((item, index) => {
+        const findLectureId = item.lectures.find(
+          (lecture) => lecture._id === lectureId
+        );
+        if (findLectureId) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+      setIsCollapped(newCollapse);
+    }
+  }, [courseContentData]);
   return (
     <div className="min-w-[30%]">
       <div className="py-4 px-4 bg-slate-700 flex items-center justify-between ">
