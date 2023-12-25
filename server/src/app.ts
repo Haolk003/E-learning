@@ -11,6 +11,7 @@ import courseRouter from "./routers/course.router";
 import reviewRouter from "./routers/review.router";
 import orderRouter from "./routers/order.route";
 import courseProgressRouter from "./routers/userCourseProgress.router";
+import noteCourseRouter from "./routers/noteCourse.router";
 import multer from "multer";
 import http from "http";
 
@@ -51,6 +52,7 @@ app.use("/api/v1", courseRouter);
 app.use("/api/v1", reviewRouter);
 app.use("/api/v1", orderRouter);
 app.use("/api/v1", courseProgressRouter);
+app.use("/api/v1", noteCourseRouter);
 interface CustomError extends Error {
   statusCode?: number;
 }

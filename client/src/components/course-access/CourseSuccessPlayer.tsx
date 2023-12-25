@@ -1,4 +1,11 @@
-import React, { useState, useRef, useCallback, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useCallback,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import ReactPlayer from "react-player";
 import _ from "lodash";
 import { useRouter } from "next/navigation";
@@ -22,12 +29,16 @@ type Props = {
   courseId: string;
   progressVideo: progressLectureProgressType;
   lectureData: CourseContentType[];
+  played: number;
+  setPlayed: Dispatch<SetStateAction<number>>;
 };
 const CustomVideoPlayer: React.FC<Props> = ({
   lectureId,
   courseId,
   progressVideo,
   lectureData,
+  played,
+  setPlayed,
 }) => {
   const router = useRouter();
 
@@ -57,11 +68,13 @@ const CustomVideoPlayer: React.FC<Props> = ({
   const [startTime, setStartTime] = useState(0);
   const [videoUrl, setVideoUrl] = useState("");
 
-  const { handleProgress, loaded, played, setPlayed } = useVideoProgress({
+  const { handleProgress, loaded } = useVideoProgress({
     courseId,
     videoUrl: videoUrl,
     seeking,
     lectureId: lectureId,
+    played,
+    setPlayed,
   });
 
   useEffect(() => {

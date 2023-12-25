@@ -5,7 +5,15 @@
   width: 100%;
   min-height: 250px;
 }
-
+.editor-container {
+  max-width: 100%;
+  margin: auto;
+  padding: 10px;
+  border: 1px solid #d3d3d3;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  background-color: white;
+}
 .ProseMirror > * + * {
   margin-top: 0.75em;
 }

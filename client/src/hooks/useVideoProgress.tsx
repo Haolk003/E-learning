@@ -1,4 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import _ from "lodash";
 import { useUpdateLengthWatchedMutation } from "@/features/course/courseApi";
 
@@ -7,14 +13,18 @@ const useVideoProgress = ({
   seeking,
   courseId,
   lectureId,
+  played,
+  setPlayed,
 }: {
   videoUrl: string;
   courseId: string;
   lectureId: string;
   seeking: boolean;
+  played: number;
+  setPlayed: Dispatch<SetStateAction<number>>;
 }) => {
   const [updateLengthWatched] = useUpdateLengthWatchedMutation();
-  const [played, setPlayed] = useState(0);
+
   const [loaded, setLoaded] = useState(0);
   const [lastSavedTime, setLastSavedTime] = useState(0);
 

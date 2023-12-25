@@ -74,7 +74,7 @@ const CourseLayout = ({ id }: { id: string }) => {
       createPaymentIntent({ amount: 20, currency: "USD" });
     }
   }, [data]);
-  console.log(isPurchased);
+
   return (
     <>
       <div className="w-[90%] mx-auto">
