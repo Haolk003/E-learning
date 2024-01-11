@@ -7,17 +7,16 @@ import {
   useGetpurchaserCourseQuery,
   useGetProgressLectureQuery,
 } from "@/features/course/courseApi";
+
 import CourseSuccessPlayer from "./CourseSuccessPlayer";
-import { IoMdClose } from "react-icons/io";
+
 import CoureAccessLectureList from "./CoureAccessLectureList";
-import {
-  progressLectureProgressType,
-  ProgressDataLectureType,
-} from "@/types/progressLectureUserType";
+
 import Loader from "../loader/Loader";
 import CourseAccessToolbar from "./CourseAccessToolbar";
 import CourseAccessOverview from "./CourseAccessOverview";
 import CourseAccessNote from "./CourseAccessNote";
+import CourseAccessReview from "./CourseAccessReview";
 
 type Props = {
   id: string;
@@ -29,10 +28,10 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
   const { data, isLoading, isSuccess, error } = useGetpurchaserCourseQuery(id);
   const { data: progress } = useGetProgressLectureQuery(id);
   const [played, setPlayed] = useState(0);
-
+  console.log(data);
   return (
     <div className="pt-[80px] flex">
-      <div>
+      <div className="w-[calc(100%-350px)] overflow-hidden">
         {progress && data && (
           <CourseSuccessPlayer
             played={played}
@@ -53,10 +52,14 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
           )}
         {data && searchParams.get("option") === "note" && (
           <CourseAccessNote
+            courseData={data.data}
             played={played}
             courseId={id}
             lectureId={lectureId}
           />
+        )}
+        {data && searchParams.get("option") === "review" && (
+          <CourseAccessReview courseId={id} courseData={data.data} />
         )}
       </div>
       {data && progress && (

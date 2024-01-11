@@ -77,11 +77,34 @@ const EditReviews = async (
   }
   return updateReview;
 };
+
+const starPercentageByCourseId = async (courseId: string) => {
+  const starCounts = await reviewModel.aggregate([
+    { $match: { courseId: courseId } },
+    { $group: { _id: "$rating", count: { $sum: 1 } } },
+  ]);
+  console.log(starCounts);
+  const totalReviews = starCounts.reduce((acc, curr) => acc + curr.count, 0);
+
+  if (totalReviews === 0) {
+    return;
+  }
+  let starPercentages: any = {};
+  for (let i = 1; i <= 5; i++) {
+    const starCount = starCounts.find((item) => item._id === i)?.count || 0;
+    starPercentages[`${i} stars`] = ((starCount / totalReviews) * 100).toFixed(
+      2
+    );
+  }
+  return starPercentages;
+};
+
 const reviewService = {
   addReview,
   getAllReview,
   getReviewsCourse,
   EditReviews,
+  starPercentageByCourseId,
 };
 
 export default reviewService;

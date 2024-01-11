@@ -1,4 +1,5 @@
 export type NoteCourseType = {
+  _id: string;
   userId: string;
   courseId: string;
   timing: number;

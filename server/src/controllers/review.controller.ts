@@ -59,3 +59,23 @@ export const EditReviewCourse = CatchAsyncError(
     });
   }
 );
+
+export const StarPercentagesByCourseId = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const percentage = await reviewService.starPercentageByCourseId(id);
+    if (!percentage) {
+      res
+        .status(200)
+        .json({ success: true, message: "No reviews found for this course" });
+    } else {
+      res
+        .status(200)
+        .json({
+          success: true,
+          data: percentage,
+          message: "Calculate Percentage of Star Successfully",
+        });
+    }
+  }
+);

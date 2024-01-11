@@ -32,6 +32,13 @@ export const reviewApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    starPercentage: build.query({
+      query: (courseId) => ({
+        url: `reviews/percentage/${courseId}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -40,4 +47,5 @@ export const {
   useCreateReviewMutation,
   useEditReviewMutation,
   useGetAllReviewQuery,
+  useStarPercentageQuery,
 } = reviewApi;

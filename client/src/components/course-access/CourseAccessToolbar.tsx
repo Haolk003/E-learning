@@ -51,9 +51,9 @@ const CourseAccessToolbar: FC<Props> = ({ courseId, lectureId }) => {
           Notes
         </p>
         <p
-          onClick={() => handleSelectOption("preview")}
+          onClick={() => handleSelectOption("review")}
           className={` h-full px-5 cursor-pointer border-b-[2px] ${
-            searchParams.get("option") === "preview"
+            searchParams.get("option") === "review"
               ? "border-black border-b-[2px]"
               : "border-gray6"
           }`}

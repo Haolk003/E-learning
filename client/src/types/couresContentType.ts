@@ -22,7 +22,6 @@ export type CourseType = {
   };
   price: number;
   sold: number;
-
   reviews: reviewContentPublic[];
   status: string;
   courseData: CourseContentType[];

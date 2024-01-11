@@ -110,6 +110,7 @@ const courseSchema: Schema<ICourse> = new mongoose.Schema(
     category: String,
     level: String,
     tags: String,
+
     thumbnail: {
       public_id: String,
       url: String,

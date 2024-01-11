@@ -16,7 +16,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
     <AdminProtect>
       <SideBarAdmin />
       <HeaderAdmin />
-      <div className="pl-[20%] py-20"> {children}</div>
+      <div className="pl-[18%] py-20"> {children}</div>
     </AdminProtect>
   );
 }
