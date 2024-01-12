@@ -16,12 +16,19 @@ import {
 import { protect } from "../middlewares/auth";
 const router = express.Router();
 router.post("/register", registrationUser);
+
 router.post("/verify-user", verifyUser);
+
 router.post("/login-user", loginUser);
+
 router.get("/me", protect, me);
+
 router.post("/forgot-password", forgotPassword);
+
 router.post("/reset-password", resetPassword);
+
 router.post("/logout", logoutUser);
+
 router.get(
   "/google/callback",
   passport.authenticate("oauth2", {
@@ -29,6 +36,7 @@ router.get(
   }),
   googleCallback
 );
+
 router.get(
   "/google",
   passport.authenticate("oauth2", {

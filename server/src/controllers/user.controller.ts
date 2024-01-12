@@ -89,3 +89,14 @@ export const updatePassword = CatchAsyncError(
       .json({ success: true, message: "Update Password successfully" });
   }
 );
+
+export const convertUserToIntructor = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.me._id;
+    await userService.convertUserToIntructor(id);
+
+    res
+      .status(200)
+      .json({ success: true, message: "You are now an instructor" });
+  }
+);

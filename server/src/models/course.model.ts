@@ -28,7 +28,7 @@ export interface ICourse extends Document {
     url: string;
   };
   description: string;
-  category: string;
+  category: mongoose.Schema.Types.ObjectId;
   tags: string;
   level: string;
   courseData: ICourseData[];
@@ -107,7 +107,10 @@ const courseSchema: Schema<ICourse> = new mongoose.Schema(
       endDate: { type: Date },
       discount: { type: Number, default: 0 },
     },
-    category: String,
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
     level: String,
     tags: String,
 

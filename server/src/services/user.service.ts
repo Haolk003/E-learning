@@ -129,6 +129,19 @@ const updatePassword = async (
   await findUser.save();
   return;
 };
+
+const convertUserToIntructor = async (userId: string) => {
+  const updateUser = await userModel.findByIdAndUpdate(
+    userId,
+    { $set: { role: "instructor", timeBeginInstructors: new Date() } },
+    { new: true }
+  );
+  if (!updateUser) {
+    throw new ErrorHandle(400, "Update User Failure");
+  }
+
+  return updateUser;
+};
 const userService = {
   updateProfileUser,
   getAllUser,
@@ -138,6 +151,7 @@ const userService = {
   removeUser,
   getUserById,
   updatePassword,
+  convertUserToIntructor,
 };
 
 export default userService;

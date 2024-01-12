@@ -31,7 +31,7 @@ const getCategoryById = async (id: string) => {
 };
 
 const getAllCategory = async () => {
-  const categories = await CategoryModel.find().sort("coursecount");
+  const categories = await CategoryModel.find().sort("-courseCount");
   return categories;
 };
 

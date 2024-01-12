@@ -27,6 +27,7 @@ export interface IUser extends Document {
   headline: string;
   isVerified: boolean;
   myCourses: Schema.Types.ObjectId[];
+  timeBeginInstructors: Date;
   comparePassword: (enterPassword: string) => Promise<boolean>;
   signAccessToken: () => string;
   signRefeshToken: () => string;
@@ -80,6 +81,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     googleUserId: String,
     facebookUserId: String,
     loginType: String,
+    timeBeginInstructors: { type: Date },
   },
   { timestamps: true }
 );

@@ -9,6 +9,7 @@ import {
   unBlockUser,
   updateProfileUser,
   updatePassword,
+  convertUserToIntructor,
 } from "../controllers/user.controller";
 import { ImgResize, uploadPhoto } from "../middlewares/uploadImage";
 const router = express.Router();
@@ -27,6 +28,8 @@ router.put("/block-user/:id", protect, authorizeRoles("admin"), blockUser);
 
 router.put("/unblock-user/:id", protect, authorizeRoles("admin"), unBlockUser);
 
+router.put("/convertUserToIntructor", protect, convertUserToIntructor);
+
 router.get("/getUserById/:id", getUserById);
 
 router.delete("/removeAccount", protect, removeUser);
@@ -34,4 +37,5 @@ router.delete("/removeAccount", protect, removeUser);
 router.put("/updateProfileUser", protect, updateProfileUser);
 
 router.put("/update-password", protect, updatePassword);
+
 export default router;

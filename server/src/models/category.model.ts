@@ -2,7 +2,7 @@ import mongoose, { Document } from "mongoose";
 
 interface ICategory extends Document {
   name: string;
-  coursecount: number;
+  courseCount: number;
   icon: string;
 }
 
@@ -14,7 +14,7 @@ const categorySchema = new mongoose.Schema<ICategory>({
   icon: {
     type: String,
   },
-  coursecount: {
+  courseCount: {
     type: Number,
     default: 0,
   },

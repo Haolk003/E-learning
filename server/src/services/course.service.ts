@@ -1,12 +1,11 @@
-import { find, isEmpty } from "lodash";
+import { isEmpty } from "lodash";
 
 import courseModel, { ICourseData } from "../models/course.model";
-import userModel from "../models/user.model";
 import ErrorHandle from "../utils/errorHandle";
 import sendEmail from "../utils/sendEmail";
 import { uploadFile } from "../utils/cloudinary";
 import orderModel from "../models/order.model";
-
+import CategoryModel from "../models/category.model";
 import {
   uploadVideo as handleUploadVideo,
   deleteImage,
@@ -45,6 +44,11 @@ const createCourseStep1 = async (
     const updateCourse = await courseModel.findByIdAndUpdate(courseId, {
       $set: { ...data },
     });
+    const isExistCategory = await CategoryModel.findById(data.category);
+
+    if (!isExistCategory) throw new ErrorHandle(400, "Category not found");
+    isExistCategory.courseCount = isExistCategory.courseCount++;
+    await isExistCategory.save();
     return updateCourse;
   } else {
     const newCourse = await courseModel.create({

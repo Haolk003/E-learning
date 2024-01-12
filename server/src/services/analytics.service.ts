@@ -4,7 +4,9 @@ import orderModel from "../models/order.model";
 
 import ErrorHandle from "../utils/errorHandle";
 
+// Function to calculate general count analytics
 const generalCountAnalytics = async () => {
+  // Query to calculate total earnings and total students for the current month
   const totalEarningscurrentMonth = await orderModel.aggregate([
     {
       $match: {
@@ -30,19 +32,34 @@ const generalCountAnalytics = async () => {
       },
     },
   ]);
-  const totalEarninglastMonth = await orderModel.aggregate([
+
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth() + 1; // Add 1 to represent the current month correctly
+
+  const startOfMonth = new Date(currentYear, currentMonth - 2, 1); // Start of the previous month
+  const endOfMonth = new Date(currentYear, currentMonth - 1, 0); // End of the previous month
+
+  const totalCourseCurrentMonth = await courseModel.aggregate([
     {
       $match: {
         createdAt: {
-          $gte: new Date(
-            new Date().getFullYear(),
-            new Date().getMonth() - 2,
-            1
-          ), // MM is the current month (1-12)
-          $lt: new Date(new Date().getFullYear(), new Date().getMonth() - 1, 0), // Last day of the previous month
+          $gte: startOfMonth,
+          $lt: endOfMonth,
         },
       },
     },
+    {
+      $group: {
+        _id: null,
+        total: {
+          $sum: 1,
+        },
+      },
+    },
+  ]);
+  // Query to calculate total earnings and total students for the previous month
+  // Aggregate orders by month
+  const orderGenerateMonth = await orderModel.aggregate([
     {
       $group: {
         _id: null, // Group all matched documents
@@ -55,23 +72,129 @@ const generalCountAnalytics = async () => {
       },
     },
   ]);
-  const studentFluctuationMonth =
-    ((totalEarningscurrentMonth[0].totalStudent -
-      totalEarninglastMonth[0].totalStudent) /
-      totalEarninglastMonth[0].totalStudent) *
-    100;
-  const earningFluctuationMonth =
-    ((totalEarningscurrentMonth[0].totalRevenue -
-      totalEarninglastMonth[0].totalRevenue) /
-      totalEarninglastMonth[0].totalRevenue) *
-    100;
+
+  // Calculate total earning for the month
+  const totalEarningMonth = orderGenerateMonth.reduce((total, item) => {
+    return total + item.totalRevenue;
+  }, 0);
+
+  // Calculate total number of students for the month
+  const totalStudent = orderGenerateMonth.reduce((total, item) => {
+    return total + item.totalStudent;
+  }, 0);
+
+  // Calculate average earning per month
+  const averageMonthEarning = totalEarningMonth / orderGenerateMonth.length;
+
+  // Calculate average number of students per month
+  const averageMonthStudent = totalStudent / orderGenerateMonth.length;
+
+  const totalCourseMonth = await courseModel.aggregate([
+    // Match documents with createdAt field within the desired range
+    {
+      $match: {
+        status: "public",
+      },
+    },
+    {
+      $project: {
+        createdAt: 1,
+        monthInteral: {
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: { monthInteral: "$monthInteral" },
+        total: {
+          $sum: 1,
+        },
+      },
+    },
+  ]);
+
+  const totalCourse = totalCourseMonth.reduce((total, item) => {
+    return total + item.total;
+  }, 0);
+  const averageMonthTotalCourse = totalCourse / totalCourseMonth.length;
+
+  const instructorMonthGenerate = await userModel.aggregate([
+    {
+      $match: { role: "instructor", timeBeginInstructors: { $lt: endOfMonth } },
+    },
+    {
+      $project: {
+        timeBeginInstructors: 1,
+        monthInteral: {
+          month: { $month: "$timeBeginInstructors" },
+          year: { $year: "$timeBeginInstructors" },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: { monthInteral: "$monthInteral" },
+        total: { $sum: 1 },
+      },
+    },
+  ]);
+
+  const generateTotalIntructorLastMonth = instructorMonthGenerate.find(
+    (item) =>
+      item._id.monthInteral.month === startOfMonth.getMonth() + 1 &&
+      item._id.monthInteral.year === startOfMonth.getFullYear()
+  );
+
+  const totalIntructor = instructorMonthGenerate.reduce((total, item) => {
+    return total + item.total;
+  }, 0);
+
+  const averageMonthTotalIntructor =
+    totalIntructor / instructorMonthGenerate.length;
+
+  // Calculate student fluctuation percentage
+  const studentFluctuationMonth = totalCourseCurrentMonth[0]
+    ? ((totalEarningscurrentMonth[0].totalStudent - averageMonthStudent) /
+        averageMonthStudent) *
+      100
+    : -100;
+
+  // Calculate earnings fluctuation percentage
+  const earningFluctuationMonth = totalEarningMonth[0]
+    ? ((totalEarningscurrentMonth[0].totalRevenue -
+        averageMonthEarning -
+        averageMonthEarning) /
+        averageMonthEarning) *
+      100
+    : -100;
+
+  const courseFluturationMonth = totalCourseCurrentMonth[0]
+    ? ((totalCourseCurrentMonth[0].total - averageMonthTotalCourse) /
+        averageMonthTotalCourse) *
+      100
+    : -100;
+
+  const totalIntructorFluturationMonth = generateTotalIntructorLastMonth
+    ? ((generateTotalIntructorLastMonth.total - averageMonthTotalIntructor) /
+        averageMonthTotalIntructor) *
+      100
+    : -100;
   return {
-    totalEarninglastMonth,
     totalEarningscurrentMonth,
     studentFluctuationMonth,
     earningFluctuationMonth,
+    totalCourse,
+    averageMonthTotalCourse,
+    courseFluturationMonth,
+    instructorMonthGenerate,
+    generateTotalIntructorLastMonth,
+    totalIntructorFluturationMonth,
+    // totalCourseFluctuationMonth,
   };
 };
+// Function to get the start date based on the given period
 
 const getStartDate = (period: string) => {
   const now = new Date();
@@ -93,7 +216,8 @@ const getStartDate = (period: string) => {
   return now;
 };
 
-const generateEarningsReport = async (period: string) => {
+// Function to generate earnings report based on the give
+async function generateEarningsReport(period: string) {
   let earningTotal;
   if (period === "1M") {
     const query = { createdAt: { $gte: getStartDate("1M") } };
@@ -191,7 +315,8 @@ const generateEarningsReport = async (period: string) => {
     ]);
   }
   return earningTotal;
-};
+}
+
 const analyticsService = {
   generalCountAnalytics,
   generateEarningsReport,
