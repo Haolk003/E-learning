@@ -24,7 +24,7 @@ const Categories = () => {
     }
   }, [data]);
   return (
-    <div className="bg-gray2 rounded-md w-[60%] mt-4">
+    <div className="bg-gray2 rounded-md w-full">
       <div className="flex items-center justify-between px-4 border-b dark:border-gray9 border-gray4 py-3  ">
         <h3 className="headingAdmin !text-[13px]">Top Categories</h3>
         <button className="bg-gray8 text-[11px] px-1 py-0.5 rounded-sm border border-gray10">

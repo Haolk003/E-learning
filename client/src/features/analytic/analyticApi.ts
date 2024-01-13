@@ -2,7 +2,7 @@ import apiSlice from "../api/apiSlice";
 
 const analyticApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
-    generateLastMonth: build.query({
+    generateAll: build.query({
       query: () => ({
         url: "/analytics/general-all",
         method: "GET",
@@ -20,5 +20,5 @@ const analyticApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGenerateAnalyticEarningQuery, useGenerateLastMonthQuery } =
+export const { useGenerateAnalyticEarningQuery, useGenerateAllQuery } =
   analyticApi;
