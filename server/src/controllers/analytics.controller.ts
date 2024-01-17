@@ -12,7 +12,8 @@ export const generalCountAnalytics = CatchAsyncError(
 
 export const generateEarningsReport = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    const analytics = await analyticsService.generateEarningsReport("1Y");
+    const { period } = req.query as any;
+    const analytics = await analyticsService.generateEarningsReport(period);
     res.status(200).json({ success: true, data: analytics });
   }
 );

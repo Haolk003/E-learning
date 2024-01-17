@@ -10,10 +10,9 @@ const analyticApi = apiSlice.injectEndpoints({
       }),
     }),
     generateAnalyticEarning: build.query({
-      query: (data: string) => ({
-        url: "/analytics/generate-report",
+      query: (period: string) => ({
+        url: `/analytics/generate-report?period=${period}`,
         method: "GET",
-        body: data,
         credentials: "include" as const,
       }),
     }),

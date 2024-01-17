@@ -5,8 +5,17 @@ const ProductTrendsChart = () => {
   // Set up the initial state for the options and series for the chart
   const [options, setOptions] = React.useState<any>({
     chart: {
-      type: "line",
-      height: "auto",
+      type: "bar",
+      height: 200,
+      zoom: {
+        enabled: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: "straight",
     },
     xaxis: {
       categories: [
@@ -26,13 +35,7 @@ const ProductTrendsChart = () => {
       max: 160,
       tickAmount: 4,
     },
-    title: {
-      text: "Product Trends by Month",
-      align: "left",
-      style: {
-        fontSize: "16px",
-      },
-    },
+
     colors: ["#546E7A"],
   });
 
@@ -44,8 +47,8 @@ const ProductTrendsChart = () => {
   ]);
 
   return (
-    <div className="text-black">
-      <Chart options={options} series={series} type="line" />
+    <div className="text-black ">
+      <Chart options={options} series={series} type="bar" />
     </div>
   );
 };

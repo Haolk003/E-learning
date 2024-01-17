@@ -207,8 +207,48 @@ const getStartDate = (period: string) => {
 // Function to generate earnings report based on the give
 async function generateEarningsReport(period: string) {
   let earningTotal;
+  if (period === "7D") {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 7);
+
+    const query = {
+      createdAt: {
+        $gte: startDate,
+        $lt: new Date(),
+      },
+    };
+    const earningTotal = await orderModel.aggregate([
+      {
+        $match: query,
+      },
+      {
+        $project: {
+          amount: "$payment_info.amount",
+          createdAt: 1,
+          dayOfYear: { $dayOfYear: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            monthInterval: "$dayOfYear",
+            year: "$year",
+          },
+          totalAmount: { $sum: "$amount" },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { "_id.year": 1, "_id.monthInterval": 1 } },
+    ]);
+  }
   if (period === "1M") {
-    const query = { createdAt: { $gte: getStartDate("1M") } };
+    const query = {
+      createdAt: {
+        $gte: getStartDate("1M"),
+        $lt: new Date(new Date().getFullYear(), new Date().getMonth(), 0),
+      },
+    };
 
     earningTotal = await orderModel.aggregate([
       { $match: query },
@@ -228,7 +268,6 @@ async function generateEarningsReport(period: string) {
             monthInterval: "$monthInteral",
           },
           totalAmount: { $sum: "$amount" },
-          averageAmount: { $avg: "$amount" },
           count: { $sum: 1 },
         },
       },
@@ -271,7 +310,7 @@ async function generateEarningsReport(period: string) {
             year: "$year",
           },
           totalAmount: { $sum: "$amount" },
-          averageAmount: { $avg: "$amount" },
+
           count: { $sum: 1 },
         },
       },
@@ -295,7 +334,6 @@ async function generateEarningsReport(period: string) {
             year: "$year",
           },
           totalAmount: { $sum: "$amount" },
-          averageAmount: { $avg: "$amount" },
           count: { $sum: 1 },
         },
       },
@@ -305,6 +343,7 @@ async function generateEarningsReport(period: string) {
   return earningTotal;
 }
 
+const genrateStudentReport = async () => {};
 const analyticsService = {
   generalCountAnalytics,
   generateEarningsReport,

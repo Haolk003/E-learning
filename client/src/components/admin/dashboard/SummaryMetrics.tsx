@@ -148,7 +148,7 @@ const SummaryMetrics = () => {
               </div>
             </div>
             <button className="flex items-center gap-2 text-amber-500 text-[13px]">
-              View All <IoArrowForward />{" "}
+              View All <IoArrowForward />
             </button>
           </div>
         </div>
