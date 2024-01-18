@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/utils/next-themes";
 import Header from "@/components/Header";
@@ -15,12 +15,16 @@ import {
   useUpdatePageViewMutation,
   useUpdateInteractEndTimeMutation,
   useUpdateTimeSpentMutation,
+  useUpdateInteractionPageViewMutation,
 } from "@/features/interact/InteractApi";
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const scrollRef = useRef<EventListener | null>(null);
+  const clickRef = useRef<EventListener | null>(null);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [request, setRequest] = useState(false);
 
   const [createInteract, { data }] = useCreateInteractCourseMutation();
@@ -30,6 +34,7 @@ export default function RootLayout({
   const [updateEndTime] = useUpdateInteractEndTimeMutation();
 
   const [updateTimeSpent] = useUpdateTimeSpentMutation();
+  const [updateInteractionPageView] = useUpdateInteractionPageViewMutation();
 
   const pathname = usePathname();
 
@@ -63,6 +68,49 @@ export default function RootLayout({
     };
   }, []);
 
+  const handleInteractType = async (type: string) => {
+    const sessionInteract = sessionStorage.getItem("session-interact");
+
+    if (sessionInteract) {
+      await updateInteractionPageView({
+        id: JSON.parse(sessionInteract).id,
+        interation: type,
+      });
+    }
+  };
+  const handleScroll = useCallback(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      handleInteractType("scroll");
+    }, 3000);
+  }, []);
+
+  const handleClick = useCallback(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    handleInteractType("click");
+  }, []);
+  useEffect(() => {
+    scrollRef.current = handleScroll;
+    clickRef.current = handleClick;
+
+    window.addEventListener("scroll", scrollRef.current);
+    window.addEventListener("click", clickRef.current);
+
+    return () => {
+      window.removeEventListener("scroll", scrollRef.current as EventListener);
+      window.removeEventListener("click", clickRef.current as EventListener);
+
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, [handleScroll, handleClick]);
   useEffect(() => {
     if (request) {
       const sessionInteract = sessionStorage.getItem("session-interact");

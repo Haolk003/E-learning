@@ -1,12 +1,13 @@
 import ErrorHandle from "../utils/errorHandle";
 import courseInteractModel from "../models/courseInteract.model";
 import axios from "axios";
-import { isAwaitKeyword } from "typescript";
 
 type interactWebsite = {
   userIp?: any;
   agent?: string;
   url: string;
+  deviceType: string;
+  userId?: string;
 };
 const createInteractWebsite = async (data: interactWebsite) => {
   const response = await axios.get(
@@ -18,6 +19,8 @@ const createInteractWebsite = async (data: interactWebsite) => {
     userAgent: data.agent,
     pageView: [{ url: data.url, viewTime: new Date() }],
     countryAccess: response.data.country_name,
+    deviceType: data.deviceType,
+    userId: data.userId,
   });
   if (response.data.country_name) {
     newInteract.countryAccess = response.data.country_name;

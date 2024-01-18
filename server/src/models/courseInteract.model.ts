@@ -14,50 +14,55 @@ export interface ICourseInteract extends Document {
   active: boolean;
   countryAccess: string;
   userAgent: string;
+  deviceType: string;
 }
 
-const CourseInteractSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-  },
-  startTime: {
-    type: Date,
-    required: true,
-  },
-  endTime: {
-    type: Date,
-  },
-  pageView: [
-    {
-      url: {
-        type: String,
-        required: true,
-      },
-      viewTime: {
-        type: Date,
-      },
-      timeSpent: {
-        type: Number,
-        default: 0,
-      },
-      interactions: [
-        {
-          type: String,
-        },
-      ],
+const CourseInteractSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
     },
-  ],
-  totalTimeSpent: {
-    type: Number,
-    default: 0,
+    startTime: {
+      type: Date,
+      required: true,
+    },
+    endTime: {
+      type: Date,
+    },
+    pageView: [
+      {
+        url: {
+          type: String,
+          required: true,
+        },
+        viewTime: {
+          type: Date,
+        },
+        timeSpent: {
+          type: Number,
+          default: 0,
+        },
+        interactions: [
+          {
+            type: String,
+          },
+        ],
+      },
+    ],
+    totalTimeSpent: {
+      type: Number,
+      default: 0,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    countryAccess: String,
+    userAgent: String,
+    deviceType: String,
   },
-  active: {
-    type: Boolean,
-    default: true,
-  },
-  countryAccess: String,
-  userAgent: String,
-});
+  { timestamps: true }
+);
 
 export default mongoose.model<ICourseInteract>(
   "CourseInteract",
