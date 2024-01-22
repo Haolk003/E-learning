@@ -355,3 +355,18 @@ input[type="number"] {
   );
   background-size: 1rem 1rem;
 }
+
+.card {
+  background: #333;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  color: white;
+}
+
+.trend-icon {
+  color: #10b981; /* Tailwind green-500 */
+}
+
+.trend-icon.down {
+  color: #f87171; /* Tailwind red-500 */
+}

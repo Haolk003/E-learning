@@ -16,8 +16,58 @@ const analyticApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    calculateMonthBounceSession: build.query({
+      query: () => ({
+        url: "analytics/calculate-month-bounce-session",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    calculateDevideTypePercentTage: build.query({
+      query: () => ({
+        url: "/analytics/calculate-devide-type-percentTage",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    calculateMonthNewUserSession: build.query({
+      query: () => ({
+        url: "/analytics/calculate-month-newUser-session",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    generateBrowser: build.query({
+      query: () => ({
+        url: "/analytics/generate-browser",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    calculateSumMetrics: build.query({
+      query: () => ({
+        url: "/analytics/calculate-sum-metrics",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    calculateSumUser: build.query({
+      query: () => ({
+        url: "/analytics/calculate-sum-user",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
-export const { useGenerateAnalyticEarningQuery, useGenerateAllQuery } =
-  analyticApi;
+export const {
+  useGenerateAnalyticEarningQuery,
+  useGenerateAllQuery,
+  useCalculateDevideTypePercentTageQuery,
+  useCalculateMonthBounceSessionQuery,
+  useCalculateMonthNewUserSessionQuery,
+  useGenerateBrowserQuery,
+  useCalculateSumMetricsQuery,
+  useCalculateSumUserQuery,
+} = analyticApi;

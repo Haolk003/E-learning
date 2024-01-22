@@ -609,8 +609,35 @@ const calculateBounceRateAndSessions = async () => {
       },
     },
   ]);
-  return pipeline;
+  const intervals = [];
+  for (let i = 12; i >= 1; i--) {
+    const month = dayjs().subtract(i, "month").get("month");
+    const year = dayjs().subtract(i, "month").get("year");
+    intervals.push({
+      _id: { month: month, year: year },
+      totalSessions: 0,
+      totalBounces: 0,
+    });
+  }
+  const newData = intervals.map((item) => {
+    const newData = pipeline.find(
+      (item2) =>
+        item._id.month == item2._id.month - 1 && item._id.year == item2._id.year
+    );
+
+    if (newData) {
+      return {
+        ...item,
+        totalBounces: newData.totalBounces,
+        totalSessions: newData.totalSessions,
+      };
+    } else {
+      return item;
+    }
+  });
+  return newData;
 };
+
 const calculateMonthNewUserSessionDuration = async () => {
   const endDate = new Date(new Date().getFullYear(), new Date().getMonth(), 0);
   const startDate = new Date(new Date().setFullYear(endDate.getFullYear() - 1));
@@ -636,6 +663,7 @@ const calculateMonthNewUserSessionDuration = async () => {
       },
     },
   ]);
+
   const newUserSessions = await courseInteractModel.aggregate([
     {
       $match: { userId: { $in: newUserIsArray } },
@@ -663,6 +691,7 @@ const calculateMonthNewUserSessionDuration = async () => {
       },
     },
   ]);
+
   return { newUserSessions, newUserPerMonth };
 };
 

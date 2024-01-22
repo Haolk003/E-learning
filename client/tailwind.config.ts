@@ -42,6 +42,8 @@ const config: Config = {
         ...red,
         ...ruby,
         ...cyan,
+        dark: "#121212",
+        lightblue: "#1DA1F2",
       },
       keyframes: {
         overlayShow: {
@@ -105,6 +107,7 @@ const config: Config = {
       fontFamily: {
         Poppins: ["var(--font-Poppins)"],
         Josefind: ["var(--font-Josefin)"],
+        sans: ["Inter var", "sans-serif"],
       },
     },
   },
