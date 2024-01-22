@@ -6,6 +6,7 @@ import {
   calculateBounceRateAndSessions,
   calculateDevideTypePercentage,
   calculateMonthNewUserSessionDuration,
+  generateBrowser,
 } from "../controllers/analytics.controller";
 import express, { Router } from "express";
 
@@ -33,4 +34,6 @@ router.get(
   "/analytics/calculate-month-newUser-session",
   calculateMonthNewUserSessionDuration
 );
+
+router.get("/analytics/generate-browser", generateBrowser);
 export default router;

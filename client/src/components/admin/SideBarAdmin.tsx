@@ -326,62 +326,18 @@ const SideBarAdmin = () => {
             </MenuItem>
           </SubMenu>
 
-          <SubMenu
-            icon={<TbDeviceDesktopAnalytics className="" />}
-            defaultOpen={false}
-            rootStyles={{
-              ["& > ." + menuClasses.button]: {
-                backgroundColor: "transparent",
-                color: "#000",
-                "&:hover": {
-                  color: "#000000",
-                  background: "#333",
-                },
-              },
-              ["." + menuClasses.subMenuContent]: {
-                backgroundColor: "transparent",
-              },
-            }}
-            label="Analytics"
-            className="!bg-transparent hover:!bg-transparent"
+          <MenuItem
+            active={pathName === "/admin/analytics"}
+            component={<Link href="/admin/analytics" />}
+            className={`${theme === "dark" && "menu-dark"} hover:text-black`}
           >
-            <MenuItem
-              active={pathName === "/admin/analytics/course"}
-              component={<Link href="/admin/analytics/course" />}
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-            >
-              <div className="flex items-center ">
-                <div className="w-[50px]">
-                  <IoAnalyticsSharp />
-                </div>
-                <div>Courses Analytics</div>
+            <div className="flex items-center">
+              <div className="w-[50px]">
+                <IoAnalyticsSharp />
               </div>
-            </MenuItem>
-            <MenuItem
-              active={pathName === "/admin/analytics/order"}
-              component={<Link href="/admin/analytics/order" />}
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <BiAnalyse />
-                </div>
-                <div>Orders Analytics</div>
-              </div>
-            </MenuItem>
-            <MenuItem
-              active={pathName === "/admin/analytics/user"}
-              component={<Link href="/admin/analytics/user" />}
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <FaUsersRays />
-                </div>
-                <div>Users Analytics</div>
-              </div>
-            </MenuItem>
-          </SubMenu>
+              <div>Analytics</div>
+            </div>
+          </MenuItem>
           <MenuItem
             active={pathName === "/admin/setting"}
             component={<Link href="/admin/setting" />}

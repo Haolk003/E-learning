@@ -2,8 +2,12 @@ import userModel from "../models/user.model";
 import courseModel from "../models/course.model";
 import orderModel from "../models/order.model";
 import courseInteractModel from "../models/courseInteract.model";
+import dayjs from "dayjs";
 
 import ErrorHandle from "../utils/errorHandle";
+
+import fillMissingIntervals from "../utils/fillMissingInterval";
+import createExpectedIntervals from "../utils/createdExpectdInterval";
 
 // Function to calculate general count analytics
 const generalCountAnalytics = async () => {
@@ -69,7 +73,7 @@ const generalCountAnalytics = async () => {
       item._id.monthInteral.month === startOfMonth.getMonth() + 1 &&
       item._id.monthInteral.year === startOfMonth.getFullYear()
   );
-  console.log(generateTotalEarningLastMonth);
+
   // Calculate total number of students for the month
   const totalStudent = orderGenerateMonth.reduce((total, item) => {
     return total + item.totalStudent;
@@ -208,9 +212,9 @@ const getStartDate = (period: string) => {
 // Function to generate earnings report based on the give
 async function generateEarningsReport(period: string) {
   let earningTotal;
-  if (period === "7D") {
+  if (period === "D") {
     const startDate = new Date();
-    startDate.setDate(startDate.getDate() - 7);
+    startDate.setDate(startDate.getDate() - 10);
 
     const query = {
       createdAt: {
@@ -218,7 +222,7 @@ async function generateEarningsReport(period: string) {
         $lt: new Date(),
       },
     };
-    const earningTotal = await orderModel.aggregate([
+    earningTotal = await orderModel.aggregate([
       {
         $match: query,
       },
@@ -233,17 +237,24 @@ async function generateEarningsReport(period: string) {
       {
         $group: {
           _id: {
-            monthInterval: "$dayOfYear",
+            day: "$dayOfYear",
+            month: "$month",
             year: "$year",
           },
           totalAmount: { $sum: "$amount" },
           count: { $sum: 1 },
         },
       },
-      { $sort: { "_id.year": 1, "_id.monthInterval": 1 } },
     ]);
-  }
-  if (period === "1M") {
+
+    const expectedIntervals = createExpectedIntervals("D");
+    const filledResults = fillMissingIntervals(
+      "D",
+      earningTotal,
+      expectedIntervals
+    );
+    earningTotal = filledResults;
+  } else if (period === "1M") {
     const query = {
       createdAt: {
         $gte: getStartDate("1M"),
@@ -265,28 +276,31 @@ async function generateEarningsReport(period: string) {
       },
       {
         $group: {
-          _id: {
-            monthInterval: "$monthInteral",
-          },
+          _id: "$monthInteral",
           totalAmount: { $sum: "$amount" },
           count: { $sum: 1 },
         },
       },
-      { $sort: { "_id.monthInteral.year": 1, "_id.monthInterval.month": 1 } },
     ]);
-    earningTotal.sort((a, b) => {
-      // Sắp xếp giảm dần theo năm
-      if (a._id.monthInterval.year > b._id.monthInterval.year) return -1;
-      if (a._id.monthInterval.year < b._id.monthInterval.year) return 1;
 
-      // Nếu cùng năm, sắp xếp tăng dần theo tháng
-      if (a._id.monthInterval.month < b._id.monthInterval.month) return 1;
-      if (a._id.monthInterval.month > b._id.monthInterval.month) return -1;
+    const expectedIntervals = createExpectedIntervals("1M");
 
-      return 0;
-    });
+    const filledResults = fillMissingIntervals(
+      "1M",
+      earningTotal,
+      expectedIntervals
+    );
+    earningTotal = filledResults;
   } else if (period === "6M") {
-    const query = { createdAt: { $gte: getStartDate("6M") } };
+    const query = {
+      createdAt: {
+        $gte: getStartDate("6M"),
+        $lt:
+          new Date().getMonth() <= 5
+            ? new Date(new Date().getFullYear(), 0, 1)
+            : new Date(),
+      },
+    };
 
     earningTotal = await orderModel.aggregate([
       { $match: query },
@@ -317,6 +331,14 @@ async function generateEarningsReport(period: string) {
       },
       { $sort: { "_id.year": 1, "_id.sixMonthInterval": 1 } },
     ]);
+
+    const expectedIntervals = createExpectedIntervals("6M");
+    const filledResults = fillMissingIntervals(
+      "6M",
+      earningTotal,
+      expectedIntervals
+    );
+    earningTotal = filledResults;
   } else {
     const query = { createdAt: { $gte: getStartDate("1Y") } };
 
@@ -340,6 +362,14 @@ async function generateEarningsReport(period: string) {
       },
       { $sort: { "_id.year": 1 } },
     ]);
+
+    const expectedIntervals = createExpectedIntervals("1Y");
+    const filledResults = fillMissingIntervals(
+      "1Y",
+      earningTotal,
+      expectedIntervals
+    );
+    earningTotal = filledResults;
   }
   return earningTotal;
 }
@@ -419,7 +449,7 @@ const calculateMetricsSum = async () => {
       },
     ]),
   ]);
-  console.log(currentMonthData, lastMonthData);
+
   const currentMonthTotalVisits = currentMonthData[0]
     ? currentMonthData[0].totalVisits
     : 0;
@@ -496,7 +526,6 @@ const calculateUserSum = async () => {
     },
   ]);
 
-  console.log(currentMonthData, lastMonthData);
   const currentMonthTotalUser = currentMonthData[0]
     ? currentMonthData[0].total
     : 0;
@@ -754,6 +783,7 @@ const genarateBrowser = async () => {
   ]);
   return trafficData;
 };
+
 const analyticsService = {
   generalCountAnalytics,
   generateEarningsReport,
@@ -762,6 +792,7 @@ const analyticsService = {
   calculateBounceRateAndSessions,
   calculateDevideTypePercentage,
   calculateMonthNewUserSessionDuration,
+  genarateBrowser,
 };
 
 export default analyticsService;

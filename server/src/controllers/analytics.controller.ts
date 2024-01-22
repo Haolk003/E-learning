@@ -53,3 +53,10 @@ export const calculateMonthNewUserSessionDuration = CatchAsyncError(
     res.status(200).json({ success: true, data: analytics });
   }
 );
+
+export const generateBrowser = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const analytics = await analyticsService.genarateBrowser();
+    res.status(200).json({ success: true, data: analytics });
+  }
+);
