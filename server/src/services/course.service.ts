@@ -11,6 +11,7 @@ import {
   deleteImage,
   deleteVideo,
 } from "../utils/cloudinary";
+import userModel from "../models/user.model";
 
 type CreateCourseType = {
   title: string;

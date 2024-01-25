@@ -142,6 +142,13 @@ const convertUserToIntructor = async (userId: string) => {
 
   return updateUser;
 };
+
+const becomeIntructor = async (userId: string) => {
+  const updateUser = await userModel.findByIdAndUpdate(userId, {
+    role: "instructor",
+  });
+  return updateUser;
+};
 const userService = {
   updateProfileUser,
   getAllUser,
@@ -152,6 +159,7 @@ const userService = {
   getUserById,
   updatePassword,
   convertUserToIntructor,
+  becomeIntructor,
 };
 
 export default userService;

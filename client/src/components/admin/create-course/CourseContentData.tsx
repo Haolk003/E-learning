@@ -28,6 +28,7 @@ const socketId = socketIO(`${ENDPOINT}`, { transports: ["websocket"] });
 type Props = {
   id: string;
 };
+
 const CourseContentData: FC<Props> = ({ id }) => {
   const {
     data: courseData,
@@ -44,7 +45,8 @@ const CourseContentData: FC<Props> = ({ id }) => {
     control,
     formState: { errors, submitCount },
     reset,
-  } = useForm<CourseContentDataTypeForm>({
+    watch,
+  } = useForm<{ test: CourseContentDataTypeForm[] }>({
     defaultValues: {
       test: [
         {
@@ -79,6 +81,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
     checkLoadingById,
     setLoadingUploadVideo,
   } = useLoadingUploadVideo(fields);
+
   const {
     addPercentLectures,
     addPercentLink,
@@ -94,6 +97,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
     Array(fields.length).fill(false)
   );
   const [typeButton, setTypeButton] = useState("next");
+  // const [contentData,setContentData]=useState<CourseContentDataTypeForm[]>([])
   const [cancleFileId, setCancleFileId] = useState<string[]>([]);
   //toggle collapse section
   const toggleCollased = (index: number) => {
@@ -102,7 +106,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
     updateCollased[index] = !updateCollased[index];
     setIsCollapsed(updateCollased);
   };
-  const onSubmit = async (data: CourseContentDataTypeForm) => {
+  const onSubmit = async (data: { test: CourseContentDataTypeForm[] }) => {
     if (data) {
       const fomatData = data.test.map((item, _index) => {
         return {
@@ -132,12 +136,14 @@ const CourseContentData: FC<Props> = ({ id }) => {
   };
   // new link in section index
   const handleAddLink = (sectionIndex: number) => {
-    const links = fields[sectionIndex].lectures;
+    const values = watch();
+    const links = values.test[sectionIndex].lectures;
+
     addLoadingLink(sectionIndex);
     addPercentLink(sectionIndex);
 
     update(sectionIndex, {
-      ...fields[sectionIndex],
+      ...values.test[sectionIndex],
       lectures: [
         ...links,
         { title: "", videoUrl: { public_id: "", url: "" }, duration: 0 },
@@ -148,8 +154,8 @@ const CourseContentData: FC<Props> = ({ id }) => {
   const handleRemoveLink = (sectionIndex: number, linkIndex: number) => {
     removeLoadingLink(sectionIndex, linkIndex);
     removePercentLink(sectionIndex, linkIndex);
-
-    const newSection = { ...fields[sectionIndex] };
+    const values = watch();
+    const newSection = { ...values.test[sectionIndex] };
     newSection.lectures.splice(linkIndex, 1);
     update(sectionIndex, { ...newSection });
   };
@@ -280,6 +286,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
       });
     }
   }, [courseData]);
+
   return (
     <div className="dark:text-white text-black">
       <Form.Root onSubmit={handleSubmit(onSubmit)}>

@@ -3,8 +3,6 @@ function fillMissingIntervals(
   data: any[],
   expectedIntervals: any[]
 ) {
-  console.log(data);
-  const dataMap = new Map();
   if (period === "6M") {
     // Check each expected interval
     const newData = expectedIntervals.map((item) => {
@@ -17,7 +15,7 @@ function fillMissingIntervals(
       if (newData) {
         return newData;
       } else {
-        return item;
+        return { ...item, totalAmount: 0, count: 0 };
       }
     });
     return newData;
@@ -38,7 +36,7 @@ function fillMissingIntervals(
           count: newData.count,
         };
       } else {
-        return item;
+        return { ...item, totalAmount: 0, count: 0 };
       }
     });
     return newData;
@@ -49,7 +47,7 @@ function fillMissingIntervals(
       if (newData) {
         return newData;
       } else {
-        return item;
+        return { ...item, totalAmount: 0, count: 0 };
       }
     });
     return newData;
@@ -60,7 +58,7 @@ function fillMissingIntervals(
       if (newData) {
         return newData;
       } else {
-        return item;
+        return { ...item, totalAmount: 0, count: 0 };
       }
     });
     return newData;

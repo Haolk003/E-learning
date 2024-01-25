@@ -7,6 +7,7 @@ import ProfilePhoto from "@/components/profile/ProfilePhoto";
 import ChangePassword from "@/components/profile/ChangePassword";
 export default function page() {
   const [active, setActive] = useState(1);
+
   return (
     <>
       <LoggedInOnly>

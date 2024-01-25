@@ -100,3 +100,15 @@ export const convertUserToIntructor = CatchAsyncError(
       .json({ success: true, message: "You are now an instructor" });
   }
 );
+
+export const becomeIntructor = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.me._id;
+    const response = await userService.becomeIntructor(userId);
+    res.status(200).json({
+      status: 200,
+      data: response,
+      message: "You became a instructor",
+    });
+  }
+);

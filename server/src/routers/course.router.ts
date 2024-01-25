@@ -50,9 +50,9 @@ router.post(
   uploadImageCourse
 );
 router.get(
-  "/get-course-admin/:id",
+  "/get-course-intructor/:id",
   protect,
-  authorizeRoles("admin"),
+
   findCourseById
 );
 
@@ -85,11 +85,12 @@ router.delete(
 router.get(
   "/get-intructor-courses",
   protect,
-  authorizeRoles("admin"),
+
   getMyCourseIntructor
 );
 
 router.get("/get-purchased-course/:id", protect, pucharserCourse);
 
 router.get("/get-course-public/:id", getCoursePublic);
+
 export default router;

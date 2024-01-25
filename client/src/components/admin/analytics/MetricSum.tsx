@@ -29,7 +29,9 @@ const MetricSum = () => {
         <div className="">
           <div className="grid grid-cols-3 gap-4">
             <div className="card !bg-blackA5 relative">
-              <div className="text-md  text-xl mb-2">Total Users</div>
+              <div className="text-md  text-[15px] font-semibold mb-2">
+                Total Users
+              </div>
               <div className="text-2xl font-bold mb-3">
                 {useFormatLargeNumbers(userData.data.totalUser[0].total)}
               </div>
@@ -56,7 +58,9 @@ const MetricSum = () => {
             </div>
 
             <div className="card !bg-blackA5 relative">
-              <div className="text-md  text-xl mb-2">Live Visitor</div>
+              <div className="text-md  text-[15px] font-semibold mb-2">
+                Live Visitor
+              </div>
               <div className="text-2xl font-bold mb-3">
                 {useFormatLargeNumbers(data.data.currentMonthTotalVisits)}
               </div>
@@ -83,7 +87,9 @@ const MetricSum = () => {
             </div>
 
             <div className="card !bg-blackA5 relative">
-              <div className="text-md  text-xl mb-2">Bounce Rate</div>
+              <div className="text-md  text-[15px] font-semibold mb-2">
+                Bounce Rate
+              </div>
               <div className="text-2xl font-bold mb-3">
                 {data.data.currentMonthBounceRate}%
               </div>

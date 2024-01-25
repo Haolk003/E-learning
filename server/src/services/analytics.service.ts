@@ -688,11 +688,53 @@ const calculateMonthNewUserSessionDuration = async () => {
         averageSessionDuration: {
           $divide: ["$totalDuration", "$sessionCount"],
         },
+        sessionCount: "$sessionCount",
       },
     },
   ]);
+  const expectedIntervals = createExpectedIntervals("1M");
+  console.log(newUserSessions);
+  const newDataUserSession = expectedIntervals.map((interval) => {
+    const newData = newUserSessions.find(
+      (item2) =>
+        interval._id.month == item2._id.month - 1 &&
+        interval._id.year == item2._id.year
+    );
 
-  return { newUserSessions, newUserPerMonth };
+    if (newData) {
+      return {
+        ...interval,
+        totalDuration: newData.totalDuration,
+        sessionCount: newData.sessionCount,
+        averageSessionDuration: newData.averageSessionDuration,
+      };
+    } else {
+      return {
+        ...interval,
+        sessionCount: 0,
+        averageSessionDuration: 0,
+      };
+    }
+  });
+
+  const newDataUserPerMonth = expectedIntervals.map((interval) => {
+    const newData = newUserPerMonth.find(
+      (item2) =>
+        interval._id.month == item2._id.month - 1 &&
+        interval._id.year == item2._id.year
+    );
+
+    if (newData) {
+      return {
+        ...interval,
+        total: newData.total,
+      };
+    } else {
+      return { ...interval, total: 0 };
+    }
+  });
+
+  return { newDataUserPerMonth, newDataUserSession };
 };
 
 const getCurrentMonthStart = () => {

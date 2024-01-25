@@ -9,6 +9,7 @@
 @import "@radix-ui/colors/red.css";
 @import "@radix-ui/colors/ruby.css";
 @import "@radix-ui/colors/cyan.css";
+@import "@radix-ui/colors/green.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -36,7 +37,7 @@
     @apply uppercase text-cyan-300 relative text-center text-[13px] before:content-[''] before:absolute before:right-0  before:-top-0 before:to-cyan-300/50 before:bg-gradient-to-l before:from-cyan-300/10  before:w-[50px] before:h-[3px] before:rounded-2xl tracking-wide;
   }
   .headingAdmin {
-    @apply relative before:content-[""] before:absolute before:-left-2 before:top-[50%] before:-translate-y-1/2 before:h-[1rem] before:w-[0.2rem] before:bg-gradient-to-b before:from-[rgba(132,90,223,0.5)] before:to-[rgba(35,183,229,0.5)] before:rounded-[0.5rem];
+    @apply relative before:content-[""] before:absolute before:-left-3 ml-2 before:top-[50%] before:-translate-y-1/2 before:h-[1rem] before:w-[0.2rem] before:bg-gradient-to-b before:from-[rgba(132,90,223,0.5)] before:to-[rgba(35,183,229,0.5)] before:rounded-[0.5rem];
   }
   .input-auth {
     @apply w-full border dark:border-white dark:text-white text-black border-black rounded-md;

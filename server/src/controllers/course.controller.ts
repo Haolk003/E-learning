@@ -170,12 +170,10 @@ export const pucharserCourse = CatchAsyncError(
     const { id } = req.params;
     const userId = req.me._id;
     const course = await courseService.getCoursePurhaser(id, userId);
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: course,
-        message: "Get Course Successfully",
-      });
+    res.status(200).json({
+      success: true,
+      data: course,
+      message: "Get Course Successfully",
+    });
   }
 );

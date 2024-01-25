@@ -12,6 +12,7 @@ const {
   ruby,
   red,
   cyan,
+  green,
 } = require("@radix-ui/colors");
 const config: Config = {
   content: [
@@ -42,6 +43,7 @@ const config: Config = {
         ...red,
         ...ruby,
         ...cyan,
+        green,
         dark: "#121212",
         lightblue: "#1DA1F2",
       },

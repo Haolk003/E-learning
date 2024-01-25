@@ -1,3 +1,4 @@
+import { becomeIntructor } from "../../../../server/src/controllers/user.controller";
 import apiSlice from "../api/apiSlice";
 import { updateProfile } from "../auth/authSlice";
 const userApi = apiSlice.injectEndpoints({
@@ -44,6 +45,13 @@ const userApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    becomeInstructor: build.mutation({
+      query: () => ({
+        url: "become-instructor",
+        method: "PUT",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -51,4 +59,5 @@ export const {
   useUpdateProfileMutation,
   useUpdateAvatarMutation,
   useUpdatePasswordMutation,
+  useBecomeInstructorMutation,
 } = userApi;

@@ -74,7 +74,6 @@ const SideBarAdmin = () => {
           width: isCollapse ? "0%" : "18%",
         }}
       >
-        {" "}
         <div className="flex items-center gap-4 justify-center mb-4 py-3">
           {!isCollapse && (
             <Link href="/" className="text-2xl tracking-wider cursor-pointer ">

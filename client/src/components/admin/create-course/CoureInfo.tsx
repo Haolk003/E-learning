@@ -22,6 +22,7 @@ import {
   useCreateCourseStep1Mutation,
   useUploadImageCourseMutation,
 } from "@/features/course/courseApi";
+import { useGetAllCategoryQuery } from "@/features/category/categoryApi";
 import { useUploadVideoMutation } from "@/features/course/courseApi";
 import socketIO from "socket.io-client";
 import ProgressDemo from "@/components/ui/Progress";
@@ -31,6 +32,9 @@ import { useGetCourseAdminQuery } from "@/features/course/courseApi";
 import { FaPhotoVideo } from "react-icons/fa";
 import CoursePlayer from "@/components/ui/CoursePlayer";
 import { CourseType } from "@/types/couresContentType";
+
+import SelectCategory from "@/components/ui/select/SelectIntructor";
+
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "";
 const socketId = socketIO(`${ENDPOINT}`, { transports: ["websocket"] });
 
@@ -52,6 +56,10 @@ type Props = {
 };
 
 const CoureInfo: FC<Props> = ({ id }) => {
+  const { data: categories, isLoading: categoriesLoading } =
+    useGetAllCategoryQuery("");
+
+  console.log(categories);
   const router = useRouter();
   const {
     error: errorGetCourse,
@@ -65,6 +73,7 @@ const CoureInfo: FC<Props> = ({ id }) => {
     useUploadVideoMutation();
   const [loadingUploadVideo, setLoadingUploadVideo] = useState(false);
   const [percentUpload, setPercentUpload] = useState(0);
+  const [category, setCategory] = useState("");
   const [videoResult, setVideoResult] = useState<{
     public_id: string;
     url: string;
@@ -148,6 +157,11 @@ const CoureInfo: FC<Props> = ({ id }) => {
         },
       });
     }
+  };
+
+  const handleChangeCategory = (value: string) => {
+    setValue("category", value);
+    setCategory(value);
   };
 
   useEffect(() => {
@@ -288,12 +302,13 @@ const CoureInfo: FC<Props> = ({ id }) => {
           <Form.Field name="category" className="w-[45%] flex flex-col gap-2">
             <Form.Label>Course Category</Form.Label>
             <Form.Control asChild>
-              <input
-                type="text"
-                placeholder="Programing..."
-                className="bg-transparent border dark:border-white border-black rounded-sm py-1 px-3"
-                {...register("category")}
-              />
+              {categories && (
+                <SelectCategory
+                  data={categories.data}
+                  value={category}
+                  handleChange={handleChangeCategory}
+                />
+              )}
             </Form.Control>
             <span className="text-red-500 text-[13px]">
               {errors.category?.message}

@@ -33,12 +33,12 @@ type Props = {
     id: string;
   }[][];
   isCollased: boolean[];
-  errors: FieldErrors<CourseContentDataTypeForm>;
+  errors: FieldErrors<{ test: CourseContentDataTypeForm[] }>;
   percentUploadVideo: {
     percent: number;
     id: string;
   }[][];
-  register: UseFormRegister<CourseContentDataTypeForm>;
+  register: UseFormRegister<{ test: CourseContentDataTypeForm[] }>;
   toggleCollased: (index: number) => void;
   handelRemoveSection: (index: number) => void;
   handleRemoveLink: (sectionIndex: number, linkIndex: number) => void;

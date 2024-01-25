@@ -77,7 +77,7 @@ const SessionBounceRateChart = () => {
       );
       const fomatDataSession = data.data.map((item: any) => item.totalSessions);
       const fomatDataBounces = data.data.map((item: any) => item.totalBounces);
-
+      setLabelChart(fomatLabel);
       setDataChart([
         {
           name: "Session",
@@ -95,7 +95,9 @@ const SessionBounceRateChart = () => {
   return (
     <div className="bg-blackA4 rounded-md w-full mt-4 ">
       <div className=" py-5 px-4 border-b border-gray8">
-        <h2 className="headingAdmin">Top Countries Sessions Vs Bounce Rate</h2>
+        <h2 className="headingAdmin !text-[15px]">
+          Top Countries Sessions Vs Bounce Rate
+        </h2>
       </div>
       <div className="text-black">
         <Chart options={options} series={dataChart} type="line" />

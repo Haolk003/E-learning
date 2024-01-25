@@ -14,14 +14,10 @@ function createExpectedIntervals(period: string) {
     ) {
       intervals.push({
         _id: { sixMonthInterval: "Jan-Jun", year: year },
-        totalAmount: 0,
-        count: 0,
       });
       if (year !== dayjs().get("year")) {
         intervals.push({
           _id: { sixMonthInterval: "Jul-Dec", year: year },
-          totalAmount: 0,
-          count: 0,
         });
       }
     }
@@ -31,8 +27,6 @@ function createExpectedIntervals(period: string) {
       const year = dayjs().subtract(i, "month").get("year");
       intervals.push({
         _id: { month: month, year: year },
-        totalAmount: 0,
-        count: 0,
       });
     }
   } else if (period === "1Y") {
@@ -41,7 +35,7 @@ function createExpectedIntervals(period: string) {
       year <= dayjs().subtract(1, "year").get("year");
       year++
     ) {
-      intervals.push({ _id: { year: year }, totalAmount: 0, count: 0 });
+      intervals.push({ _id: { year: year } });
     }
   } else if (period === "D") {
     for (let i = 10; i >= 1; i--) {
@@ -50,8 +44,6 @@ function createExpectedIntervals(period: string) {
       const year = dayjs().subtract(i, "day").get("year");
       intervals.push({
         _id: { day: day, month: month, year: year },
-        totalAmount: 0,
-        count: 0,
       });
     }
   }

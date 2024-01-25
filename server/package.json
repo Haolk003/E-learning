@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@radix-ui/react-select": "^2.0.0",
     "@types/bcryptjs": "^2.4.5",
     "@types/cookie-parser": "^1.4.5",
     "@types/cors": "^2.8.15",

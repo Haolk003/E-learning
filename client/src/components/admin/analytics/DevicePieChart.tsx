@@ -64,7 +64,7 @@ const DevicePieChart = () => {
       {data && (
         <div className="bg-blackA4 rounded-md w-full">
           <div className=" py-5 px-4 border-b border-gray8">
-            <h2 className="headingAdmin">Session by Device</h2>
+            <h2 className="headingAdmin !text-[15px]">Session by Device</h2>
           </div>
           <div className="text-black bg-gray1 p-4 rounded-md">
             <Chart options={options} type="donut" series={options.series} />

@@ -49,13 +49,11 @@ export type CourseContentType = {
 };
 
 export interface CourseContentDataTypeForm {
-  test: {
-    videoSection: string;
-    description: string;
-    lectures: {
-      title: string;
-      videoUrl: { public_id: string; url: string };
-      duration: number;
-    }[];
+  videoSection: string;
+  description: string;
+  lectures: {
+    title: string;
+    videoUrl: { public_id: string; url: string };
+    duration: number;
   }[];
 }

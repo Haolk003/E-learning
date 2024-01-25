@@ -3,6 +3,8 @@ import MetricSum from "./MetricSum";
 import DevicePieChart from "./DevicePieChart";
 import SessionBounceRateChart from "./SessionBounceRateChart";
 import SessionNewUser from "./SessionNewUser";
+import TrafficSources from "./TrafficSource";
+import CountrySessions from "./CountriesSession";
 
 const AnalyticLayout = () => {
   return (
@@ -18,6 +20,8 @@ const AnalyticLayout = () => {
         </div>
         <div className="w-[35%]">
           <DevicePieChart />
+          <TrafficSources />
+          <CountrySessions />
         </div>
       </div>
     </div>
