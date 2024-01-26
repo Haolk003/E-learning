@@ -51,9 +51,9 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
-    getCourseAdmin: build.query({
+    getCourseInstructor: build.query({
       query: (id: string) => ({
-        url: `get-course-admin/${id}`,
+        url: `get-course-instructor/${id}`,
         method: "GET",
         credentials: "include" as const,
       }),
@@ -133,7 +133,7 @@ export const {
   useUploadImageCourseMutation,
   useUploadVideoMutation,
   useDeleteFileCloudinaryMutation,
-  useGetCourseAdminQuery,
+  useGetCourseInstructorQuery,
   usePublicCourseByIdMutation,
   useGetAllCourseQuery,
   useDeleteCourseAdminMutation,

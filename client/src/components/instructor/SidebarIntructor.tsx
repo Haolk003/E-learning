@@ -18,6 +18,7 @@ import {
   sidebarClasses,
 } from "react-pro-sidebar";
 import { MdLiveTv, MdOutlineChat } from "react-icons/md";
+import Link from "next/link";
 
 const SideBarAdmin = () => {
   const { theme } = useTheme();
@@ -53,6 +54,7 @@ const SideBarAdmin = () => {
 
       <Menu className="">
         <MenuItem
+          component={<Link href="/instructor/courses" />}
           rootStyles={{
             ["& > ." + menuClasses.button]: {
               backgroundColor: "transparent",

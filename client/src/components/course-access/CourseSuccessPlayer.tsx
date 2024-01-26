@@ -24,6 +24,8 @@ import PlayerControls from "./PlayerControl";
 import SlideVideo from "../ui/slide/SlideVideo";
 
 import { CourseContentType } from "@/types/couresContentType";
+import { NoteCourseType } from "@/types/noteCouresType";
+
 type Props = {
   lectureId: string;
   courseId: string;
@@ -31,6 +33,7 @@ type Props = {
   lectureData: CourseContentType[];
   played: number;
   setPlayed: Dispatch<SetStateAction<number>>;
+  notes: NoteCourseType[];
 };
 const CustomVideoPlayer: React.FC<Props> = ({
   lectureId,
@@ -39,6 +42,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
   lectureData,
   played,
   setPlayed,
+  notes,
 }) => {
   const router = useRouter();
 
@@ -67,6 +71,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
     useState<HTMLElement | null>(null);
   const [startTime, setStartTime] = useState(0);
   const [videoUrl, setVideoUrl] = useState("");
+  const [pointSaved, setPointSaved] = useState<number[]>([]);
 
   const { handleProgress, loaded } = useVideoProgress({
     courseId,
@@ -281,9 +286,9 @@ const CustomVideoPlayer: React.FC<Props> = ({
   // Loading and error handling effects
   useEffect(() => {
     setLoading(true);
-    const checkProgress = progressVideo.progress.find(
-      (item) => item.lectureId === lectureId
-    );
+    const checkProgress =
+      progressVideo &&
+      progressVideo.progress.find((item) => item.lectureId === lectureId);
 
     if (checkProgress) {
       playerRef.current?.seekTo(checkProgress.lengthWatched);
@@ -371,6 +376,20 @@ const CustomVideoPlayer: React.FC<Props> = ({
     };
   }, []);
 
+  useEffect(() => {
+    if (notes && duration > 0) {
+      const fomatterSaved = notes.reduce((list: number[], note) => {
+        if (note.lectureId === lectureId) {
+          return [...list, (note.timing / duration) * 100];
+        } else {
+          return list;
+        }
+      }, []);
+
+      setPointSaved(fomatterSaved);
+    }
+  }, [notes, duration]);
+
   return (
     <div ref={containerRef} className="bg-blackA6 min-w-[70%] h-auto relative">
       <div
@@ -450,6 +469,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
             handleMouseDown={handleSeekMouseDown}
             handleMouseUp={handleSeekMouseUp}
             value={played / duration}
+            pointSaved={pointSaved}
           />
 
           <PlayerControls

@@ -111,9 +111,11 @@ const CoureAccessLectureList: FC<Props> = ({
                         },
                         1
                       );
-                      const checkProgress = progressData.progress.find(
-                        (data, index2) => data.lectureId === lecture._id
-                      );
+                      const checkProgress =
+                        progressData &&
+                        progressData.progress.find(
+                          (data, index2) => data.lectureId === lecture._id
+                        );
                       return (
                         <li
                           className={`flex gap-3  py-3 px-4 ${
@@ -128,7 +130,7 @@ const CoureAccessLectureList: FC<Props> = ({
                             defaultChecked={
                               checkProgress ? checkProgress.isCompleted : false
                             }
-                            className="shadow-blackA4 hover:bg-violet3 flex h-[20px] w-[20px] appearance-none items-center justify-center rounded-[4px] bg-white shadow-[0_2px_10px] outline-none focus:shadow-[0_0_0_2px_black]"
+                            className="shadow-blackA4 hover:bg-violet3 flex h-5 w-10 appearance-none items-center justify-center rounded-4 bg-white shadow-0_2px_10px outline-none focus:shadow-0_0_0_2px_black"
                           >
                             <Checkbox.Indicator className="text-violet11">
                               <IoMdCheckmark />

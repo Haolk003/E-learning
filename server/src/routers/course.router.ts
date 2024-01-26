@@ -23,21 +23,21 @@ const router = express.Router();
 router.post(
   "/create-course-step1/:id",
   protect,
-  authorizeRoles("admin"),
+  authorizeRoles("instructor"),
   createEditCourseStep1
 );
 router;
 router.put(
   "/create-edit-course-step2/:id",
   protect,
-  authorizeRoles("admin"),
+  authorizeRoles("instructor"),
   createEditCourseStep2
 );
 
 router.put(
   "/create-edit-course-step3/:id",
   protect,
-  authorizeRoles("admin"),
+  authorizeRoles("instructor"),
   createEditCourseStep3
 );
 
@@ -50,9 +50,9 @@ router.post(
   uploadImageCourse
 );
 router.get(
-  "/get-course-intructor/:id",
+  "/get-course-instructor/:id",
   protect,
-
+  authorizeRoles("instructor"),
   findCourseById
 );
 
@@ -69,7 +69,7 @@ router.put("/deleteFile", protect, deleteImageOrVideo);
 router.put(
   "/public-course/:id",
   protect,
-  authorizeRoles("admin"),
+  authorizeRoles("instructor"),
   publicCourse
 );
 
@@ -82,12 +82,7 @@ router.delete(
   deleteCourseById
 );
 
-router.get(
-  "/get-intructor-courses",
-  protect,
-
-  getMyCourseIntructor
-);
+router.get("/get-intructor-courses", protect, getMyCourseIntructor);
 
 router.get("/get-purchased-course/:id", protect, pucharserCourse);
 

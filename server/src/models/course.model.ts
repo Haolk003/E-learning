@@ -35,6 +35,7 @@ export interface ICourse extends Document {
   status: string;
   prerequisites: { title: string }[];
   benefits: { title: string }[];
+  progress: number;
 }
 
 export interface ICourseData {
@@ -126,6 +127,7 @@ const courseSchema: Schema<ICourse> = new mongoose.Schema(
     status: { type: String, enum: ["draft", "public"], default: "draft" },
     prerequisites: [{ title: String }],
     benefits: [{ title: String }],
+    progress: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

@@ -24,12 +24,16 @@ type Props = {
   courseId: string;
   lectureId: string;
   courseData: CourseType;
+  notes: NoteCourseType[];
+  refetch: () => void;
 };
 const CourseAccessNote: React.FC<Props> = ({
   played,
   courseId,
   lectureId,
   courseData,
+  notes,
+  refetch,
 }) => {
   const editor = useEditor({
     extensions: [StarterKit],
@@ -37,7 +41,7 @@ const CourseAccessNote: React.FC<Props> = ({
   const editorEdit = useEditor({
     extensions: [StarterKit],
   });
-  const { data, refetch } = useGetNoteCourseQuery(courseId);
+
   const [createNoteCoures, { isLoading, error, isSuccess }] =
     useCreateNoteCourseMutation();
   const [
@@ -63,7 +67,7 @@ const CourseAccessNote: React.FC<Props> = ({
     }
   };
   const handleOpenEditNote = (index: number, content: string) => {
-    const newIsOPenEditNote = Array(data.data.length).fill(false);
+    const newIsOPenEditNote = Array(notes.length).fill(false);
     newIsOPenEditNote[index] = true;
     setIsOpenEditNote(newIsOPenEditNote);
     editorEdit?.commands.setContent(content);
@@ -82,10 +86,10 @@ const CourseAccessNote: React.FC<Props> = ({
     await deleteNoteCourse(id);
   };
   useEffect(() => {
-    if (data) {
-      setIsOpenEditNote(Array(data.data.length).fill(false));
+    if (notes) {
+      setIsOpenEditNote(Array(notes.length).fill(false));
     }
-  }, [data]);
+  }, [notes]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -157,8 +161,8 @@ const CourseAccessNote: React.FC<Props> = ({
         </div>
       )}
       <div className="">
-        {data &&
-          data.data.map((item: NoteCourseType, index: number) => {
+        {notes &&
+          notes.map((item: NoteCourseType, index: number) => {
             let lectureTitle = "";
             let sectionTitle = "";
             let lectureIndex = 0;

@@ -7,6 +7,12 @@ import {
   useGetpurchaserCourseQuery,
   useGetProgressLectureQuery,
 } from "@/features/course/courseApi";
+import {
+  useGetNoteCourseQuery,
+  useCreateNoteCourseMutation,
+  useUpdateNoteCourseMutation,
+  useDeleteNoteCourseMutation,
+} from "@/features/noteCourse/noteCourseApi";
 
 import CourseSuccessPlayer from "./CourseSuccessPlayer";
 
@@ -24,15 +30,17 @@ type Props = {
 };
 
 const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
+  const { data: notes, refetch } = useGetNoteCourseQuery(id);
+  console.log(notes);
   const searchParams = useSearchParams();
   const { data, isLoading, isSuccess, error } = useGetpurchaserCourseQuery(id);
   const { data: progress } = useGetProgressLectureQuery(id);
   const [played, setPlayed] = useState(0);
-  console.log(data);
+
   return (
     <div className="pt-[80px] flex">
       <div className="w-[calc(100%-350px)] overflow-hidden">
-        {progress && data && (
+        {progress && notes && data && (
           <CourseSuccessPlayer
             played={played}
             setPlayed={setPlayed}
@@ -40,6 +48,7 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
             lectureData={data.data.courseData}
             lectureId={lectureId}
             progressVideo={progress.data}
+            notes={notes.data}
           />
         )}
         {progress && data && (
@@ -50,8 +59,10 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
             !searchParams.get("option")) && (
             <CourseAccessOverview courseData={data.data} />
           )}
-        {data && searchParams.get("option") === "note" && (
+        {data && notes.data && searchParams.get("option") === "note" && (
           <CourseAccessNote
+            notes={notes.data}
+            refetch={refetch}
             courseData={data.data}
             played={played}
             courseId={id}

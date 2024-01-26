@@ -5,7 +5,7 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { RiDeleteBin2Fill } from "react-icons/ri";
 import {
   useCreateCourseStep2Mutation,
-  useGetCourseAdminQuery,
+  useGetCourseInstructorQuery,
 } from "@/features/course/courseApi";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -17,7 +17,7 @@ const CourseInfoStep2 = ({ id }: { id: string }) => {
     isSuccess: isSuccessGetCourse,
     isLoading: loadingGetCourse,
     error: errorGetCourse,
-  } = useGetCourseAdminQuery(id);
+  } = useGetCourseInstructorQuery(id);
   const router = useRouter();
   const [updateCourse, { isLoading, error, isSuccess }] =
     useCreateCourseStep2Mutation();
@@ -92,9 +92,9 @@ const CourseInfoStep2 = ({ id }: { id: string }) => {
   useEffect(() => {
     if (isSuccess) {
       if (typeButton === "save") {
-        router.push(`/admin`);
+        router.push(`/instructor/courses`);
       } else {
-        router.push(`/admin/create-course/step3/${id}`);
+        router.push(`/instructor/create-course/step3/${id}`);
       }
     }
     if (error && "data" in error) {

@@ -16,7 +16,7 @@ import { CourseContentDataValidate } from "@/validations/createCourseValidate";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useDeleteFileCloudinaryMutation } from "@/features/course/courseApi";
 
-import { useGetCourseAdminQuery } from "@/features/course/courseApi";
+import { useGetCourseInstructorQuery } from "@/features/course/courseApi";
 import { CourseContentType } from "@/types/couresContentType";
 import FormControlContent from "./FormControlContent";
 
@@ -34,7 +34,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
     data: courseData,
     isLoading: loadingGetCourse,
     error: errorGetCourse,
-  } = useGetCourseAdminQuery(id);
+  } = useGetCourseInstructorQuery(id);
   const router = useRouter();
   const [updateCourse, { isLoading, isSuccess, error }] =
     useCreateCourseStep3Mutation();
@@ -80,7 +80,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
     changeIdLoading,
     checkLoadingById,
     setLoadingUploadVideo,
-  } = useLoadingUploadVideo(fields);
+  } = useLoadingUploadVideo(watch().test);
 
   const {
     addPercentLectures,
@@ -91,7 +91,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
     removePercentSection,
     findIdAndUpdatePercent,
     setPercentUploadVideo,
-  } = usePercentUploadVideo(fields);
+  } = usePercentUploadVideo(watch().test);
 
   const [isCollased, setIsCollapsed] = useState<boolean[]>(
     Array(fields.length).fill(false)
@@ -167,7 +167,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
   };
   //back to step 2
   const prevButton = () => {
-    router.push(`/admin/create-course/step2/${id}`);
+    router.push(`/instructor/create-course/step2/${id}`);
   };
 
   //show error
@@ -191,9 +191,9 @@ const CourseContentData: FC<Props> = ({ id }) => {
     // if update course success next to step4
     if (isSuccess) {
       if (typeButton === "next") {
-        router.push(`/admin/create-course/step4/${id}`);
+        router.push(`/instructor/create-course/step4/${id}`);
       } else {
-        router.push(`/admin`);
+        router.push(`/instructor/courses`);
       }
     }
     if (error && "data" in error) {
@@ -221,9 +221,9 @@ const CourseContentData: FC<Props> = ({ id }) => {
       if (checkLoadingById(id)) {
         loadingUploadVideo.forEach((item, index) => {
           const linkIndex = item.findIndex((item2, _index2) => item2.id === id);
-
+          const values = watch().test;
           if (linkIndex !== -1) {
-            const fieldLectures = fields[index].lectures.map(
+            const fieldLectures = values[index].lectures.map(
               (item3, lectureIndex) => {
                 if (lectureIndex === linkIndex) {
                   return {
@@ -240,7 +240,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
               }
             );
 
-            update(index, { ...fields[index], lectures: fieldLectures });
+            update(index, { ...values[index], lectures: fieldLectures });
           }
         });
         findIdAndUpdate(id, false);
@@ -251,7 +251,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
       }
       socketId.off("video-result", onVideoResult);
     });
-  }, [cancleFileId, fields, loadingUploadVideo]);
+  }, [cancleFileId, watch(), loadingUploadVideo]);
 
   useEffect(() => {
     if (courseData && courseData.data.courseData.length > 0) {

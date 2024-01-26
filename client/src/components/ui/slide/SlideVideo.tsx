@@ -1,6 +1,7 @@
 import React, { FC } from "react";
 import * as Slide from "@radix-ui/react-slider";
 type Props = {
+  pointSaved: number[];
   value: number;
   handleChange: (e: any) => void;
   handleMouseUp: (e: any) => void;
@@ -13,7 +14,9 @@ const SlideVideo: FC<Props> = ({
   handleChange,
   handleMouseDown,
   handleMouseUp,
+  pointSaved,
 }) => {
+  console.log(pointSaved);
   return (
     <Slide.Root
       min={0}
@@ -28,12 +31,19 @@ const SlideVideo: FC<Props> = ({
     >
       <Slide.Track className="bg-white relative duration-300  h-full w-full ">
         <Slide.Range className="absolute z-30  bg-violet11 h-full "></Slide.Range>
-        <div className="absolute z-20 bottom-0 h-full left-0 w-full">
-          <div className="h-full bg-gray-200">
+        <div className="absolute bottom-0 h-full left-0 w-full">
+          <div className="h-full bg-gray-200 relative">
             <div
               className="bg-blackA8 h-full"
               style={{ width: `${loaded * 100}%` }} // Set the width of the progress bar based on the loaded state
-            ></div>
+            ></div>{" "}
+            {pointSaved &&
+              pointSaved.map((item, index) => (
+                <div
+                  className="absolute top-0 h-full w-[10px] bg-blue5 z-40"
+                  style={{ left: `${item}%` }}
+                ></div>
+              ))}
           </div>
         </div>
       </Slide.Track>

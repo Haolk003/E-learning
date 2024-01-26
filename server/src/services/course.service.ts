@@ -56,6 +56,7 @@ const createCourseStep1 = async (
       ...data,
       author: userId,
       status: "draft",
+      progress: 33,
     });
     return newCourse;
   }
@@ -84,7 +85,13 @@ const createEditCourseStep2 = async (
 ) => {
   const updateCourse = await courseModel.findByIdAndUpdate(
     courseId,
-    { $set: { prerequisites: data.prerequisites, benefits: data.benefits } },
+    {
+      $set: {
+        prerequisites: data.prerequisites,
+        benefits: data.benefits,
+        progress: 66,
+      },
+    },
     { new: true }
   );
   return updateCourse;
@@ -95,12 +102,13 @@ const createEditCourseStep3 = async (data: ICourseData[], courseId: string) => {
     const totalCourseLength = item.lectures.reduce((total, item) => {
       return total + item.duration;
     }, 0);
+
     return { ...item, videoLength: totalCourseLength };
   });
 
   const updateCourse = await courseModel.findByIdAndUpdate(
     courseId,
-    { $set: { courseData: newData } },
+    { $set: { courseData: newData, progress: 100 } },
     { new: true }
   );
   return updateCourse;
@@ -121,6 +129,28 @@ const publicCourse = async (courseId: string) => {
     throw new ErrorHandle(400, "Please fill in the fields");
   }
   findCourse.status = "public";
+  const categoryExist = await CategoryModel.findById(findCourse.category);
+  if (categoryExist) {
+    categoryExist.courseCount = categoryExist.courseCount + 1;
+    await categoryExist.save();
+  }
+  await findCourse.save();
+  return findCourse;
+};
+
+//convert status to private
+const privateCourse = async (courseId: string) => {
+  const findCourse = await courseModel.findById(courseId);
+  if (!findCourse) {
+    throw new ErrorHandle(400, "Course not found");
+  }
+  findCourse.status = "private";
+  const categoryExist = await CategoryModel.findById(findCourse.category);
+  if (categoryExist) {
+    categoryExist.courseCount -= 1;
+    await categoryExist.save();
+  }
+
   await findCourse.save();
   return findCourse;
 };
@@ -262,7 +292,7 @@ const getMyCourseIntructor = async ({
 
   const skip = (page - 1) * limit;
   query = query
-    .populate("author")
+    .populate("author category")
     .select("-courseData -prerequisites -benefits -description -tags")
     .sort(sort)
     .skip(skip)
@@ -289,6 +319,7 @@ const courseService = {
   uploadVideo,
   deleteImageVideo,
   publicCourse,
+  privateCourse,
   getAllCourseByAdmin,
   deleteCourse,
   getMyCourseIntructor,

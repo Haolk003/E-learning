@@ -15,7 +15,7 @@ import useCaculatorSale from "@/hooks/useCaculatorSale";
 import Rating from "@/components/ui/Rating";
 
 import {
-  useGetCourseAdminQuery,
+  useGetCourseInstructorQuery,
   usePublicCourseByIdMutation,
 } from "@/features/course/courseApi";
 
@@ -23,7 +23,7 @@ const CoursePreview = ({ id }: { id: string }) => {
   const router = useRouter();
   const [courseData, setCourseData] = useState<CourseType | null>(null);
   const [isCollapse, setIsCollapse] = useState<boolean[]>([]);
-  const { data, isLoading, error } = useGetCourseAdminQuery(id);
+  const { data, isLoading, error } = useGetCourseInstructorQuery(id);
   const [
     publicCourse,
     {
@@ -39,7 +39,7 @@ const CoursePreview = ({ id }: { id: string }) => {
   };
 
   const handleSaveCourse = () => {
-    router.push("/admin");
+    router.push("/instructor");
   };
   const handlePublicCourse = async () => {
     await publicCourse(id);
@@ -54,7 +54,7 @@ const CoursePreview = ({ id }: { id: string }) => {
   useEffect(() => {
     if (isSuccessPublic) {
       toast.success("Public Course Successfully");
-      router.push("/admin/all-course");
+      router.push("/instructor/courses");
     }
     if (errorPublic && "data" in errorPublic) {
       const errorMessage = errorPublic.data as any;

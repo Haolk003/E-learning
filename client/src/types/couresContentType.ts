@@ -30,6 +30,7 @@ export type CourseType = {
   sale: { discount: number; startDate?: Date; endDate?: Date };
   createdAt: Date;
   updatedAt: string;
+  progress: number;
 };
 
 export type CourseContentType = {

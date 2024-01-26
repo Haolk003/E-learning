@@ -25,9 +25,9 @@ const updateLenghtWatched = async ({
   );
   if (!checkLecture) {
     userProgress.progress.push({
+      isCompleted: false,
       lectureId,
       lengthWatched,
-      isCompleted: false,
     });
   } else {
     checkLecture.lengthWatched = lengthWatched;
@@ -66,6 +66,7 @@ const updateIsCompleted = async ({
   } else {
     checkLecture.isCompleted = isCompleted;
   }
+  console.log(checkLecture);
   userProgress.save();
   return userProgress;
 };

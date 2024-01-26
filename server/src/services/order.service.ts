@@ -41,7 +41,9 @@ const newOrder = async (
     payment_info: paymentIntent,
   });
   findCourse.sold = Number(findCourse.sold) + 1;
+
   await findCourse.save();
+  console.log("a");
   await UserCourseProgressModel.create({
     userId,
     courseId,

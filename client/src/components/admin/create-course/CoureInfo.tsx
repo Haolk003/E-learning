@@ -1,3 +1,5 @@
+"use client";
+
 import React, {
   ChangeEvent,
   Dispatch,
@@ -28,7 +30,7 @@ import socketIO from "socket.io-client";
 import ProgressDemo from "@/components/ui/Progress";
 import { RiLoader2Fill } from "react-icons/ri";
 
-import { useGetCourseAdminQuery } from "@/features/course/courseApi";
+import { useGetCourseInstructorQuery } from "@/features/course/courseApi";
 import { FaPhotoVideo } from "react-icons/fa";
 import CoursePlayer from "@/components/ui/CoursePlayer";
 import { CourseType } from "@/types/couresContentType";
@@ -59,14 +61,13 @@ const CoureInfo: FC<Props> = ({ id }) => {
   const { data: categories, isLoading: categoriesLoading } =
     useGetAllCategoryQuery("");
 
-  console.log(categories);
   const router = useRouter();
   const {
     error: errorGetCourse,
     isSuccess: successGetCourse,
     isLoading: loadingGetCourse,
     data: course,
-  } = useGetCourseAdminQuery(String(id), { skip: !id });
+  } = useGetCourseInstructorQuery(String(id), { skip: !id });
   const [createCourse, { isLoading, error, isSuccess, data: courseData }] =
     useCreateCourseStep1Mutation();
   const [uploadVideo, { isSuccess: successUploadVideo }] =
@@ -173,9 +174,9 @@ const CoureInfo: FC<Props> = ({ id }) => {
   useEffect(() => {
     if (isSuccess) {
       if (typeButton === "save") {
-        router.push(`/admin`);
+        router.push(`/instructor/courses`);
       } else {
-        router.push(`/admin/create-course/step2/${courseData.data._id}`);
+        router.push(`/instructor/create-course/step2/${courseData.data._id}`);
       }
     }
     if (error && "data" in error) {
