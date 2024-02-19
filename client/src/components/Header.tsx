@@ -57,8 +57,9 @@ const Header = () => {
         }  w-[100vw] h-[80px]`}
       >
         <div className="w-[90%] mx-auto h-full flex items-center justify-between">
-          <Link href="/">
-            <h1 className="text-3xl font-Poppins font-semibold">Elearning</h1>
+          <Link href="/" className="flex items-center   ">
+            <Image src="/assets/logo2.png" alt="" width={80} height={80} />
+            <h2 className=" text-2xl font-semibold ">Elearning</h2>
           </Link>
 
           <div className="flex items-center gap-7 text-xl">

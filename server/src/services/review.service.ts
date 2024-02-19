@@ -99,12 +99,20 @@ const starPercentageByCourseId = async (courseId: string) => {
   return starPercentages;
 };
 
+const checkExistReviewPersonal = async (courseId: string, userId: string) => {
+  const existReview = await reviewModel.findOne({
+    courseId: courseId,
+    user: userId,
+  });
+  return existReview ? true : false;
+};
 const reviewService = {
   addReview,
   getAllReview,
   getReviewsCourse,
   EditReviews,
   starPercentageByCourseId,
+  checkExistReviewPersonal,
 };
 
 export default reviewService;

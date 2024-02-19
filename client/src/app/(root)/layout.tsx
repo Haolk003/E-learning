@@ -154,7 +154,6 @@ export default function RootLayout({
 
   return (
     <>
-      <Header />
       <div className="">{children}</div>
     </>
   );

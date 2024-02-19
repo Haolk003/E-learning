@@ -3,6 +3,7 @@ import {
   updateLengthWatched,
   updateIsCompleted,
   getProgressLectureUserByCourseId,
+  getProgessByUserId,
 } from "../controllers/userCourseProgress.controller";
 import { protect } from "../middlewares/auth";
 const router = express.Router();
@@ -16,4 +17,7 @@ router.get(
   protect,
   getProgressLectureUserByCourseId
 );
+
+router.get("/get-progress", protect, getProgessByUserId);
+
 export default router;

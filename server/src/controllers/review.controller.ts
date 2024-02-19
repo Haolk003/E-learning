@@ -69,13 +69,31 @@ export const StarPercentagesByCourseId = CatchAsyncError(
         .status(200)
         .json({ success: true, message: "No reviews found for this course" });
     } else {
+      res.status(200).json({
+        success: true,
+        data: percentage,
+        message: "Calculate Percentage of Star Successfully",
+      });
+    }
+  }
+);
+
+export const checkExistReviewPersonal = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { courseId } = req.params;
+    const userId = req.me._id;
+    const checkExist = await reviewService.checkExistReviewPersonal(
+      courseId,
+      userId
+    );
+    if (checkExist) {
       res
         .status(200)
-        .json({
-          success: true,
-          data: percentage,
-          message: "Calculate Percentage of Star Successfully",
-        });
+        .json({ success: true, data: checkExist, message: "Exist Review" });
+    } else {
+      res
+        .status(200)
+        .json({ success: true, data: checkExist, message: "Not Exist Review" });
     }
   }
 );

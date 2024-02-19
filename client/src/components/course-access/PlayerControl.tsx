@@ -23,6 +23,8 @@ import SlideVolume from "../ui/slide/SlideVolume";
 import PopoverSettingVideo from "../ui/PopoverSettingVideo";
 import ConvertDuratonVideo from "@/utils/convertDuratonVideo";
 
+import FullScreenPortal from "@/utils/FullScreen";
+
 import TooltipDemo from "../ui/Tootip";
 
 type Props = {
@@ -93,76 +95,78 @@ const PlayerControls: React.FC<Props> = ({
                   <Select.Value placeholder="1x" />
                 </Select.Trigger>
                 <Select.Portal>
-                  <Select.Content
-                    className="overflow-hidden bg-black px-4 py-4 absolute bottom-12 left-0"
-                    position="popper"
-                  >
-                    <Select.Viewport>
-                      <Select.Item
-                        value="2"
-                        className="text-[13px] cursor-pointer leading-none text-white flex items-center gap-4 h-[35px]"
-                      >
-                        <Select.ItemText>2x</Select.ItemText>
-                        <Select.ItemIndicator className="text-violet11">
-                          <PiCircleFill />
-                        </Select.ItemIndicator>
-                      </Select.Item>
-                      <Select.Item
-                        value="1.75"
-                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                      >
-                        <Select.ItemText>1.75x</Select.ItemText>
-                        <Select.ItemIndicator className="text-violet11">
-                          <PiCircleFill />
-                        </Select.ItemIndicator>
-                      </Select.Item>
-                      <Select.Item
-                        value="1.5"
-                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                      >
-                        <Select.ItemText>1.5x</Select.ItemText>
-                        <Select.ItemIndicator className="text-violet11">
-                          <PiCircleFill />
-                        </Select.ItemIndicator>
-                      </Select.Item>
-                      <Select.Item
-                        value="1.25"
-                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                      >
-                        <Select.ItemText>1.25x</Select.ItemText>
-                        <Select.ItemIndicator className="text-violet11">
-                          <PiCircleFill />
-                        </Select.ItemIndicator>
-                      </Select.Item>
-                      <Select.Item
-                        value="1"
-                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                      >
-                        <Select.ItemText>1x</Select.ItemText>
-                        <Select.ItemIndicator className="text-violet11">
-                          <PiCircleFill />
-                        </Select.ItemIndicator>
-                      </Select.Item>
-                      <Select.Item
-                        value="0.75"
-                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                      >
-                        <Select.ItemText>0.75x</Select.ItemText>
-                        <Select.ItemIndicator className="text-violet11">
-                          <PiCircleFill />
-                        </Select.ItemIndicator>
-                      </Select.Item>
-                      <Select.Item
-                        value="0.5"
-                        className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
-                      >
-                        <Select.ItemText>0.5x</Select.ItemText>
-                        <Select.ItemIndicator className="text-violet11">
-                          <PiCircleFill />
-                        </Select.ItemIndicator>
-                      </Select.Item>
-                    </Select.Viewport>
-                  </Select.Content>
+                  <FullScreenPortal>
+                    <Select.Content
+                      className="overflow-hidden bg-black px-4 py-4 absolute bottom-12 left-0"
+                      position="popper"
+                    >
+                      <Select.Viewport>
+                        <Select.Item
+                          value="2"
+                          className="text-[13px] cursor-pointer leading-none text-white flex items-center gap-4 h-[35px]"
+                        >
+                          <Select.ItemText>2x</Select.ItemText>
+                          <Select.ItemIndicator className="text-violet11">
+                            <PiCircleFill />
+                          </Select.ItemIndicator>
+                        </Select.Item>
+                        <Select.Item
+                          value="1.75"
+                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                        >
+                          <Select.ItemText>1.75x</Select.ItemText>
+                          <Select.ItemIndicator className="text-violet11">
+                            <PiCircleFill />
+                          </Select.ItemIndicator>
+                        </Select.Item>
+                        <Select.Item
+                          value="1.5"
+                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                        >
+                          <Select.ItemText>1.5x</Select.ItemText>
+                          <Select.ItemIndicator className="text-violet11">
+                            <PiCircleFill />
+                          </Select.ItemIndicator>
+                        </Select.Item>
+                        <Select.Item
+                          value="1.25"
+                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                        >
+                          <Select.ItemText>1.25x</Select.ItemText>
+                          <Select.ItemIndicator className="text-violet11">
+                            <PiCircleFill />
+                          </Select.ItemIndicator>
+                        </Select.Item>
+                        <Select.Item
+                          value="1"
+                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                        >
+                          <Select.ItemText>1x</Select.ItemText>
+                          <Select.ItemIndicator className="text-violet11">
+                            <PiCircleFill />
+                          </Select.ItemIndicator>
+                        </Select.Item>
+                        <Select.Item
+                          value="0.75"
+                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                        >
+                          <Select.ItemText>0.75x</Select.ItemText>
+                          <Select.ItemIndicator className="text-violet11">
+                            <PiCircleFill />
+                          </Select.ItemIndicator>
+                        </Select.Item>
+                        <Select.Item
+                          value="0.5"
+                          className="text-[13px] leading-none text-white flex items-center gap-4 h-[35px] cursor-pointer"
+                        >
+                          <Select.ItemText>0.5x</Select.ItemText>
+                          <Select.ItemIndicator className="text-violet11">
+                            <PiCircleFill />
+                          </Select.ItemIndicator>
+                        </Select.Item>
+                      </Select.Viewport>
+                    </Select.Content>
+                  </FullScreenPortal>
                 </Select.Portal>
               </Select.Root>
             </div>
@@ -203,14 +207,16 @@ const PlayerControls: React.FC<Props> = ({
                 </button>
               </HoverCard.Trigger>
               <HoverCard.Portal>
-                <HoverCard.Content className="absolute -bottom-10 left-[50%] -translate-x-1/2">
-                  <div>
-                    <SlideVolume
-                      value={volume}
-                      handleChange={handleChangeVolume}
-                    />
-                  </div>
-                </HoverCard.Content>
+                <FullScreenPortal>
+                  <HoverCard.Content className="absolute -bottom-10 left-[50%] -translate-x-1/2">
+                    <div>
+                      <SlideVolume
+                        value={volume}
+                        handleChange={handleChangeVolume}
+                      />
+                    </div>
+                  </HoverCard.Content>
+                </FullScreenPortal>
               </HoverCard.Portal>
             </HoverCard.Root>
           </div>

@@ -7,7 +7,7 @@ import {
 } from "react";
 import _ from "lodash";
 import { useUpdateLengthWatchedMutation } from "@/features/course/courseApi";
-
+import videoSnapshot from "video-snapshot";
 const useVideoProgress = ({
   videoUrl,
   seeking,
@@ -15,12 +15,15 @@ const useVideoProgress = ({
   lectureId,
   played,
   setPlayed,
+  lectureTitle,
 }: {
   videoUrl: string;
   courseId: string;
   lectureId: string;
   seeking: boolean;
   played: number;
+  lectureTitle: string;
+
   setPlayed: Dispatch<SetStateAction<number>>;
 }) => {
   const [updateLengthWatched] = useUpdateLengthWatchedMutation();
@@ -34,9 +37,11 @@ const useVideoProgress = ({
         lectureId,
         courseId,
         lengthWatched: playedTime,
+        lectureTitle,
+        lectureUrl: videoUrl,
       });
       setLastSavedTime(playedTime);
-    }, 5000), // Update every 30 seconds
+    }, 5000), // Update every 5 seconds
     [videoUrl]
   );
 

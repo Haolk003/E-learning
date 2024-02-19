@@ -43,11 +43,22 @@ const newOrder = async (
   findCourse.sold = Number(findCourse.sold) + 1;
 
   await findCourse.save();
-  console.log("a");
+
   await UserCourseProgressModel.create({
     userId,
     courseId,
-    lastWatchedLectureId: findCourse.courseData[0].lectures[0]._id,
+    lastWatchedLecture: {
+      lectureId: findCourse.courseData[0].lectures[0]._id,
+      lectureTitle: findCourse.courseData[0].lectures[0].title,
+      lectureUrl: findCourse.courseData[0].lectures[0].videoUrl.url,
+    },
+    progress: [
+      {
+        lectureId: findCourse.courseData[0].lectures[0]._id,
+        lengthWatched: 0,
+        isCompleted: false,
+      },
+    ],
   });
   return newOrder;
 };

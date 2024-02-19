@@ -25,6 +25,7 @@ import SlideVideo from "../ui/slide/SlideVideo";
 
 import { CourseContentType } from "@/types/couresContentType";
 import { NoteCourseType } from "@/types/noteCouresType";
+import FullScreenPortal from "@/utils/FullScreen";
 
 type Props = {
   lectureId: string;
@@ -71,6 +72,8 @@ const CustomVideoPlayer: React.FC<Props> = ({
     useState<HTMLElement | null>(null);
   const [startTime, setStartTime] = useState(0);
   const [videoUrl, setVideoUrl] = useState("");
+  const [videoTitle, setVideoTitle] = useState("");
+
   const [pointSaved, setPointSaved] = useState<number[]>([]);
 
   const { handleProgress, loaded } = useVideoProgress({
@@ -80,6 +83,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
     lectureId: lectureId,
     played,
     setPlayed,
+    lectureTitle: videoTitle,
   });
 
   useEffect(() => {
@@ -118,16 +122,17 @@ const CustomVideoPlayer: React.FC<Props> = ({
 
   // Toggles the fullscreen mode of the video player
   const toggleFullScreen = () => {
-    const isFullscreen = document.fullscreenElement;
-    if (!isFullScreen) {
-      const container = containerRef.current;
-      if (container) {
-        if (container.requestFullscreen) {
-          container.requestFullscreen();
-        }
+    const container = containerRef.current;
+    if (container) {
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch((err) => {
+          console.error(
+            `Error attempting to enable full-screen mode: ${err.message} (${err.name})`
+          );
+        });
+      } else {
+        document.exitFullscreen();
       }
-    } else {
-      document.exitFullscreen();
     }
     setIsFullScreen(!isFullScreen);
   };
@@ -304,6 +309,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
           sectionIndex: index,
         });
         setVideoUrl(item.lectures[checkLecture].videoUrl.url);
+        setVideoTitle(item.lectures[checkLecture].title);
       }
     });
 
@@ -394,7 +400,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
     <div ref={containerRef} className="bg-blackA6 min-w-[70%] h-auto relative">
       <div
         className={`relative ${
-          isFullScreen ? "w-screen h-screen" : "w-[80%] mx-auto"
+          isFullScreen ? "" : "w-[80%] mx-auto"
         }    mx-auto`}
       >
         <div
@@ -471,6 +477,29 @@ const CustomVideoPlayer: React.FC<Props> = ({
             value={played / duration}
             pointSaved={pointSaved}
           />
+          {/* {isFullScreen && (
+            <FullScreenPortal>
+              <PlayerControls
+                duration={duration}
+                handleIsOpenVolume={handleIsOpenVolume}
+                handelOpenVolumeChange={handelOpenVolumeChange}
+                handleBackwind={handleBackwind}
+                handleChangeOpenSetting={handleChangeOpenSetting}
+                handleChangeVolume={handleChangeVolume}
+                handleForward={handleForward}
+                handlePlay={handlePlay}
+                handleSeekChange={handleSeekChange}
+                isFullScreen={isFullScreen}
+                playbackRate={playbackRate}
+                played={played}
+                playing={playing}
+                setPlayBackRate={setPlayBackRate}
+                toggleExpandedView={toggleExpandedView}
+                toggleFullScreen={toggleFullScreen}
+                volume={volume}
+              />
+            </FullScreenPortal>
+          )} */}
 
           <PlayerControls
             duration={duration}
@@ -565,6 +594,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
           </TooltipDemo>
         </motion.div>
       )}
+      {isFullScreen && <div id="modal-root"></div>}
     </div>
   );
 };

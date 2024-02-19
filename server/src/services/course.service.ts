@@ -1,4 +1,4 @@
-import { isEmpty } from "lodash";
+import _, { isEmpty } from "lodash";
 
 import courseModel, { ICourseData } from "../models/course.model";
 import ErrorHandle from "../utils/errorHandle";
@@ -225,35 +225,50 @@ type filterGetAllCourse = {
   keyword?: string;
   page?: number;
   limit?: number;
+  category?: string;
+  price?: number;
+  ratings?: number;
 };
-const getAllCourseByAdmin = async ({
-  sort = "-createdAt",
-  limit = 20,
-  page = 1,
-  keyword,
-}: filterGetAllCourse) => {
+const getAllCourseByAdmin = async (queryObj: filterGetAllCourse) => {
+  const queryObjCopy = queryObj;
+  const limit = queryObj.limit ? queryObj.limit : 20;
+  const page = queryObj.page ? queryObj.page : 1;
+
+  const excludeField = ["page", "sort", "limit", "keyword"];
+
+  const filteredQueryObj = _.omit(queryObjCopy, excludeField);
+  let queryStr = JSON.stringify(filteredQueryObj);
+  queryStr = queryStr.replace(/\b(gt|gte|lte|lt)\b/g, (match) => `$${match}`);
+  queryStr = JSON.parse(queryStr);
   let query;
-  if (!isEmpty(keyword)) {
-    query = courseModel.find({
-      title: { $regex: keyword, $options: "i" },
-      status: "public",
-    });
+  if (!isEmpty(queryObj.keyword)) {
+    query = courseModel.find(
+      Object.assign(
+        { title: { $regex: queryObj.keyword, $options: "i" } },
+        { status: "public" },
+        queryStr
+      )
+    );
   } else {
-    query = courseModel.find({ status: "public" });
+    query = courseModel.find(Object.assign({ status: "public" }, queryStr));
   }
 
-  const countQuery = await query.model.countDocuments(query.getFilter()).exec();
+  if (queryObj.sort) {
+    const sortBy = queryObj.sort.split(",").join(" ");
+    query = query.sort(sortBy);
+  } else {
+    query = query.sort("-createdAt");
+  }
 
-  const skip = (page - 1) * limit;
   query = query
-    .populate("author")
     .select("-courseData -prerequisites -benefits -description -tags")
-    .sort(sort)
-    .skip(skip)
+    .skip((page - 1) * limit)
     .limit(limit);
 
-  const courses = await query;
-  return { courses, countQuery };
+  const totalCount = await courseModel.countDocuments(query.getFilter()).exec();
+  const courses = await query.exec();
+
+  return { courses, totalCount };
 };
 
 const deleteCourseById = async (id: string) => {

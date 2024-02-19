@@ -1,20 +1,25 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 interface IUserCourseProgreessSChema extends Document {
-  userId: string;
+  userId: Schema.Types.ObjectId;
   courseId: Schema.Types.ObjectId;
   progress: {
     lectureId: string;
     lengthWatched: number;
     isCompleted: boolean;
   }[];
-  lastWatchedLectureId: string;
+  lastWatchedLecture: {
+    lectureTitle: string;
+    lectureUrl: String;
+    lectureId: String;
+  };
 }
 const userCourseProgressSchema: Schema<IUserCourseProgreessSChema> =
   new mongoose.Schema(
     {
       userId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
       },
       courseId: {
@@ -29,7 +34,11 @@ const userCourseProgressSchema: Schema<IUserCourseProgreessSChema> =
           isCompleted: { type: Boolean, default: false },
         },
       ],
-      lastWatchedLectureId: String,
+      lastWatchedLecture: {
+        lectureTitle: String,
+        lectureUrl: String,
+        lectureId: String,
+      },
     },
     { timestamps: true }
   );

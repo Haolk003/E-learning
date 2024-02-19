@@ -29,6 +29,29 @@
   }
 }
 
+#modal-root {
+  /* Adjust width and height as needed */
+}
+
+.slider-thumb::-webkit-slider-thumb {
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  background: white;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+  pointer-events: auto;
+}
+
+.slider-thumb::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: white;
+  cursor: pointer;
+  border-radius: 50%;
+  border: none;
+}
 @layer utilities {
   .css-invert {
     @apply invert-[50%] brightness-200;
@@ -193,6 +216,12 @@ body {
 }
 .p-FieldLabel {
   color: white;
+}
+.circular-progress {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #ffffff 0%, #ff00ff 50%, #ffffff 100%);
 }
 #messages {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New";

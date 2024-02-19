@@ -5,6 +5,8 @@ type updateLengthWatchedType = {
   userId: string;
   courseId: string;
   lectureId: string;
+  lectureTitle: string;
+  lectureUrl: string;
   lengthWatched: number;
 };
 const updateLenghtWatched = async ({
@@ -12,6 +14,8 @@ const updateLenghtWatched = async ({
   lectureId,
   lengthWatched,
   userId,
+  lectureTitle,
+  lectureUrl,
 }: updateLengthWatchedType) => {
   let userProgress = await UserCourseProgressModel.findOne({
     userId,
@@ -32,7 +36,8 @@ const updateLenghtWatched = async ({
   } else {
     checkLecture.lengthWatched = lengthWatched;
   }
-  userProgress.save();
+  userProgress.lastWatchedLecture = { lectureTitle, lectureId, lectureUrl };
+  await userProgress.save();
   return userProgress;
 };
 type UpdateIsCompletedType = {
@@ -40,12 +45,16 @@ type UpdateIsCompletedType = {
   courseId: string;
   lectureId: string;
   isCompleted: boolean;
+  lectureTitle: string;
+  lectureUrl: string;
 };
 const updateIsCompleted = async ({
   courseId,
   isCompleted,
   lectureId,
   userId,
+  lectureTitle,
+  lectureUrl,
 }: UpdateIsCompletedType) => {
   let userProgress = await UserCourseProgressModel.findOne({
     userId,
@@ -66,8 +75,8 @@ const updateIsCompleted = async ({
   } else {
     checkLecture.isCompleted = isCompleted;
   }
-  console.log(checkLecture);
-  userProgress.save();
+  userProgress.lastWatchedLecture = { lectureTitle, lectureId, lectureUrl };
+  await userProgress.save();
   return userProgress;
 };
 
@@ -84,10 +93,19 @@ const getProgressLectureUserByCourseId = async ({
   });
   return userProgress;
 };
+
+const getProgessByUserId = async (userId: string) => {
+  const userProgress = await UserCourseProgressModel.find({
+    userId: userId,
+  }).populate("courseId", "title courseData");
+
+  return userProgress;
+};
 const userCourseProgressService = {
   updateIsCompleted,
   updateLenghtWatched,
   getProgressLectureUserByCourseId,
+  getProgessByUserId,
 };
 
 export default userCourseProgressService;

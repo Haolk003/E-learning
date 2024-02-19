@@ -5,12 +5,15 @@ import userCourseProgressService from "../services/userCourseProgress.service";
 export const updateLengthWatched = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.me._id;
-    const { courseId, lectureId, lengthWatched } = req.body;
+    const { courseId, lectureId, lengthWatched, lectureTitle, lectureUrl } =
+      req.body;
     const progress = await userCourseProgressService.updateLenghtWatched({
       courseId: courseId,
       lectureId,
       userId,
       lengthWatched,
+      lectureTitle,
+      lectureUrl,
     });
     res.status(200).json({
       success: true,
@@ -23,12 +26,15 @@ export const updateLengthWatched = CatchAsyncError(
 export const updateIsCompleted = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const userId = req.me._id;
-    const { courseId, lectureId, isCompleted } = req.body;
+    const { courseId, lectureId, isCompleted, lectureTitle, lectureUrl } =
+      req.body;
     const progress = await userCourseProgressService.updateIsCompleted({
       courseId,
       isCompleted,
       lectureId,
       userId,
+      lectureTitle,
+      lectureUrl,
     });
     res.status(200).json({
       success: true,
@@ -47,12 +53,22 @@ export const getProgressLectureUserByCourseId = CatchAsyncError(
         courseId: courseId,
         userId: userId,
       });
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: progress,
-        message: "GET Progress Lecture User By CourseId",
-      });
+    res.status(200).json({
+      success: true,
+      data: progress,
+      message: "GET Progress Lecture User By CourseId",
+    });
+  }
+);
+
+export const getProgessByUserId = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.me._id;
+    const progress = await userCourseProgressService.getProgessByUserId(userId);
+    res.status(200).json({
+      success: true,
+      data: progress,
+      message: "GET Progress By UserId",
+    });
   }
 );

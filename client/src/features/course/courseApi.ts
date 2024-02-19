@@ -101,24 +101,43 @@ export const courseApi = apiSlice.injectEndpoints({
       }),
     }),
     updateLengthWatched: build.mutation({
-      query: ({ lectureId, courseId, lengthWatched }) => ({
+      query: ({
+        lectureId,
+        courseId,
+        lengthWatched,
+        lectureTitle,
+        lectureUrl,
+      }) => ({
         url: "update-lengthWatched-video",
         method: "PUT",
-        body: { lectureId, courseId, lengthWatched },
+        body: { lectureId, courseId, lengthWatched, lectureTitle, lectureUrl },
         credentials: "include" as const,
       }),
     }),
     updateIsCompleted: build.mutation({
-      query: ({ lectureId, courseId, isCompleted }) => ({
+      query: ({
+        lectureId,
+        courseId,
+        isCompleted,
+        lectureTitle,
+        lectureUrl,
+      }) => ({
         url: "update-isCompleted-video",
         method: "PUT",
-        body: { lectureId, courseId, isCompleted },
+        body: { lectureId, courseId, isCompleted, lectureTitle, lectureUrl },
         credentials: "include" as const,
       }),
     }),
     getProgressLecture: build.query({
       query: (courseId: string) => ({
         url: `get-progress-lecture/${courseId}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    getProgressCoursesUser: build.query({
+      query: () => ({
+        url: "/get-progress",
         method: "GET",
         credentials: "include" as const,
       }),
@@ -143,4 +162,5 @@ export const {
   useUpdateIsCompletedMutation,
   useUpdateLengthWatchedMutation,
   useGetProgressLectureQuery,
+  useGetProgressCoursesUserQuery,
 } = courseApi;

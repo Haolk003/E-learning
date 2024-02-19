@@ -40,7 +40,7 @@ const SlideVideo: FC<Props> = ({
             {pointSaved &&
               pointSaved.map((item, index) => (
                 <div
-                  className="absolute top-0 h-full w-[10px] bg-blue5 z-40"
+                  className="absolute top-[50%] -translate-y-1/2 h-[10px] w-[10px] bg-blue5 z-40"
                   style={{ left: `${item}%` }}
                 ></div>
               ))}

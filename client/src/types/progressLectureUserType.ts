@@ -1,9 +1,15 @@
+import { CourseType } from "./couresContentType";
+
 export type progressLectureProgressType = {
   _id: string;
   userId: string;
   progress: ProgressDataLectureType[];
-  courseId: string;
-  lastWatchedLectureId: string;
+  courseId: CourseType;
+  lastWatchedLecture: {
+    lectureTitle: string;
+    lectureId: string;
+    lectureUrl: string;
+  };
   updatedAt: string;
   createdAt: string;
 };

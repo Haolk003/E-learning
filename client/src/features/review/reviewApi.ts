@@ -1,3 +1,4 @@
+import { checkExistReviewPersonal } from "../../../../server/src/controllers/review.controller";
 import apiSlice from "../api/apiSlice";
 
 export const reviewApi = apiSlice.injectEndpoints({
@@ -39,6 +40,13 @@ export const reviewApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    checkExistReviewPersonal: build.query({
+      query: (courseId) => ({
+        url: `/reviews/check-exist-review/${courseId}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -48,4 +56,5 @@ export const {
   useEditReviewMutation,
   useGetAllReviewQuery,
   useStarPercentageQuery,
+  useCheckExistReviewPersonalQuery,
 } = reviewApi;

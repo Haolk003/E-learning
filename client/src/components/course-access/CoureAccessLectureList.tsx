@@ -33,6 +33,7 @@ const CoureAccessLectureList: FC<Props> = ({
 }) => {
   const [updateIsCompletedLecture, { error, isLoading, isSuccess }] =
     useUpdateIsCompletedMutation();
+  const [active, setActive] = useState(false);
   const [isCollapped, setIsCollapped] = useState<boolean[]>([]);
   const handleChangeOpen = (open: boolean, index: number) => {
     const newIsCollappsed = [...isCollapped];
@@ -42,9 +43,17 @@ const CoureAccessLectureList: FC<Props> = ({
 
   const handleUpdateCompletedLecture = async (
     lectureId: string,
+    lectureTitle: string,
+    lectureUrl: string,
     isCompleted: string | boolean
   ) => {
-    await updateIsCompletedLecture({ lectureId, courseId, isCompleted });
+    await updateIsCompletedLecture({
+      lectureId,
+      courseId,
+      isCompleted,
+      lectureTitle: lectureTitle,
+      lectureUrl,
+    });
   };
   useEffect(() => {
     if (error && "data" in error) {
@@ -67,8 +76,27 @@ const CoureAccessLectureList: FC<Props> = ({
       setIsCollapped(newCollapse);
     }
   }, [courseContentData]);
+  useEffect(() => {
+    const handelScroll = () => {
+      if (typeof window !== "undefined") {
+        if (window.scrollY > 80) {
+          setActive(true);
+        } else {
+          setActive(false);
+        }
+      }
+    };
+    window.addEventListener("scroll", handelScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handelScroll);
+    };
+  }, []);
   return (
-    <div className=" fixed w-[350px] right-0 top-[80px] h-screen z-20 bg-slate-700">
+    <div
+      className={`fixed w-[350px] right-0 top-[80px] h-screen z-20 bg-slate-700`}
+      style={{ top: active ? "0" : "80px" }}
+    >
       <div className="py-4 px-4 flex items-center justify-between  ">
         <h3>Course content</h3>
         <button>
@@ -124,13 +152,18 @@ const CoureAccessLectureList: FC<Props> = ({
                         >
                           <Checkbox.Root
                             onCheckedChange={(checked) =>
-                              handleUpdateCompletedLecture(lecture._id, checked)
+                              handleUpdateCompletedLecture(
+                                lecture._id,
+                                lecture.title,
+                                lecture.videoUrl.url,
+                                checked
+                              )
                             }
                             key={lecture._id}
                             defaultChecked={
                               checkProgress ? checkProgress.isCompleted : false
                             }
-                            className="shadow-blackA4 hover:bg-violet3 flex h-5 w-10 appearance-none items-center justify-center rounded-4 bg-white shadow-0_2px_10px outline-none focus:shadow-0_0_0_2px_black"
+                            className="shadow-blackA4 hover:bg-violet3 flex h-5 min-w-5 w-5 appearance-none items-center justify-center rounded-4 bg-white shadow-0_2px_10px outline-none focus:shadow-0_0_0_2px_black"
                           >
                             <Checkbox.Indicator className="text-violet11">
                               <IoMdCheckmark />
@@ -139,7 +172,7 @@ const CoureAccessLectureList: FC<Props> = ({
                           <Link
                             href={`/course-access/${courseId}/lecture/${lecture._id}`}
                           >
-                            <h4 className="text-[14px]">
+                            <h4 className="text-[14px] max-w-[250px]">
                               {sequence + lectureIndex}.{lecture.title}
                             </h4>
                             <div className="flex items-center gap-2 text-[13px] mt-1">

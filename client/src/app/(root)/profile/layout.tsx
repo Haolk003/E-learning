@@ -1,5 +1,6 @@
 import React from "react";
 import Heading from "@/utils/Heading";
+import Header from "@/components/Header";
 export default function RootLayout({
   children,
 }: {
@@ -8,6 +9,7 @@ export default function RootLayout({
   return (
     <>
       <Heading description="dda" keyword="das" title="profile" />
+      <Header />
       <div className="">{children}</div>
     </>
   );

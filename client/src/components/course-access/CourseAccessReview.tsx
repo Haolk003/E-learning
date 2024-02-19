@@ -23,8 +23,7 @@ const CourseAccessReview: FC<Props> = ({ courseId, courseData }) => {
     isSuccess: isSuccessReview,
   } = useGetReviewByCoureIdQuery(courseId);
   const [ratingSelectType, setRatingSelectType] = useState("all");
-  console.log(data);
-  console.log(reviews);
+
   return (
     <>
       {data && reviews && (
@@ -41,42 +40,57 @@ const CourseAccessReview: FC<Props> = ({ courseId, courseData }) => {
             <div className="w-[80%] flex flex-col gap-3">
               <div className="flex items-center gap-4 w-full">
                 <div className="w-[80%]">
-                  <ProgressPrecentRating progress={data.data["5 stars"]} />
+                  <ProgressPrecentRating
+                    progress={data.data ? data.data["5 stars"] : 0}
+                  />
                 </div>
                 <div className="flex items-center justify-between gap-1 w-[20%]">
-                  <Rating ratings={5} /> <p>{data.data["5 stars"]}%</p>
+                  <Rating ratings={5} />{" "}
+                  <p>{data.data ? data.data["5 stars"] : 0}%</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 w-full">
                 <div className="w-[80%]">
-                  <ProgressPrecentRating progress={data.data["4 stars"]} />
+                  <ProgressPrecentRating
+                    progress={data.data ? data.data["4 stars"] : 0}
+                  />
                 </div>
                 <div className="flex items-center justify-between gap-1 w-[20%]">
-                  <Rating ratings={4} /> <p>{data.data["4 stars"]}%</p>
+                  <Rating ratings={4} />{" "}
+                  <p>{data.data ? data.data["4 stars"] : 0}%</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 w-full">
                 <div className="w-[80%]">
-                  <ProgressPrecentRating progress={data.data["3 stars"]} />
+                  <ProgressPrecentRating
+                    progress={data.data ? data.data["3 stars"] : 0}
+                  />
                 </div>
                 <div className="flex items-center justify-between gap-1 w-[20%]">
-                  <Rating ratings={3} /> <p>{data.data["3 stars"]}%</p>
+                  <Rating ratings={3} />{" "}
+                  <p>{data.data ? data.data["3 stars"] : 0}%</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 w-full">
                 <div className="w-[80%]">
-                  <ProgressPrecentRating progress={data.data["2 stars"]} />
+                  <ProgressPrecentRating
+                    progress={data.data ? data.data["2 stars"] : 0}
+                  />
                 </div>
                 <div className="flex items-center justify-between gap-1 w-[20%]">
-                  <Rating ratings={2} /> <p>{data.data["2 stars"]}%</p>
+                  <Rating ratings={2} />{" "}
+                  <p>{data.data ? data.data["2 stars"] : 0}%</p>
                 </div>
               </div>
               <div className="flex items-center gap-4 w-full">
                 <div className="w-[80%]">
-                  <ProgressPrecentRating progress={data.data["1 stars"]} />
+                  <ProgressPrecentRating
+                    progress={data.data ? data.data["1 stars"] : 0}
+                  />
                 </div>
                 <div className="flex items-center justify-between gap-1 w-[20%]">
-                  <Rating ratings={1} /> <p>{data.data["1 stars"]}%</p>
+                  <Rating ratings={1} />{" "}
+                  <p>{data.data ? data.data["1 stars"] : 0}%</p>
                 </div>
               </div>
             </div>

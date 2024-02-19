@@ -108,16 +108,12 @@ interface QueryType {
 }
 export const getAllCoursePublic = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { keyword, sort, limit, page } = req.query as QueryType;
-    const { countQuery, courses } = await courseService.getAllCourseByAdmin({
-      keyword,
-      sort,
-      limit,
-      page,
+    const { courses, totalCount } = await courseService.getAllCourseByAdmin({
+      ...req.query,
     });
     res.status(200).json({
       success: true,
-      data: { courses, countQuery },
+      data: { courses, totalCount },
       message: "Get Courses Successfully",
     });
   }

@@ -3,6 +3,7 @@
 import React, { FC, useEffect, useState } from "react";
 import * as Collapible from "@radix-ui/react-collapsible";
 import { useSearchParams } from "next/navigation";
+import CreateReview from "./CreateReview";
 import {
   useGetpurchaserCourseQuery,
   useGetProgressLectureQuery,
@@ -23,6 +24,13 @@ import CourseAccessToolbar from "./CourseAccessToolbar";
 import CourseAccessOverview from "./CourseAccessOverview";
 import CourseAccessNote from "./CourseAccessNote";
 import CourseAccessReview from "./CourseAccessReview";
+import CourseAccessHeader from "./CourseAccessHeader";
+import {
+  progressLectureProgressType,
+  ProgressDataLectureType,
+} from "@/types/progressLectureUserType";
+import { CourseContentType } from "@/types/couresContentType";
+import { textPasteRule } from "@tiptap/react";
 
 type Props = {
   id: string;
@@ -31,62 +39,92 @@ type Props = {
 
 const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
   const { data: notes, refetch } = useGetNoteCourseQuery(id);
-  console.log(notes);
+
   const searchParams = useSearchParams();
   const { data, isLoading, isSuccess, error } = useGetpurchaserCourseQuery(id);
   const { data: progress } = useGetProgressLectureQuery(id);
   const [played, setPlayed] = useState(0);
+  const totalProgressCompleted = progress
+    ? progress.data.progress.reduce(
+        (total: number, progress: ProgressDataLectureType) => {
+          if (progress.isCompleted) {
+            return total + 1;
+          } else {
+            return total;
+          }
+        },
+        0
+      )
+    : 0;
 
+  const totalLecture = data
+    ? data.data.courseData.reduce(
+        (total: number, courseData: CourseContentType) => {
+          return total + courseData.lectures.length;
+        },
+        0
+      )
+    : 0;
   return (
-    <div className="pt-[80px] flex">
-      <div className="w-[calc(100%-350px)] overflow-hidden">
-        {progress && notes && data && (
-          <CourseSuccessPlayer
-            played={played}
-            setPlayed={setPlayed}
-            courseId={id}
-            lectureData={data.data.courseData}
-            lectureId={lectureId}
-            progressVideo={progress.data}
-            notes={notes.data}
-          />
-        )}
-        {progress && data && (
-          <CourseAccessToolbar courseId={id} lectureId={lectureId} />
-        )}
-        {data &&
-          (searchParams.get("option") === "overview" ||
-            !searchParams.get("option")) && (
-            <CourseAccessOverview courseData={data.data} />
-          )}
-        {data && notes.data && searchParams.get("option") === "note" && (
-          <CourseAccessNote
-            notes={notes.data}
-            refetch={refetch}
-            courseData={data.data}
-            played={played}
-            courseId={id}
-            lectureId={lectureId}
-          />
-        )}
-        {data && searchParams.get("option") === "review" && (
-          <CourseAccessReview courseId={id} courseData={data.data} />
-        )}
-      </div>
-      {data && progress && (
-        <CoureAccessLectureList
-          lectureId={lectureId}
-          progressData={progress.data}
+    <div>
+      {data && (
+        <CourseAccessHeader
           courseId={id}
-          courseContentData={data.data.courseData}
+          courseTitle={data.data.title}
+          totalLecture={totalLecture}
+          totalProgressComplete={totalProgressCompleted}
         />
       )}
-
-      {isLoading && (
-        <div className="bg-blackA7 absolute w-full h-full flex items-center justify-center left-0 top-0">
-          <Loader />
+      <div className=" flex">
+        <div className="w-[calc(100%-350px)] overflow-hidden">
+          {progress && notes && data && (
+            <CourseSuccessPlayer
+              played={played}
+              setPlayed={setPlayed}
+              courseId={id}
+              lectureData={data.data.courseData}
+              lectureId={lectureId}
+              progressVideo={progress.data}
+              notes={notes.data}
+            />
+          )}
+          {progress && data && (
+            <CourseAccessToolbar courseId={id} lectureId={lectureId} />
+          )}
+          {data &&
+            (searchParams.get("option") === "overview" ||
+              !searchParams.get("option")) && (
+              <CourseAccessOverview courseData={data.data} />
+            )}
+          {data && notes.data && searchParams.get("option") === "note" && (
+            <CourseAccessNote
+              notes={notes.data}
+              refetch={refetch}
+              courseData={data.data}
+              played={played}
+              courseId={id}
+              lectureId={lectureId}
+            />
+          )}
+          {data && searchParams.get("option") === "review" && (
+            <CourseAccessReview courseId={id} courseData={data.data} />
+          )}
         </div>
-      )}
+        {data && progress && (
+          <CoureAccessLectureList
+            lectureId={lectureId}
+            progressData={progress.data}
+            courseId={id}
+            courseContentData={data.data.courseData}
+          />
+        )}
+
+        {isLoading && (
+          <div className="bg-blackA7 absolute w-full h-full flex items-center justify-center left-0 top-0">
+            <Loader />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
