@@ -37,6 +37,8 @@ import { CourseType } from "@/types/couresContentType";
 
 import SelectCategory from "@/components/ui/select/SelectIntructor";
 
+import { CategoryType } from "@/types/categoryType";
+
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "";
 const socketId = socketIO(`${ENDPOINT}`, { transports: ["websocket"] });
 
@@ -52,6 +54,7 @@ type courseInfoType = {
   category: string;
   level: string;
   tags: string;
+  subCategory: string;
 };
 type Props = {
   id?: string;
@@ -60,7 +63,7 @@ type Props = {
 const CoureInfo: FC<Props> = ({ id }) => {
   const { data: categories, isLoading: categoriesLoading } =
     useGetAllCategoryQuery("");
-
+  console.log(categories);
   const router = useRouter();
   const {
     error: errorGetCourse,
@@ -75,6 +78,8 @@ const CoureInfo: FC<Props> = ({ id }) => {
   const [loadingUploadVideo, setLoadingUploadVideo] = useState(false);
   const [percentUpload, setPercentUpload] = useState(0);
   const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [subCategoryData, setSubCategoryData] = useState<CategoryType[]>([]);
   const [videoResult, setVideoResult] = useState<{
     public_id: string;
     url: string;
@@ -163,6 +168,19 @@ const CoureInfo: FC<Props> = ({ id }) => {
   const handleChangeCategory = (value: string) => {
     setValue("category", value);
     setCategory(value);
+    if (value !== "") {
+      const newCategories = categories.data as CategoryType[];
+      const findParentCategory = newCategories.find(
+        (item) => item._id === value
+      );
+      if (findParentCategory) {
+        setSubCategoryData(findParentCategory.subcategories);
+      }
+    }
+  };
+  const handleChangeSubCategory = (value: string) => {
+    setValue("subCategory", value);
+    setSubCategory(value);
   };
 
   useEffect(() => {
@@ -284,8 +302,8 @@ const CoureInfo: FC<Props> = ({ id }) => {
             </span>
           </Form.Field>
         </div>
-        <div className="flex items-center justify-between mt-3 ">
-          <Form.Field name="tags" className="flex flex-col gap-2 w-[45%]">
+        <div className="">
+          <Form.Field name="tags" className="flex flex-col gap-2 w-full">
             <Form.Label>Course Tags</Form.Label>
             <Form.Control asChild>
               <input
@@ -299,15 +317,35 @@ const CoureInfo: FC<Props> = ({ id }) => {
               {errors.tags?.message}
             </span>
           </Form.Field>
-
-          <Form.Field name="category" className="w-[45%] flex flex-col gap-2">
-            <Form.Label>Course Category</Form.Label>
-            <Form.Control asChild>
+        </div>
+        <div className="w-full flex items-center justify-between mt-5">
+          <Form.Field name="category" className="w-[45%] flex flex-col  gap-2">
+            <Form.Label>
+              <p>Course Category</p>
+            </Form.Label>
+            <Form.Control asChild className="w-full">
               {categories && (
                 <SelectCategory
                   data={categories.data}
                   value={category}
                   handleChange={handleChangeCategory}
+                />
+              )}
+            </Form.Control>
+            <span className="text-red-500 text-[13px]">
+              {errors.category?.message}
+            </span>
+          </Form.Field>
+          <Form.Field name="category" className="w-[45%] flex flex-col  gap-2">
+            <Form.Label>
+              <p>Course SubCategory</p>
+            </Form.Label>
+            <Form.Control asChild className="w-full">
+              {categories && (
+                <SelectCategory
+                  data={subCategoryData}
+                  value={subCategory}
+                  handleChange={handleChangeSubCategory}
                 />
               )}
             </Form.Control>

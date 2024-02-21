@@ -1,44 +1,104 @@
-import React, { useEffect, useState } from "react";
-import * as Collapsible from "@radix-ui/react-collapsible";
-import * as Checkbox from "@radix-ui/react-checkbox";
+import React, { useCallback, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
 import { FaCircle } from "react-icons/fa6";
 import ColllapseFilter from "../ui/ColllapseFilter";
 import Rating from "../ui/Rating";
 import RadioGroupFilterRating from "../ui/radio-group/RadioGroupFilterRating";
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import CheckboxFilterCourses from "../ui/checkbox/CheckboxFilterCourses";
+import * as RadioGroup from "@radix-ui/react-radio-group";
+
 const CourseSearchFilter = () => {
-  const [isCollappedRating, setIsCollappedRating] = useState(false);
-  const [isCollappedCategory, setIsCollappedCategory] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const levelQuery = searchParams.getAll("level");
+  const [isCollappedRating, setIsCollappedRating] = useState(true);
+  const [isCollappedLevel, setIsCollappedLevel] = useState(true);
   const [isCollapedPrice, setIsCollapedPrice] = useState(false);
-  const [isCollapedLevel, setIsCollapedLevel] = useState(false);
-  const [filterPrice, setFilerPrice] = useState<any>({
-    paid: false,
-    free: false,
-  });
+  const [priceValue, setPriceValue] = useState(searchParams.get("price") || "");
+
+  const [ratingsValue, setRatingsValue] = useState(
+    searchParams.get("ratings") || ""
+  );
   const [filtersLevel, setFiltersLevel] = useState<any>({
-    all: false,
-    beginner: false,
-    intermediate: false,
-    expert: false,
+    all: levelQuery.find((item) => item === "all") ? true : false,
+    beginner: levelQuery.find((item) => item === "beginner") ? true : false,
+    intermediate: levelQuery.find((item) => item === "intermediate")
+      ? true
+      : false,
+    expert: levelQuery.find((item) => item === "expert") ? true : false,
   });
+
+  const createQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.append(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+  const updateQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (value) {
+        if (!params.has(name, value)) {
+          params.append(name, value.toString());
+        } else {
+          params.set(name, value.toString());
+        }
+      } else {
+        params.delete(name);
+      }
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+  const deleteQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete(name, value);
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+  const handleChangeRating = (value: string) => {
+    setRatingsValue(value);
+    router.push(pathname + "?" + updateQueryString("ratings", value));
+  };
+  const handleChangePrice = (value: string) => {
+    setPriceValue(value);
+    router.push(pathname + "?" + updateQueryString("price", value));
+  };
 
   const handleCheckboxLevelfilter = (filterName: string) => {
-    setFiltersLevel({
-      ...filtersLevel,
-      [filterName]: !filtersLevel[filterName],
+    setFiltersLevel((prevFilters: any) => {
+      const newFilters = {
+        ...prevFilters,
+        [filterName]: !prevFilters[filterName],
+      };
+
+      // Sử dụng updatedQueryString để cập nhật địa chỉ hoặc thực hiện các hành động khác dựa trên query string mới.
+
+      return newFilters;
     });
+    if (!filtersLevel[filterName]) {
+      const updatedQueryString = updateQueryString("level", filterName);
+      router.push(pathname + "?" + updatedQueryString);
+    } else {
+      const updatedQueryString = deleteQueryString("level", filterName);
+      router.push(pathname + "?" + updatedQueryString);
+    }
   };
 
-  const handelCheckboxPriceFilter = (filterName: string) => {
-    setFilerPrice({
-      ...filterPrice,
-      [filterName]: !filterPrice[filterName],
-    });
-  };
   useEffect(() => {
     console.log(filtersLevel);
   }, [filtersLevel]);
+
   return (
     <div>
       <ColllapseFilter
@@ -46,13 +106,17 @@ const CourseSearchFilter = () => {
         setIsOpenCollapse={setIsCollappedRating}
         title="Ratings"
       >
-        <RadioGroupFilterRating />
+        <RadioGroupFilterRating
+          value={ratingsValue}
+          handleChangeRating={handleChangeRating}
+        />
       </ColllapseFilter>
+
       <br />
 
       <ColllapseFilter
-        isOpenCollapse={isCollappedCategory}
-        setIsOpenCollapse={setIsCollappedCategory}
+        isOpenCollapse={isCollappedLevel}
+        setIsOpenCollapse={setIsCollappedLevel}
         title="Level"
       >
         <div className="flex flex-col gap-4">
@@ -73,14 +137,34 @@ const CourseSearchFilter = () => {
         title="Price"
       >
         <div className="flex flex-col gap-4">
-          {Object.keys(filterPrice).map((filter) => (
-            <CheckboxFilterCourses
-              key={filter}
-              label={filter}
-              isChecked={filtersLevel[filter]}
-              handleCheckbox={() => handelCheckboxPriceFilter(filter)}
-            />
-          ))}
+          <RadioGroup.Root
+            className="mt-2 flex flex-col gap-4"
+            value={priceValue}
+            onValueChange={(value: string) => handleChangePrice(value)}
+          >
+            <div className="flex items-center gap-2">
+              <RadioGroup.Item
+                value="paid"
+                className="bg-white w-[15px] h-[15px] rounded-full shadow-[0_2px_10px] shadow-blackA4 hover:bg-violet3 focus:shadow-[0_0_0_2px] focus:shadow-black outline-none cursor-default"
+              >
+                <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-[11px] after:h-[11px] after:rounded-[50%] after:bg-violet11" />
+              </RadioGroup.Item>
+              <label className="text-[15px] leading-none pl-[15px] flex items-center gap-1">
+                <p>Paid</p>
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <RadioGroup.Item
+                value="free"
+                className="bg-white w-[15px] h-[15px] rounded-full shadow-[0_2px_10px] shadow-blackA4 hover:bg-violet3 focus:shadow-[0_0_0_2px] focus:shadow-black outline-none cursor-default"
+              >
+                <RadioGroup.Indicator className="flex items-center justify-center w-full h-full relative after:content-[''] after:block after:w-[11px] after:h-[11px] after:rounded-[50%] after:bg-violet11" />
+              </RadioGroup.Item>
+              <label className="text-[15px] leading-none pl-[15px] flex items-center gap-1">
+                <p>Free</p>
+              </label>
+            </div>
+          </RadioGroup.Root>
         </div>
       </ColllapseFilter>
     </div>

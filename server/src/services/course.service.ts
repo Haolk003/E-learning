@@ -32,6 +32,7 @@ type CreateCourseStep1 = {
   description: string;
   level: string;
   category: string;
+  subCategory: string;
 };
 
 //save data when the user completes step 1
@@ -226,25 +227,46 @@ type filterGetAllCourse = {
   page?: number;
   limit?: number;
   category?: string;
-  price?: number;
+  price?: string | string[];
   ratings?: number;
+  level?: string | string[];
 };
 const getAllCourseByAdmin = async (queryObj: filterGetAllCourse) => {
-  const queryObjCopy = queryObj;
-  const limit = queryObj.limit ? queryObj.limit : 20;
-  const page = queryObj.page ? queryObj.page : 1;
+  const filteredObject = _.omitBy(queryObj, _.isEmpty);
+
+  if (
+    typeof filteredObject.level === "string" &&
+    filteredObject.level.split("").includes(",")
+  ) {
+    filteredObject.level = filteredObject.level.split(",");
+  }
+  // Loại bỏ dấu ngoặc vuông từ chuỗi
+  //   const strippedString = filteredObject.level.replace(/\[|\]/g, "");
+
+  //   // Phân tích chuỗi và chuyển đổi thành mảng
+  //   const parsedArray = strippedString.split(",");
+
+  //   // Gán mảng mới cho thuộc tính 'price'
+  //   filteredObject.level = parsedArray;
+  // }
+  console.log(filteredObject);
+  const queryObjCopy = filteredObject;
+  const limit = (filteredObject.limit ? filteredObject.limit : 20) as number;
+  const page = (filteredObject.page ? filteredObject.page : 1) as number;
 
   const excludeField = ["page", "sort", "limit", "keyword"];
 
   const filteredQueryObj = _.omit(queryObjCopy, excludeField);
   let queryStr = JSON.stringify(filteredQueryObj);
+
   queryStr = queryStr.replace(/\b(gt|gte|lte|lt)\b/g, (match) => `$${match}`);
   queryStr = JSON.parse(queryStr);
+
   let query;
-  if (!isEmpty(queryObj.keyword)) {
+  if (!isEmpty(filteredObject.keyword)) {
     query = courseModel.find(
       Object.assign(
-        { title: { $regex: queryObj.keyword, $options: "i" } },
+        { title: { $regex: filteredObject.keyword, $options: "i" } },
         { status: "public" },
         queryStr
       )
@@ -253,11 +275,11 @@ const getAllCourseByAdmin = async (queryObj: filterGetAllCourse) => {
     query = courseModel.find(Object.assign({ status: "public" }, queryStr));
   }
 
-  if (queryObj.sort) {
-    const sortBy = queryObj.sort.split(",").join(" ");
+  if (filteredObject && typeof filteredObject.sort === "string") {
+    const sortBy = filteredObject.sort.split(",").join(" ");
     query = query.sort(sortBy);
   } else {
-    query = query.sort("-createdAt");
+    query = query.sort("-reviews");
   }
 
   query = query

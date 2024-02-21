@@ -2,17 +2,23 @@ import mongoose, { Document } from "mongoose";
 
 interface ICategory extends Document {
   name: string;
+  parent_id: mongoose.Schema.Types.ObjectId;
+  description: string;
+  isCategory: boolean;
   courseCount: number;
-  icon: string;
 }
 
 const categorySchema = new mongoose.Schema<ICategory>({
-  name: {
-    type: String,
-    required: true,
+  parent_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    default: null,
   },
-  icon: {
-    type: String,
+  name: String,
+  description: String,
+  isCategory: {
+    type: Boolean,
+    default: true,
   },
   courseCount: {
     type: Number,

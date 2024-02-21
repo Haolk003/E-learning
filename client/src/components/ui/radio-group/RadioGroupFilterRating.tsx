@@ -4,10 +4,18 @@ import Rating from "../Rating";
 
 type Props = {
   value: string;
+  handleChangeRating: (value: string) => void;
 };
-const RadioGroupFilterRating = () => {
+const RadioGroupFilterRating: React.FC<Props> = ({
+  handleChangeRating,
+  value,
+}) => {
   return (
-    <RadioGroup.Root className="mt-2 flex flex-col gap-4">
+    <RadioGroup.Root
+      className="mt-2 flex flex-col gap-4"
+      value={value}
+      onValueChange={(value: string) => handleChangeRating(value)}
+    >
       <div className="flex items-center gap-2">
         <RadioGroup.Item
           value="4.5"

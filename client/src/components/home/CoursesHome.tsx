@@ -14,7 +14,6 @@ const CoursesHome = () => {
   const [courses, setCourses] = useState<any[]>([]);
   useEffect(() => {
     if (data) {
-      console.log(data);
       const course = data.data.courses as CourseType[];
       setCourses(
         course.map((item, index) => {

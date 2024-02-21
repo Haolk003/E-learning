@@ -4,6 +4,8 @@ import ErrorHandle from "../utils/errorHandle";
 type newCategoryType = {
   name: string;
   icon?: string;
+  parent_id?: string;
+  description?: string;
 };
 const newCategory = async (data: newCategoryType) => {
   const newCategory = await CategoryModel.create(data);
@@ -31,8 +33,23 @@ const getCategoryById = async (id: string) => {
 };
 
 const getAllCategory = async () => {
-  const categories = await CategoryModel.find().sort("-courseCount");
-  return categories;
+  const resultCategories = await CategoryModel.aggregate([
+    {
+      $match: {
+        parent_id: null,
+      },
+    },
+    {
+      $lookup: {
+        from: "categories", // your collection name
+        localField: "_id",
+        foreignField: "parent_id",
+        as: "subcategories",
+      },
+    },
+  ]);
+
+  return resultCategories;
 };
 
 const deleteCategory = async (id: string) => {

@@ -38,79 +38,80 @@ export default function RootLayout({
 
   const pathname = usePathname();
 
-  const handleUpdateTimeSpent = async () => {
-    const sessionInteract = sessionStorage.getItem("session-interact");
-    if (sessionInteract) {
-      await updateTimeSpent({
-        id: JSON.parse(sessionInteract).id,
-        timeSpent: 20,
-      });
-    }
-  };
+  // const handleUpdateTimeSpent = async () => {
+  //   const sessionInteract = sessionStorage.getItem("session-interact");
+  //   if (sessionInteract) {
+  //     await updateTimeSpent({
+  //       id: JSON.parse(sessionInteract).id,
+  //       timeSpent: 20,
+  //     });
+  //   }
+  // };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      handleUpdateTimeSpent();
-    }, 20000);
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     handleUpdateTimeSpent();
+  //   }, 40000);
 
-    return () => clearInterval(interval);
-  }, []);
-  useEffect(() => {
-    const handleRouteChange = () => {
-      // Xử lý chuyển trang ở đây
-      console.log(pathname);
-    };
+  //   return () => clearInterval(interval);
+  // }, []);
+  // useEffect(() => {
+  //   const handleRouteChange = () => {
+  //     // Xử lý chuyển trang ở đây
+  //     console.log(pathname);
+  //   };
 
-    window.onpopstate = handleRouteChange;
+  //   window.onpopstate = handleRouteChange;
 
-    return () => {
-      window.onpopstate = null;
-    };
-  }, []);
+  //   return () => {
+  //     window.onpopstate = null;
+  //   };
+  // }, []);
 
-  const handleInteractType = async (type: string) => {
-    const sessionInteract = sessionStorage.getItem("session-interact");
+  // const handleInteractType = async (type: string) => {
+  //   const sessionInteract = sessionStorage.getItem("session-interact");
 
-    if (sessionInteract) {
-      await updateInteractionPageView({
-        id: JSON.parse(sessionInteract).id,
-        interation: type,
-      });
-    }
-  };
-  const handleScroll = useCallback(() => {
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
+  //   if (sessionInteract) {
+  //     await updateInteractionPageView({
+  //       id: JSON.parse(sessionInteract).id,
+  //       interation: type,
+  //     });
+  //   }
+  // };
+  // const handleScroll = useCallback(() => {
+  //   if (debounceTimeoutRef.current) {
+  //     clearTimeout(debounceTimeoutRef.current);
+  //   }
 
-    debounceTimeoutRef.current = setTimeout(() => {
-      handleInteractType("scroll");
-    }, 3000);
-  }, []);
+  //   debounceTimeoutRef.current = setTimeout(() => {
+  //     handleInteractType("scroll");
+  //   }, 3000);
+  // }, []);
 
-  const handleClick = useCallback(() => {
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
+  // const handleClick = useCallback(() => {
+  //   if (debounceTimeoutRef.current) {
+  //     clearTimeout(debounceTimeoutRef.current);
+  //   }
+  //   debounceTimeoutRef.current = setTimeout(() => {
+  //     handleInteractType("click");
+  //   }, 5000);
+  // }, []);
+  // useEffect(() => {
+  //   scrollRef.current = handleScroll;
+  //   clickRef.current = handleClick;
 
-    handleInteractType("click");
-  }, []);
-  useEffect(() => {
-    scrollRef.current = handleScroll;
-    clickRef.current = handleClick;
+  //   window.addEventListener("scroll", scrollRef.current);
+  //   window.addEventListener("click", clickRef.current);
 
-    window.addEventListener("scroll", scrollRef.current);
-    window.addEventListener("click", clickRef.current);
+  //   return () => {
+  //     window.removeEventListener("scroll", scrollRef.current as EventListener);
+  //     window.removeEventListener("click", clickRef.current as EventListener);
 
-    return () => {
-      window.removeEventListener("scroll", scrollRef.current as EventListener);
-      window.removeEventListener("click", clickRef.current as EventListener);
-
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
-    };
-  }, [handleScroll, handleClick]);
+  //     if (debounceTimeoutRef.current) {
+  //       clearTimeout(debounceTimeoutRef.current);
+  //     }
+  //   };
+  // }, [handleScroll, handleClick]);
   useEffect(() => {
     if (request) {
       const sessionInteract = sessionStorage.getItem("session-interact");
