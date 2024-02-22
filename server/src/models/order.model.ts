@@ -6,7 +6,7 @@ interface IOrderShema extends Document {
   payment_info: { id: string; object: string; amount: number };
   payment_method: object;
   payment_stripe_id: string;
-  lectureId: string;
+  instructorId: mongoose.Types.ObjectId;
 }
 const orderShema = new mongoose.Schema<IOrderShema>(
   {
@@ -20,8 +20,10 @@ const orderShema = new mongoose.Schema<IOrderShema>(
       ref: "Course",
       required: true,
     },
-    lectureId: {
-      type: String,
+    instructorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
     payment_info: {
       id: String,

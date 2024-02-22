@@ -5,6 +5,7 @@ interface Ireview extends Document {
   rating: number;
   comment: string;
   courseId: mongoose.Schema.Types.ObjectId;
+  instructorId: Schema.Types.ObjectId;
 }
 const reviewShema: Schema<Ireview> = new mongoose.Schema(
   {
@@ -24,6 +25,11 @@ const reviewShema: Schema<Ireview> = new mongoose.Schema(
     },
     courseId: {
       type: String,
+      required: true,
+    },
+    instructorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },

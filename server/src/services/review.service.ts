@@ -29,6 +29,7 @@ const addReview = async ({
     courseId: courseId,
     comment: comment,
     rating: rating,
+    instructorId: findCourse.author,
   });
 
   if (newReview) {

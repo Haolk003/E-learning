@@ -7,7 +7,11 @@ import dayjs from "dayjs";
 import ErrorHandle from "../utils/errorHandle";
 
 import fillMissingIntervals from "../utils/fillMissingInterval";
-import createExpectedIntervals from "../utils/createdExpectdInterval";
+import {
+  createExpectedIntervals,
+  createExpectedIntervalsInstructor,
+} from "../utils/createdExpectdInterval";
+import reviewModel from "../models/review.model";
 
 // Function to calculate general count analytics
 const generalCountAnalytics = async () => {
@@ -372,6 +376,364 @@ async function generateEarningsReport(period: string) {
     earningTotal = filledResults;
   }
   return earningTotal;
+}
+
+async function generateEarningReportForInstructor(
+  period: string,
+  userId: string
+) {
+  let earningTotal;
+  const now = new Date();
+  if (period === "7D") {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 7);
+
+    const query = {
+      createdAt: {
+        $gte: startDate,
+        $lt: new Date(),
+      },
+      instructorId: userId,
+    };
+    earningTotal = await orderModel.aggregate([
+      {
+        $match: query,
+      },
+      {
+        $project: {
+          amount: "$payment_info.amount",
+          createdAt: 1,
+          dayOfMonth: { $dayOfMonth: "$createdAt" },
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            day: "$dayOfMonth",
+            month: "$month",
+            year: "$year",
+          },
+          totalAmount: { $sum: "$amount" },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const expectedIntervals = createExpectedIntervalsInstructor("7D");
+    const filledResults = fillMissingIntervals(
+      "D",
+      earningTotal,
+      expectedIntervals
+    );
+    console.log(earningTotal);
+    earningTotal = filledResults;
+  } else if (period === "30D") {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30);
+    const query = {
+      createdAt: {
+        $gte: startDate,
+        $lt: new Date(),
+      },
+      instructorId: userId,
+    };
+
+    earningTotal = await orderModel.aggregate([
+      { $match: query },
+      {
+        $project: {
+          amount: "$payment_info.amount",
+          createdAt: 1,
+          dayOfMonth: { $dayOfMonth: "$createdAt" },
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            day: "$dayOfMonth",
+            month: "$month",
+            year: "$year",
+          },
+          totalAmount: { $sum: "$amount" },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+    console.log(earningTotal);
+    const expectedIntervals = createExpectedIntervals("30D");
+
+    const filledResults = fillMissingIntervals(
+      "D",
+      earningTotal,
+      expectedIntervals
+    );
+    earningTotal = filledResults;
+  } else if (period === "1Y") {
+    const query = {
+      createdAt: {
+        $gte: getStartDate("1M"),
+        $lt: new Date(new Date().getFullYear(), new Date().getMonth(), 0),
+      },
+      instructorId: userId,
+    };
+
+    earningTotal = await orderModel.aggregate([
+      { $match: query },
+      {
+        $project: {
+          amount: "$payment_info.amount",
+          createdAt: 1,
+          monthInteral: {
+            month: { $month: "$createdAt" },
+            year: { $year: "$createdAt" },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$monthInteral",
+          totalAmount: { $sum: "$amount" },
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    const expectedIntervals = createExpectedIntervals("1M");
+
+    const filledResults = fillMissingIntervals(
+      "1M",
+      earningTotal,
+      expectedIntervals
+    );
+    earningTotal = filledResults;
+  } else {
+    const query = {
+      instructorId: userId,
+    };
+
+    earningTotal = await orderModel.aggregate([
+      { $match: query },
+      {
+        $project: {
+          amount: "$payment_info.amount",
+          createdAt: 1,
+          year: { $year: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: "$year",
+          },
+          totalAmount: { $sum: "$amount" },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { "_id.year": 1 } },
+    ]);
+
+    const expectedIntervals = createExpectedIntervals("1Y");
+    const filledResults = fillMissingIntervals(
+      "1Y",
+      earningTotal,
+      expectedIntervals
+    );
+    earningTotal = filledResults;
+  }
+  return earningTotal;
+}
+
+async function generateReviewReportForInstructor(
+  period: string,
+  userId: string
+) {
+  let reviewTotal;
+  const now = new Date();
+  if (period === "7D") {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 7);
+
+    const query = {
+      createdAt: {
+        $gte: startDate,
+        $lt: new Date(),
+      },
+      instructorId: userId,
+    };
+    reviewTotal = await reviewModel.aggregate([
+      {
+        $match: query,
+      },
+      {
+        $project: {
+          amount: "$rating",
+          createdAt: 1,
+          dayOfMonth: { $dayOfMonth: "$createdAt" },
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            day: "$dayOfMonth",
+            month: "$month",
+            year: "$year",
+          },
+          totalAmount: { $sum: "$amount" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $addFields: {
+          average: { $divide: ["$totalAmount", "$count"] },
+        },
+      },
+    ]);
+
+    const expectedIntervals = createExpectedIntervalsInstructor("7D");
+    const filledResults = fillMissingIntervals(
+      "D",
+      reviewTotal,
+      expectedIntervals
+    );
+    console.log(reviewTotal);
+    reviewTotal = filledResults;
+  } else if (period === "30D") {
+    const startDate = new Date();
+    startDate.setDate(startDate.getDate() - 30);
+    const query = {
+      createdAt: {
+        $gte: startDate,
+        $lt: new Date(),
+      },
+      instructorId: userId,
+    };
+
+    reviewTotal = await reviewModel.aggregate([
+      { $match: query },
+      {
+        $project: {
+          amount: "$rating",
+          createdAt: 1,
+          dayOfMonth: { $dayOfMonth: "$createdAt" },
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            day: "$dayOfMonth",
+            month: "$month",
+            year: "$year",
+          },
+          totalAmount: { $sum: "$amount" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $addFields: {
+          average: { $divide: ["$totalAmount", "$count"] },
+        },
+      },
+    ]);
+    console.log(reviewTotal);
+    const expectedIntervals = createExpectedIntervals("30D");
+
+    const filledResults = fillMissingIntervals(
+      "D",
+      reviewTotal,
+      expectedIntervals
+    );
+    reviewTotal = filledResults;
+  } else if (period === "1Y") {
+    const query = {
+      createdAt: {
+        $gte: getStartDate("1M"),
+        $lt: new Date(new Date().getFullYear(), new Date().getMonth(), 0),
+      },
+      instructorId: userId,
+    };
+
+    reviewTotal = await reviewModel.aggregate([
+      { $match: query },
+      {
+        $project: {
+          amount: "$rating",
+          createdAt: 1,
+          monthInteral: {
+            month: { $month: "$createdAt" },
+            year: { $year: "$createdAt" },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: "$monthInteral",
+          totalAmount: { $sum: "$amount" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $addFields: {
+          average: { $divide: ["$totalAmount", "$count"] },
+        },
+      },
+    ]);
+
+    const expectedIntervals = createExpectedIntervals("1M");
+
+    const filledResults = fillMissingIntervals(
+      "1M",
+      reviewTotal,
+      expectedIntervals
+    );
+    reviewTotal = filledResults;
+  } else {
+    const query = {
+      instructorId: userId,
+    };
+
+    reviewTotal = await reviewModel.aggregate([
+      { $match: query },
+      {
+        $project: {
+          amount: "$rating",
+          createdAt: 1,
+          year: { $year: "$createdAt" },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            year: "$year",
+          },
+          totalAmount: { $sum: "$amount" },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $addFields: {
+          average: { $divide: ["$totalAmount", "$count"] },
+        },
+      },
+      { $sort: { "_id.year": 1 } },
+    ]);
+
+    const expectedIntervals = createExpectedIntervals("1Y");
+    const filledResults = fillMissingIntervals(
+      "1Y",
+      reviewTotal,
+      expectedIntervals
+    );
+    reviewTotal = filledResults;
+  }
+  return reviewTotal;
 }
 
 const calculateMetricsSum = async () => {
@@ -864,6 +1226,8 @@ const analyticsService = {
   calculateDevideTypePercentage,
   calculateMonthNewUserSessionDuration,
   genarateBrowser,
+  generateEarningReportForInstructor,
+  generateReviewReportForInstructor,
 };
 
 export default analyticsService;
