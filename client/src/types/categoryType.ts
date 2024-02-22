@@ -2,5 +2,8 @@ export type CategoryType = {
   _id: string;
   name: string;
   courseCount: number;
-  icon: string;
+  parent_id: string | null;
+  description: string;
+  isCategory: boolean;
+  subcategories: CategoryType[];
 };

@@ -36,6 +36,7 @@ export interface ICourse extends Document {
   prerequisites: { title: string }[];
   benefits: { title: string }[];
   progress: number;
+  subCategory: Schema.Types.ObjectId;
 }
 
 export interface ICourseData {
@@ -109,6 +110,10 @@ const courseSchema: Schema<ICourse> = new mongoose.Schema(
       discount: { type: Number, default: 0 },
     },
     category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
+    subCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
     },

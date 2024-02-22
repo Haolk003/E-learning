@@ -14,6 +14,7 @@ export const courseInfoValidate = Yup.object({
     url: Yup.string().required("Demo Url is required"),
     public_id: Yup.string().required("Demo Url is required"),
   }),
+  subCategory: Yup.string().required("SubCategory is required"),
 });
 interface CourseContentDataType {
   test: {

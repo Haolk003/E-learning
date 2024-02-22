@@ -66,9 +66,14 @@ export const courseApi = apiSlice.injectEndpoints({
       }),
     }),
     getAllCourse: build.query({
-      query: ({ sort, keyword, limit, page }) => ({
-        url: `get-all-courses?sort=${sort}&keyword=${keyword}&limit=${limit}&page=${page}`,
+      query: ({ sort, keyword, page, price, level, ratings }) => ({
+        url: `get-all-courses?sort=${sort}${
+          ratings ? `&ratings[gte]=${ratings}` : ""
+        }&keyword=${keyword}&page=${page}${
+          price === "paid" ? "&price[gt]=0" : ""
+        }${price === "free" ? "&price=0" : ""}&level=${level ? level : ""}`,
         method: "GET",
+
         credentials: "include" as const,
       }),
     }),

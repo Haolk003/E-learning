@@ -8,9 +8,10 @@ import VideoSnapshot from "video-snapshot";
 import Link from "next/link";
 type Props = {};
 const ProgressCourse: React.FC<Props> = () => {
-  const { data } = useGetProgressCoursesUserQuery("");
+  const { data } = useGetProgressCoursesUserQuery("", {
+    refetchOnMountOrArgChange: false,
+  });
 
-  console.log(data);
   useEffect(() => {
     if (data) {
       const progress = data.data as progressLectureProgressType[];

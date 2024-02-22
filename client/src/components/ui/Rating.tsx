@@ -11,7 +11,7 @@ const Rating = ({ ratings }: { ratings: number }) => {
           key={i}
           size={20}
           color="#f6b100"
-          className="mr-1.5 cursor-pointer"
+          className="mr-1 cursor-pointer"
         />
       );
     } else if (i === Math.ceil(ratings) && !Number.isInteger(ratings)) {
@@ -20,7 +20,7 @@ const Rating = ({ ratings }: { ratings: number }) => {
           key={i}
           size={20}
           color="#f6b100"
-          className="mr-1.5 cursor-pointer"
+          className="mr-1 cursor-pointer"
         />
       );
     } else {
@@ -29,7 +29,7 @@ const Rating = ({ ratings }: { ratings: number }) => {
           key={i}
           size={20}
           color="#f6b100"
-          className="mr-1.5 cursor-pointer"
+          className="mr-1 cursor-pointer"
         />
       );
     }

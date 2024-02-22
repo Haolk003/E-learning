@@ -32,7 +32,9 @@
 #modal-root {
   /* Adjust width and height as needed */
 }
-
+.MuiPagination-text {
+  color: #ccc;
+}
 .slider-thumb::-webkit-slider-thumb {
   appearance: none;
   width: 25px;
