@@ -6,6 +6,7 @@ import CoursesHome from "@/components/home/CoursesHome";
 import ProgressCourse from "@/components/home/ProgressCourse";
 import Header from "@/components/Header";
 import Fotter from "@/components/Fotter";
+import Footer2 from "@/components/Footer2";
 const page = () => {
   return (
     <div className="h-[200vh]  scroll-auto text-3xl text-black">
@@ -19,6 +20,7 @@ const page = () => {
       <ProgressCourse />
       <CoursesHome />
       <Fotter />
+      <Footer2 />
     </div>
   );
 };
