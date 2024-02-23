@@ -58,6 +58,20 @@ const analyticApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    generateAnalyticReviewForIntructor: build.query({
+      query: (period) => ({
+        url: `/analytics/generate-report-review-instructor?period=${period}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    generateAnalyticsEarningForIntructor: build.query({
+      query: (period) => ({
+        url: `/analytics/generate-earning-instructor?period=${period}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -70,4 +84,6 @@ export const {
   useGenerateBrowserQuery,
   useCalculateSumMetricsQuery,
   useCalculateSumUserQuery,
+  useGenerateAnalyticReviewForIntructorQuery,
+  useGenerateAnalyticsEarningForIntructorQuery,
 } = analyticApi;

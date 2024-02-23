@@ -57,7 +57,6 @@ export interface ICourseData {
       user: mongoose.Schema.Types.ObjectId;
     }
   ];
-
   videoSection: string;
   videoLength: number;
   videoPlayer: string;

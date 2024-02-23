@@ -25,6 +25,8 @@ import { useGetAllCategoryQuery } from "@/features/category/categoryApi";
 
 import { CategoryType } from "@/types/categoryType";
 
+import { IoIosNotificationsOutline } from "react-icons/io";
+
 const Header = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -84,7 +86,7 @@ const Header = () => {
           <div className="flex items-center gap-3">
             <HoverCard.Root>
               <HoverCard.Trigger asChild>
-                <p className="cursor-pointer text-[18px]">Categories</p>
+                <p className="cursor-pointer text-[15px]">Categories</p>
               </HoverCard.Trigger>
               <HoverCard.Portal>
                 <HoverCard.Content className="z-[200]  data-[side=bottom]:animate-slideUpAndFade data-[side=right]:animate-slideLeftAndFade data-[side=left]:animate-slideRightAndFade data-[side=top]:animate-slideDownAndFade min-w-[300px] h-[90vh]  bg-white dark:bg-gray5 p-5 shadow-[hsl(206_22%_7%_/_35%)_0px_10px_38px_-10px,hsl(206_22%_7%_/_20%)_0px_10px_20px_-15px] data-[state=open]:transition-all py-5">
@@ -153,11 +155,25 @@ const Header = () => {
             </form>
           </div>
 
-          <div className="flex items-center gap-7 text-xl">
-            <Link href="/courses">Courses</Link>
-            <Link href="/About">About</Link>
-            <Link href="/sponsorships">Sponsorships</Link>
-            <Link href="/faq">FAQ</Link>
+          <div className="flex items-center gap-7 text-[16px]">
+            {user && (
+              <Link
+                href={`${
+                  user?.role === "user"
+                    ? "/become-instructor"
+                    : "/instructor/courses"
+                }`}
+              >
+                {user?.role === "user" ? "Become instructor" : "Instructor"}
+              </Link>
+            )}
+
+            <Link href="/my-learning">My Learning</Link>
+            <button className="relative">
+              <IoIosNotificationsOutline size={25} />
+              <span className="animate-ping absolute top-1 right-[7px] inline-flex h-[5px] w-[5px] rounded-full bg-blue8"></span>
+            </button>
+
             <ThemeSwicher />
 
             <div>

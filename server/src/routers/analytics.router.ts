@@ -7,14 +7,24 @@ import {
   calculateDevideTypePercentage,
   calculateMonthNewUserSessionDuration,
   generateBrowser,
+  generateEarningReportForInstructor,
+  generateReviewReportForInstructor,
 } from "../controllers/analytics.controller";
 import express, { Router } from "express";
+import { protect, authorizeRoles } from "../middlewares/auth";
 
 const router = express.Router();
 
 router.get("/analytics/general-all", generalCountAnalytics);
 
 router.get("/analytics/generate-report", generateEarningsReport);
+
+router.get(
+  "/analytics/generate-earning-instructor",
+  protect,
+  authorizeRoles("instructor"),
+  generateEarningReportForInstructor
+);
 
 router.get("/analytics/calculate-sum-metrics", calculateMetricsSum);
 
@@ -36,4 +46,11 @@ router.get(
 );
 
 router.get("/analytics/generate-browser", generateBrowser);
+
+router.get(
+  "/analytics/generate-report-review-instructor",
+  protect,
+  authorizeRoles("instructor"),
+  generateReviewReportForInstructor
+);
 export default router;

@@ -39,6 +39,7 @@ const newOrder = async (
     courseId: courseId,
     userId: userId,
     payment_info: paymentIntent,
+    instructorId: findCourse.author,
   });
   findCourse.sold = Number(findCourse.sold) + 1;
 

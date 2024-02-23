@@ -18,6 +18,17 @@ export const generateEarningsReport = CatchAsyncError(
   }
 );
 
+export const generateEarningReportForInstructor = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.me._id;
+    const { period } = req.query as any;
+    const analytics = await analyticsService.generateEarningReportForInstructor(
+      period,
+      userId
+    );
+    res.status(200).json({ success: true, data: analytics });
+  }
+);
 export const calculateUserSum = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const analytics = await analyticsService.calculateUserSum();
@@ -57,6 +68,19 @@ export const calculateMonthNewUserSessionDuration = CatchAsyncError(
 export const generateBrowser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const analytics = await analyticsService.genarateBrowser();
+    res.status(200).json({ success: true, data: analytics });
+  }
+);
+
+export const generateReviewReportForInstructor = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { period } = req.query as any;
+    const userId = req.me._id;
+    const analytics = await analyticsService.generateReviewReportForInstructor(
+      period,
+      userId
+    );
+
     res.status(200).json({ success: true, data: analytics });
   }
 );

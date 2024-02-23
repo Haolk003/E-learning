@@ -81,6 +81,16 @@ const config: Config = {
           from: { opacity: "0", transform: "translateX(-2px)" },
           to: { opacity: "1", transform: "translateX(0)" },
         },
+        ping: {
+          "75%": {
+            transform: "scale(2)",
+            opacity: "1",
+          },
+          "100%": {
+            transform: "scale(2)",
+            opacity: " 1",
+          },
+        },
       },
       animation: {
         overlayShow: "overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)",
@@ -94,6 +104,7 @@ const config: Config = {
         slideUpAndFade: "slideUpAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
         slideRightAndFade:
           "slideRightAndFade 400ms cubic-bezier(0.16, 1, 0.3, 1)",
+        ping: "ping 1s cubic-bezier(0, 0, 0.2, 1) infinite",
       },
 
       screens: {
