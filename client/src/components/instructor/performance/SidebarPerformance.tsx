@@ -10,9 +10,9 @@ const SidebarPerformance = () => {
       <ul className="flex flex-col gap-5">
         <li>
           <Link
-            href={`/instructor/performance/overview`}
+            href={`/instructor/performance/overview/revenue`}
             className={`${
-              pathName === "/instructor/performance/overview"
+              pathName.includes("/instructor/performance/overview")
                 ? "text-white font-semibold text-[18px]"
                 : "text-gray9 text-[17px]"
             }`}
