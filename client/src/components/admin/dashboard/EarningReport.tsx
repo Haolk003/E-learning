@@ -14,7 +14,7 @@ const EarningReport = () => {
     <div className="bg-gray2 rounded-lg mt-4 ">
       <div className="py-3 px-4 flex items-center justify-between">
         <h2 className="headingAdmin !text-[13px]">Earnings Report</h2>
-        <div className="flex ">
+        <div className="flex">
           <ToggleGroupEarningReport
             period={periodEarning}
             handleChange={handleChangePeriod}

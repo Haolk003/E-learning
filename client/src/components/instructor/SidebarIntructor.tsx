@@ -74,6 +74,7 @@ const SideBarAdmin = () => {
           Courses
         </MenuItem>
         <MenuItem
+          component={<Link href="/instructor/communication" />}
           rootStyles={{
             ["& > ." + menuClasses.button]: {
               backgroundColor: "transparent",
@@ -93,6 +94,7 @@ const SideBarAdmin = () => {
           Communication
         </MenuItem>
         <MenuItem
+          component={<Link href="/instructor/performance" />}
           rootStyles={{
             ["& > ." + menuClasses.button]: {
               backgroundColor: "transparent",
