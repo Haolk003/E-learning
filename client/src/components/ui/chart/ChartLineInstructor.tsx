@@ -26,9 +26,12 @@ const ChartLineIntructor: FC<Props> = ({ data, period, type }) => {
             .format("YY")}`
       );
 
-      const fomatData = data.map((item) => item.totalAmount);
+      let fomatData = data.map((item) => item.totalAmount);
+      if (type === "enrollments") {
+        fomatData = data.map((item) => item.count);
+      }
 
-      setSeries([{ name: "Earning", data: fomatData }]);
+      setSeries([{ name: type.toUpperCase(), data: fomatData }]);
       setMonths(newMonths);
       const dataMax = Math.max(...fomatData);
       setDataMax(dataMax);
@@ -40,9 +43,11 @@ const ChartLineIntructor: FC<Props> = ({ data, period, type }) => {
             .format("MMM")}-${dayjs().set("year", item._id.year).format("YY")}`
       );
 
-      const fomatData = data.map((item) => item.totalAmount);
-
-      setSeries([{ name: "Earning", data: fomatData }]);
+      let fomatData = data.map((item) => item.totalAmount);
+      if (type === "enrollments") {
+        fomatData = data.map((item) => item.count);
+      }
+      setSeries([{ name: type.toUpperCase(), data: fomatData }]);
       setMonths(newMonths);
 
       const dataMax = Math.max(...fomatData);
@@ -55,9 +60,11 @@ const ChartLineIntructor: FC<Props> = ({ data, period, type }) => {
             .format("MMM")}-${dayjs().set("year", item._id.year).format("YY")}`
       );
 
-      const fomatData = data.map((item) => item.totalAmount);
-
-      setSeries([{ name: "Earning", data: fomatData }]);
+      let fomatData = data.map((item) => item.totalAmount);
+      if (type === "enrollments") {
+        fomatData = data.map((item) => item.count);
+      }
+      setSeries([{ name: type.toUpperCase(), data: fomatData }]);
       setMonths(newMonths);
 
       const dataMax = Math.max(...fomatData);
@@ -65,9 +72,11 @@ const ChartLineIntructor: FC<Props> = ({ data, period, type }) => {
     } else {
       const newMonths = data.map((item) => `${item._id.year}`);
 
-      const fomatData = data.map((item) => item.totalAmount);
-
-      setSeries([{ name: "Earning", data: fomatData }]);
+      let fomatData = data.map((item) => item.totalAmount);
+      if (type === "enrollments") {
+        fomatData = data.map((item) => item.count);
+      }
+      setSeries([{ name: type.toUpperCase(), data: fomatData }]);
       setMonths(newMonths);
 
       const dataMax = Math.max(...fomatData);

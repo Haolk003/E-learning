@@ -2,12 +2,16 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { useGenerateAnalyticsEarningForIntructorQuery } from "@/features/analytic/analyticApi";
+import {
+  useGenerateAnalyticsEarningForIntructorQuery,
+  useGenerateAnalyticReviewForIntructorQuery,
+} from "@/features/analytic/analyticApi";
 
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import ChartLineIntructor from "@/components/ui/chart/ChartLineInstructor";
 import ToggleGroupEarningReport from "@/components/ui/toggleGroup/ToggleGroupEarningReport";
 import useUpdateQueryString from "@/hooks/useUpdateQueryString";
+import Loader from "@/components/loader/Loader";
 type Props = {
   slug: string;
 };
@@ -32,14 +36,16 @@ const dateRangeData = [
 ];
 const PerformanceOverview: React.FC<Props> = ({ slug }) => {
   const router = useRouter();
-
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [periodEarning, setPeriodEarning] = useState(
     searchParams.get("period") || "7D"
   );
 
-  const { data } = useGenerateAnalyticsEarningForIntructorQuery(periodEarning);
+  const { data, isLoading } =
+    useGenerateAnalyticsEarningForIntructorQuery(periodEarning);
+  const { data: reviews, isLoading: isLoadingReview } =
+    useGenerateAnalyticReviewForIntructorQuery(periodEarning);
 
   const handleChangePeriod = (value: string) => {
     setPeriodEarning(value);
@@ -103,15 +109,27 @@ const PerformanceOverview: React.FC<Props> = ({ slug }) => {
               period={periodEarning}
             />
           </div>
-          {data && (
+          {data && slug !== "rating" && (
             <ChartLineIntructor
               data={data.data}
               period={periodEarning}
-              type="revenue"
+              type={slug}
+            />
+          )}
+          {reviews && slug === "rating" && (
+            <ChartLineIntructor
+              data={reviews.data}
+              period={periodEarning}
+              type={slug}
             />
           )}
         </div>
       </div>
+      {(isLoading || isLoadingReview) && (
+        <div className="fixed top-0 left-0 bg-blackA6 h-screen w-full flex items-center justify-center">
+          <Loader />
+        </div>
+      )}
     </div>
   );
 };
