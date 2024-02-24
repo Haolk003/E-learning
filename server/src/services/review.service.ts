@@ -20,7 +20,10 @@ const addReview = async ({
   if (!findCourse) {
     throw new ErrorHandle(400, "Course does not exist");
   }
-  const findReviewUser = await reviewModel.findOne({ courseId: courseId });
+  const findReviewUser = await reviewModel.findOne({
+    courseId: courseId,
+    user: userId,
+  });
   if (findReviewUser) {
     throw new ErrorHandle(400, "You have already reviewed this course");
   }
@@ -84,7 +87,6 @@ const starPercentageByCourseId = async (courseId: string) => {
     { $match: { courseId: courseId } },
     { $group: { _id: "$rating", count: { $sum: 1 } } },
   ]);
-  console.log(starCounts);
   const totalReviews = starCounts.reduce((acc, curr) => acc + curr.count, 0);
 
   if (totalReviews === 0) {
@@ -107,6 +109,11 @@ const checkExistReviewPersonal = async (courseId: string, userId: string) => {
   });
   return existReview ? true : false;
 };
+
+const getAllReviewUserId = async (userId: string) => {
+  const reviews = await reviewModel.find({ user: userId });
+  return reviews;
+};
 const reviewService = {
   addReview,
   getAllReview,
@@ -114,6 +121,7 @@ const reviewService = {
   EditReviews,
   starPercentageByCourseId,
   checkExistReviewPersonal,
+  getAllReviewUserId,
 };
 
 export default reviewService;

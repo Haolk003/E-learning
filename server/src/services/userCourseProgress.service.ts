@@ -100,11 +100,16 @@ const getProgessByUserId = async (userId: string) => {
     userId: userId,
   }).populate({
     path: "courseId",
-    select: "title courseData author",
-    populate: {
-      path: "author",
-      select: "firstName lastName email",
-    },
+    select: "title courseData author thumbnail category",
+    populate: [
+      {
+        path: "author",
+        select: "firstName lastName email",
+      },
+      {
+        path: "category",
+      },
+    ],
   });
 
   return userProgress;

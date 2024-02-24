@@ -4,7 +4,7 @@ import "tailwindcss/tailwind.css";
 
 type Props = {
   data: {
-    name: string;
+    label: string;
     value: string;
   }[];
   value: string;
@@ -36,7 +36,7 @@ const SelectFilterMyCourses: FC<Props> = ({ data, handleChange, value }) => {
                 className="text-[15px] text-left w-full px-3 mb-2 leading-none text-gray11 cursor-pointers rounded-[3px]  h-[25px]  relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none  data-[highlighted]:text-violet12  "
               >
                 <SelectPrimitive.ItemText className="cursor-pointer">
-                  {item.name}
+                  {item.label}
                 </SelectPrimitive.ItemText>
               </SelectPrimitive.Item>
             ))}

@@ -1,48 +1,97 @@
 import React, { useState } from "react";
 import SelectFilterMyCourses from "@/components/ui/select/SelectFilterMyCourse";
 import { IoIosSearch } from "react-icons/io";
+
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
+
+import useUpdateQueryString from "@/hooks/useUpdateQueryString";
 const sortData = [
   {
-    name: "Recently Accessed",
-    value: "-accessed",
+    label: "Recently Accessed",
+    value: "-updatedAt",
   },
   {
-    name: "Recently Enrolled",
+    label: "Recently Enrolled",
     value: "-createdAt",
   },
   {
-    name: "Title: A-to-Z",
+    label: "Title: A-to-Z",
     value: "title",
   },
   {
-    name: "Title: Z-to-A",
+    label: "Title: Z-to-A",
     value: "-title",
   },
 ];
 
 const progressDataSelect = [
   {
-    name: "Inprogress",
+    label: "Inprogress",
     value: "in-progress",
   },
   {
-    name: "Not Started",
+    label: "Not Started",
     value: "not-started",
   },
 ];
-const MyLearningFilter = () => {
-  const [sort, setSort] = useState("Recently Accessed");
-  const [categories, setCategories] = useState("");
-  const [progress, setProgress] = useState("");
-  const [intructor, setIntructor] = useState("");
+
+type Props = {
+  categoriesData: {
+    label: string;
+    value: string;
+  }[];
+  instructorData: {
+    label: string;
+    value: string;
+  }[];
+};
+const MyLearningFilter: React.FC<Props> = ({
+  categoriesData,
+  instructorData,
+}) => {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
+  const [sort, setSort] = useState(searchParams.get("sort") || "-updatedAt");
+  const [categories, setCategories] = useState(
+    searchParams.get("category") || "all"
+  );
+  const [progress, setProgress] = useState(searchParams.get("progress") || "");
+  const [instructor, setInstructor] = useState(
+    searchParams.get("instructor") || "all"
+  );
 
   const handleChangeSort = (value: string) => {
     setSort(value);
+    const params = new URLSearchParams(searchParams.toString());
+    router.push(pathname + "?" + useUpdateQueryString(params, "sort", value));
+  };
+
+  const handleChangeCategories = (value: string) => {
+    setCategories(value);
+    const params = new URLSearchParams(searchParams.toString());
+    router.push(
+      pathname + "?" + useUpdateQueryString(params, "category", value)
+    );
+  };
+  const handleChangeIntructor = (value: string) => {
+    setInstructor(value);
+    const params = new URLSearchParams(searchParams.toString());
+    router.push(
+      pathname + "?" + useUpdateQueryString(params, "instructor", value)
+    );
+  };
+  const handleChangeProgress = (value: string) => {
+    setProgress(value);
+    const params = new URLSearchParams(searchParams.toString());
+    router.push(
+      pathname + "?" + useUpdateQueryString(params, "progress", value)
+    );
   };
   return (
     <div className="flex items-end justify-between ">
       <div className="flex gap-3 items-end ">
-        <div className="flex flex-col gap-3 w-[150px]">
+        <div className="flex flex-col gap-3 w-[180px]">
           <p>Sort by</p>
           <SelectFilterMyCourses
             data={sortData}
@@ -53,23 +102,23 @@ const MyLearningFilter = () => {
         <div className="flex flex-col gap-3 w-[150px]">
           <p>Filter by</p>
           <SelectFilterMyCourses
-            data={sortData}
-            handleChange={handleChangeSort}
-            value={sort}
+            data={categoriesData}
+            handleChange={handleChangeCategories}
+            value={categories}
           />
         </div>
         <div className="w-[150px]">
           <SelectFilterMyCourses
-            data={sortData}
-            handleChange={handleChangeSort}
-            value={sort}
+            data={instructorData}
+            handleChange={handleChangeIntructor}
+            value={instructor}
           />
         </div>
         <div className="w-[150px]">
           <SelectFilterMyCourses
-            data={sortData}
-            handleChange={handleChangeSort}
-            value={sort}
+            data={progressDataSelect}
+            handleChange={handleChangeProgress}
+            value={progress}
           />
         </div>
         <button className="font-semibold h-[40px] flex items-center justify-center">

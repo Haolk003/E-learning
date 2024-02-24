@@ -69,7 +69,7 @@ router.put("/deleteFile", protect, deleteImageOrVideo);
 router.put(
   "/public-course/:id",
   protect,
-  authorizeRoles("instructor"),
+
   publicCourse
 );
 
