@@ -66,7 +66,7 @@ const userSchema: Schema<IUser> = new mongoose.Schema(
     role: {
       type: String,
       default: "user",
-      enum: ["user", "admin"],
+      enum: ["user", "admin", "instructor"],
     },
     linkedin: String,
     facebookLink: String,

@@ -5,6 +5,7 @@ import {
   EditReviewCourse,
   StarPercentagesByCourseId,
   checkExistReviewPersonal,
+  getAllReviewsUserId,
 } from "../controllers/review.controller";
 import express from "express";
 import { protect } from "../middlewares/auth";
@@ -25,5 +26,7 @@ router.get(
   protect,
   checkExistReviewPersonal
 );
+
+router.get("/reviews/get-all-reviews-userId", protect, getAllReviewsUserId);
 
 export default router;

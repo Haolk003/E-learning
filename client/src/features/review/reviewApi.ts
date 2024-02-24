@@ -47,6 +47,13 @@ export const reviewApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getAllReviewUserId: build.query({
+      query: () => ({
+        url: "/reviews/get-all-reviews-userId",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -57,4 +64,5 @@ export const {
   useGetAllReviewQuery,
   useStarPercentageQuery,
   useCheckExistReviewPersonalQuery,
+  useGetAllReviewUserIdQuery,
 } = reviewApi;

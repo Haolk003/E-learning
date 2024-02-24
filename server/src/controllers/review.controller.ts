@@ -97,3 +97,19 @@ export const checkExistReviewPersonal = CatchAsyncError(
     }
   }
 );
+
+export const getAllReviewsUserId = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const userId = req.me._id;
+  const reviews = await reviewService.getAllReviewUserId(userId);
+  res
+    .status(200)
+    .json({
+      success: true,
+      data: reviews,
+      message: "Get All Reviews for user successfully",
+    });
+};
