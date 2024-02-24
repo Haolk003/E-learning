@@ -1,3 +1,4 @@
+import { isEmpty } from "lodash";
 import UserCourseProgressModel from "../models/userCourseProgress.model";
 import ErrorHandle from "../utils/errorHandle";
 
@@ -97,10 +98,26 @@ const getProgressLectureUserByCourseId = async ({
 const getProgessByUserId = async (userId: string) => {
   const userProgress = await UserCourseProgressModel.find({
     userId: userId,
-  }).populate("courseId", "title courseData");
+  }).populate({
+    path: "courseId",
+    select: "title courseData author",
+    populate: {
+      path: "author",
+      select: "firstName lastName email",
+    },
+  });
 
   return userProgress;
 };
+
+type query = {
+  sort?: string;
+  keyword?: string;
+  categories?: string;
+  progress?: string;
+  instructor?: string;
+};
+
 const userCourseProgressService = {
   updateIsCompleted,
   updateLenghtWatched,
