@@ -6,11 +6,11 @@ type Props = {
   title: string;
   _id: string;
   thumbnail: string;
-  price: string;
+  price: number;
   author: string;
   ratings: number;
   totalRating: number;
-  benefits: string[];
+  benefits: { title: string; _id: string }[];
 };
 const CourseCardCategory: FC<Props> = ({
   _id,

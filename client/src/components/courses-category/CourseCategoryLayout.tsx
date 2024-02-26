@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useGetCoursesCategoryPublicQuery } from "@/features/course/courseApi";
 import { useStarPercentageQuery } from "@/features/review/reviewApi";
-
+import CourseCardCategory from "../card/CourseCardCategory";
+import { CourseType } from "@/types/couresContentType";
 type Props = {
   categoryId: string;
   subCategoryId?: string;
@@ -42,6 +43,25 @@ const CourseCategoryLayout: React.FC<Props> = ({
           Most popular
         </div>
         <div className="py-2">New</div>
+      </div>
+
+      <div className="grid grid-cols-5 gap-4">
+        {data &&
+          data.data.map((item: CourseType, index: number) => {
+            return (
+              <CourseCardCategory
+                key={item._id}
+                _id={item._id}
+                author={item.author.lastName + item.author.firstName}
+                benefits={item.benefits}
+                price={item.price}
+                ratings={item.ratings}
+                thumbnail={item.thumbnail.url}
+                title={item.title}
+                totalRating={item.reviews.length || 0}
+              />
+            );
+          })}
       </div>
     </div>
   );
