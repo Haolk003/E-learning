@@ -5,6 +5,7 @@ import {
   getAllCategory,
   newCategory,
   updateCategory,
+  getAllSubCategoryFromCategoryId,
 } from "../controllers/category.controller";
 import { protect, authorizeRoles } from "../middlewares/auth";
 
@@ -28,6 +29,11 @@ router.delete(
   protect,
   authorizeRoles("admin"),
   deleteCategory
+);
+
+router.get(
+  "/get-all-subCategory-categoryId/:categoryId",
+  getAllSubCategoryFromCategoryId
 );
 
 export default router;

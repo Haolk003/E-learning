@@ -147,6 +147,15 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getCoursesCategoryPublic: build.query({
+      query: ({ categoryId, subCategoryId }) => ({
+        url: `/get-courses-category/${categoryId}${
+          subCategoryId ? `/${subCategoryId}` : ""
+        }`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -168,4 +177,5 @@ export const {
   useUpdateLengthWatchedMutation,
   useGetProgressLectureQuery,
   useGetProgressCoursesUserQuery,
+  useGetCoursesCategoryPublicQuery,
 } = courseApi;

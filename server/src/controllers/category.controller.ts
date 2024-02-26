@@ -56,12 +56,24 @@ export const deleteCategory = CatchAsyncError(
     const { id } = req.params;
     const deleteCategory = await categoryService.deleteCategory(id);
 
+    res.status(200).json({
+      success: true,
+      data: deleteCategory,
+      message: "Category deleted Successfully",
+    });
+  }
+);
+
+export const getAllSubCategoryFromCategoryId = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { categoryId } = req.params;
+    const categories = await categoryService.getAllSubCategory(categoryId);
     res
       .status(200)
       .json({
         success: true,
-        data: deleteCategory,
-        message: "Category deleted Successfully",
+        data: categories,
+        message: "Get All SubCategories from parentID successfully",
       });
   }
 );

@@ -31,6 +31,13 @@ export const categoryApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getAllSubCategory: build.query({
+      query: (categoryId) => ({
+        url: `/get-all-subCategory-categoryId/${categoryId}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -39,4 +46,5 @@ export const {
   useGetAllCategoryQuery,
   useGetCategoryByIdQuery,
   useNewCategoryMutation,
+  useGetAllSubCategoryQuery,
 } = categoryApi;

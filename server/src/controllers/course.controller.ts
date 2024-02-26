@@ -173,3 +173,23 @@ export const pucharserCourse = CatchAsyncError(
     });
   }
 );
+
+export const findCourseCategoryAndSubCategory = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { page, sort } = req.query as any;
+    const { categoryId, subCategoryId } = req.params;
+    const courses = await courseService.findCourseCategoryAndSubCategory({
+      categoryId,
+      subCategoryId,
+      pageQuery: page,
+      sortQuery: sort,
+    });
+    res
+      .status(200)
+      .json({
+        success: true,
+        data: courses,
+        message: "Get Courses Category Successfully",
+      });
+  }
+);

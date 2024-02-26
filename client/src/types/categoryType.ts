@@ -7,3 +7,12 @@ export type CategoryType = {
   isCategory: boolean;
   subcategories: CategoryType[];
 };
+
+export type CategoryTypePopulate = {
+  _id: string;
+  name: string;
+  parent_id: {
+    name: string;
+    _id: string;
+  };
+};
