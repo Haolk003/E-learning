@@ -339,11 +339,50 @@ const getMyCourseIntructor = async ({
   return { courses, countQuery };
 };
 
-type addReviewType = {
-  title: string;
-  rating: number;
-  userId: string;
-  courseId: string;
+type findCourseCategoryType = {
+  categoryId: string;
+  subCategoryId?: string;
+  sortQuery?: string;
+  pageQuery?: number;
+};
+const findCourseCategoryAndSubCategory = async ({
+  categoryId,
+  pageQuery,
+  sortQuery,
+  subCategoryId,
+}: findCourseCategoryType) => {
+  const sort = sortQuery || "-sold";
+  const page = pageQuery || 1;
+  const skip = (page - 1) * 10;
+  if (!isEmpty(subCategoryId)) {
+    const findCourses = await courseModel
+      .find({
+        category: categoryId,
+        subCategory: subCategoryId,
+        status: "public",
+      })
+      .populate("author", "firstName lastName email")
+      .populate([{ path: "category" }, { path: "subCategory" }])
+      .select(
+        "-tags -prerequisites -courseData.description -courseData.lectures -demoUrl"
+      )
+      .sort(sort)
+      .skip(skip)
+      .limit(10);
+    return findCourses;
+  } else {
+    const findCourses = await courseModel
+      .find({ category: categoryId, status: "public" })
+      .select(
+        "-tags -prerequisites -courseData.description -courseData.lectures -demoUrl"
+      )
+      .populate("author", "firstName lastName email")
+      .populate([{ path: "category" }, { path: "subCategory" }])
+      .sort(sort)
+      .limit(10)
+      .skip(skip);
+    return findCourses;
+  }
 };
 
 const courseService = {
@@ -363,6 +402,7 @@ const courseService = {
   deleteCourseById,
   findCourseByIdPublic,
   getCoursePurhaser,
+  findCourseCategoryAndSubCategory,
 };
 
 export default courseService;

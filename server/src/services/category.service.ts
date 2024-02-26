@@ -59,12 +59,21 @@ const deleteCategory = async (id: string) => {
   }
   return deleteCategory;
 };
+
+const getAllSubCategory = async (id: string) => {
+  const subCategories = await CategoryModel.find({ parent_id: id })
+    .populate("parent_id", "name")
+    .select("parent_id name");
+  return subCategories;
+};
+
 const categoryService = {
   newCategory,
   updateCategory,
   getAllCategory,
   getCategoryById,
   deleteCategory,
+  getAllSubCategory,
 };
 
 export default categoryService;

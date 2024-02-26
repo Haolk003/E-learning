@@ -14,6 +14,7 @@ import {
   getMyCourseIntructor,
   getCoursePublic,
   pucharserCourse,
+  findCourseCategoryAndSubCategory,
 } from "../controllers/course.controller";
 import { ImgResize, uploadPhoto } from "../middlewares/uploadImage";
 import { uploadVideoMulter } from "../middlewares/uploadVideo";
@@ -88,4 +89,13 @@ router.get("/get-purchased-course/:id", protect, pucharserCourse);
 
 router.get("/get-course-public/:id", getCoursePublic);
 
+router.get(
+  "/get-courses-category/:categoryId/:subCategoryId",
+  findCourseCategoryAndSubCategory
+);
+
+router.get(
+  "/get-courses-category/:categoryId",
+  findCourseCategoryAndSubCategory
+);
 export default router;
