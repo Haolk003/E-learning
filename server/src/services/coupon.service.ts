@@ -68,26 +68,30 @@ class CouponService {
     }
     return { success: true, message: "Coupon marked as used successfully." };
   }
-  async getCouponDetails(code: string): Promise<Coupon | null> {
-    const coupon = await CouponModel.findOne({ code });
+  async getCouponDetails(couponId: string): Promise<Coupon | null> {
+    const coupon = await CouponModel.findById(couponId);
+    if (!coupon) {
+      throw new ErrorHandle(400, "Coupon not found");
+    }
     return coupon;
   }
 
   // Cập nhật coupon
   async updateCoupon(
+    couponId: string,
     code: string,
     updateData: Partial<Coupon>
   ): Promise<Coupon | null> {
-    const coupon = await CouponModel.findOneAndUpdate({ code }, updateData, {
+    const coupon = await CouponModel.findByIdAndUpdate(couponId, updateData, {
       new: true,
     });
     return coupon;
   }
 
   // Xóa coupon
-  async deleteCoupon(code: string): Promise<any> {
-    const result = await CouponModel.deleteOne({ code });
-    if (result.deletedCount === 0) {
+  async deleteCoupon(couponId: string): Promise<any> {
+    const result = await CouponModel.findByIdAndDelete(couponId);
+    if (!result) {
       throw new ErrorHandle(400, "Coupon not found");
     }
     return result;

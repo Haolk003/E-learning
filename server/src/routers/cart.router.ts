@@ -6,6 +6,7 @@ import {
   deleteCourseIdInCart,
   getCart,
   updateCart,
+  applyCouponToCart,
 } from "../controllers/cart.controller";
 import { protect } from "../middlewares/auth";
 const router = express.Router();
@@ -26,4 +27,5 @@ router.get("/getCart", protect, getCart);
 // Thêm đường dẫn để cập nhật thông tin giỏ hàng
 router.put("/updateCart", protect, updateCart);
 
+router.put("/apply-coupon-cart", protect, applyCouponToCart);
 export default router;

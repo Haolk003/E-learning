@@ -22,7 +22,7 @@ export const updateCoupon = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { couponId } = req.params;
     const { code, discount, expiryDate } = req.body;
-    const coupon = await couponService.updateCoupon(couponId, {
+    const coupon = await couponService.updateCoupon(couponId, couponId, {
       code,
       discount,
       expiryDate,

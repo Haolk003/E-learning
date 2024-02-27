@@ -73,3 +73,18 @@ export const getCart = CatchAsyncError(
     });
   }
 );
+
+export const applyCouponToCart = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.me._id;
+    const { couponCode } = req.body;
+    const cart = await cartService.applyCoupon(userId, couponCode);
+    res
+      .status(200)
+      .json({
+        success: true,
+        data: cart,
+        message: "Apply coupon for cart successfully",
+      });
+  }
+);

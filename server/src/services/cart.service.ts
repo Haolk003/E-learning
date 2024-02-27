@@ -79,7 +79,7 @@ class CartService {
       throw new ErrorHandle(400, "Invalid coupon");
     }
 
-    cart.totalPrice -= coupon.discount;
+    cart.totalPrice -= (cart.totalPrice * coupon.discount) / 100;
     coupon.usedBy.push(cart.userId);
     cart.isApplyCoupon = true;
 
