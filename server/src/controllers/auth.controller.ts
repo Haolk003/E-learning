@@ -7,7 +7,7 @@ import ErrorHandle from "../utils/errorHandle";
 const registrationUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { email, password, firstName, lastName } = req.body;
-    const { token, user } = await authService.registrationUserService({
+    const { token, user } = await authService.registrationUser({
       email,
       password,
       firstName,

@@ -240,16 +240,7 @@ const getAllCourseByAdmin = async (queryObj: filterGetAllCourse) => {
   ) {
     filteredObject.level = filteredObject.level.split(",");
   }
-  // Loại bỏ dấu ngoặc vuông từ chuỗi
-  //   const strippedString = filteredObject.level.replace(/\[|\]/g, "");
 
-  //   // Phân tích chuỗi và chuyển đổi thành mảng
-  //   const parsedArray = strippedString.split(",");
-
-  //   // Gán mảng mới cho thuộc tính 'price'
-  //   filteredObject.level = parsedArray;
-  // }
-  console.log(filteredObject);
   const queryObjCopy = filteredObject;
   const limit = (filteredObject.limit ? filteredObject.limit : 20) as number;
   const page = (filteredObject.page ? filteredObject.page : 1) as number;
