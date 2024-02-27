@@ -11,26 +11,7 @@ const CoursesHome = () => {
     limit: 20,
     sort: "-sold",
   });
-  const [courses, setCourses] = useState<any[]>([]);
-  useEffect(() => {
-    if (data) {
-      const course = data.data.courses as CourseType[];
-      setCourses(
-        course.map((item, index) => {
-          return {
-            _id: item._id,
-            estimatePrice: item.price / 20,
-            image: item.thumbnail.url,
-            title: item.title,
-            star: 4,
-            lectureLength: 10,
-            price: item.price,
-            sold: 3,
-          };
-        })
-      );
-    }
-  }, [data]);
+
   return (
     <div className="bg-gray4 w-full py-10 px-10">
       <div className="flex flex-col items-center ">
@@ -42,10 +23,31 @@ const CoursesHome = () => {
           Career Growth
         </p>
       </div>
-      <div className="grid grid-cols-3 gap-4 w-[80%] mx-auto mt-4">
-        {courses.map((item, index) => {
-          return <CoureCardItem {...item} key={item._id} />;
-        })}
+      <div className="grid grid-cols-3 gap-4 w-[70%] mx-auto mt-4">
+        {data &&
+          data.data.courses.map((item: CourseType, index: number) => {
+            const lectureLenght = item.courseData.reduce((total, lecure) => {
+              return total + lecure.lectures.length;
+            }, 0);
+            return (
+              <CoureCardItem
+                _id={item._id}
+                benefits={item.benefits}
+                description={item.description}
+                estimatePrice={item.price}
+                image={item.thumbnail.url}
+                lectureLength={lectureLenght}
+                level={item.level}
+                price={item.price}
+                sold={item.sold}
+                star={item.ratings}
+                title={item.title}
+                totalVideoLength={20}
+                updatedAt={item.updatedAt}
+                key={item._id}
+              />
+            );
+          })}
       </div>
     </div>
   );

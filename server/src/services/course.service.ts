@@ -274,7 +274,7 @@ const getAllCourseByAdmin = async (queryObj: filterGetAllCourse) => {
   }
 
   query = query
-    .select("-courseData -prerequisites -benefits -description -tags")
+    .select(" -prerequisites -tags")
     .skip((page - 1) * limit)
     .limit(limit);
 
