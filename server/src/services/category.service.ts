@@ -1,79 +1,81 @@
+import mongoose from "mongoose";
 import CategoryModel from "../models/category.model";
 import ErrorHandle from "../utils/errorHandle";
 
-type newCategoryType = {
+interface NewCategoryType {
   name: string;
   icon?: string;
-  parent_id?: string;
+  parent_id?: mongoose.Types.ObjectId | null;
   description?: string;
-};
-const newCategory = async (data: newCategoryType) => {
-  const newCategory = await CategoryModel.create(data);
-  return newCategory;
-};
+}
 
-const updateCategory = async (id: string, data: newCategoryType) => {
-  const updateCategory = await CategoryModel.findByIdAndUpdate(
-    id,
-    { $set: { data } },
-    { new: true }
-  );
-  if (!updateCategory) {
-    throw new ErrorHandle(400, "Can not update category");
+class CategoryService {
+  async newCategory(data: NewCategoryType) {
+    try {
+      const newCategory = await CategoryModel.create(data);
+      return newCategory;
+    } catch (error) {
+      throw new ErrorHandle(500, "Cannot create category");
+    }
   }
-  return updateCategory;
-};
 
-const getCategoryById = async (id: string) => {
-  const category = await CategoryModel.findById(id);
-  if (!category) {
-    throw new ErrorHandle(400, "Category not found");
+  async updateCategory(id: string, data: NewCategoryType) {
+    try {
+      const updatedCategory = await CategoryModel.findByIdAndUpdate(
+        id,
+        { $set: data },
+        { new: true, runValidators: true }
+      );
+      if (!updatedCategory) {
+        throw new ErrorHandle(400, "Category not found");
+      }
+      return updatedCategory;
+    } catch (error) {
+      throw new ErrorHandle(500, "Cannot update category");
+    }
   }
-  return category;
-};
 
-const getAllCategory = async () => {
-  const resultCategories = await CategoryModel.aggregate([
-    {
-      $match: {
-        parent_id: null,
+  async getCategoryById(id: string) {
+    const category = await CategoryModel.findById(id);
+    if (!category) {
+      throw new ErrorHandle(400, "Category not found");
+    }
+    return category;
+  }
+
+  async getAllCategory() {
+    const categories = await CategoryModel.aggregate([
+      {
+        $match: {
+          parent_id: null,
+        },
       },
-    },
-    {
-      $lookup: {
-        from: "categories", // your collection name
-        localField: "_id",
-        foreignField: "parent_id",
-        as: "subcategories",
+      {
+        $lookup: {
+          from: "categories",
+          localField: "_id",
+          foreignField: "parent_id",
+          as: "subcategories",
+        },
       },
-    },
-  ]);
-
-  return resultCategories;
-};
-
-const deleteCategory = async (id: string) => {
-  const deleteCategory = await CategoryModel.findByIdAndDelete(id);
-  if (!deleteCategory) {
-    throw new ErrorHandle(400, "Category not found");
+    ]);
+    return categories;
   }
-  return deleteCategory;
-};
 
-const getAllSubCategory = async (id: string) => {
-  const subCategories = await CategoryModel.find({ parent_id: id })
-    .populate("parent_id", "name")
-    .select("parent_id name");
-  return subCategories;
-};
+  async deleteCategory(id: string) {
+    const category = await CategoryModel.findByIdAndDelete(id);
+    if (!category) {
+      throw new ErrorHandle(400, "Category not found");
+    }
+    return category;
+  }
 
-const categoryService = {
-  newCategory,
-  updateCategory,
-  getAllCategory,
-  getCategoryById,
-  deleteCategory,
-  getAllSubCategory,
-};
+  async getAllSubCategory(parentId: string) {
+    const subCategories = await CategoryModel.find({ parent_id: parentId })
+      .populate("parent_id", "name")
+      .select("name icon description");
+    return subCategories;
+  }
+}
 
-export default categoryService;
+export default new CategoryService();

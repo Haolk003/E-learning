@@ -16,6 +16,7 @@ import categoryRouter from "./routers/category.router";
 import analyticsRouter from "./routers/analytics.router";
 import courseInteractRouter from "./routers/courseInteract.router";
 import cartRouter from "./routers/cart.router";
+import couponRouter from "./routers/coupon.router";
 import multer from "multer";
 import http from "http";
 
@@ -61,6 +62,7 @@ app.use("/api/v1", categoryRouter);
 app.use("/api/v1", analyticsRouter);
 app.use("/api/v1", courseInteractRouter);
 app.use("/api/v1", cartRouter);
+app.use("/api/v1", couponRouter);
 interface CustomError extends Error {
   statusCode?: number;
 }
