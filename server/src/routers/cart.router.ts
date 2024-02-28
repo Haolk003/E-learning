@@ -7,6 +7,7 @@ import {
   getCart,
   updateCart,
   applyCouponToCart,
+  deleteCouponInCart,
 } from "../controllers/cart.controller";
 import { protect } from "../middlewares/auth";
 const router = express.Router();
@@ -28,4 +29,6 @@ router.get("/getCart", protect, getCart);
 router.put("/updateCart", protect, updateCart);
 
 router.put("/apply-coupon-cart", protect, applyCouponToCart);
+
+router.put("/delete-coupon-in-cart", protect, deleteCouponInCart);
 export default router;

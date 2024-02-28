@@ -9,6 +9,9 @@ const CoursesSearchList: React.FC<Props> = ({ courses }) => {
     <div className="flex flex-col gap-6">
       {courses &&
         courses.map((course, index) => {
+          const totalVideoLength = course.courseData.reduce((total, item) => {
+            return total + item.videoLength;
+          }, 0);
           return (
             <CourseSearchCard
               key={course._id}
@@ -23,6 +26,9 @@ const CoursesSearchList: React.FC<Props> = ({ courses }) => {
               title={course.title}
               totalHours={39}
               totalLecture={20}
+              benefits={course.benefits}
+              totalVideoLength={Math.ceil(totalVideoLength / 60)}
+              updatedAt={course.updatedAt}
             />
           );
         })}

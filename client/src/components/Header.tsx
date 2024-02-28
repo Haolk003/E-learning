@@ -27,11 +27,17 @@ import { CategoryType } from "@/types/categoryType";
 
 import { IoIosNotificationsOutline } from "react-icons/io";
 
+import { FiShoppingCart } from "react-icons/fi";
+
+import { useGetCartQuery } from "@/features/cart/cartApi";
+
+import { cartType, cartItemType } from "@/types/cartType";
 const Header = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: categories } = useGetAllCategoryQuery("");
+  const { data: cart } = useGetCartQuery("");
 
   const user = useAppSelector((state) => state.auth.user);
   const open = useAppSelector((state) => state.layout.open);
@@ -173,6 +179,67 @@ const Header = () => {
               <IoIosNotificationsOutline size={25} />
               <span className="animate-ping absolute top-1 right-[7px] inline-flex h-[5px] w-[5px] rounded-full bg-blue8"></span>
             </button>
+            <HoverCard.Root>
+              <HoverCard.Trigger asChild>
+                <div>
+                  <FiShoppingCart size={25} className="cursor-pointer" />
+                </div>
+              </HoverCard.Trigger>
+
+              <HoverCard.Portal>
+                <HoverCard.Content
+                  side="bottom"
+                  align="end"
+                  sideOffset={30}
+                  className="dark:bg-gray3 data-[side=bottom]:animate-slideUpAndFade data-[state=open]:transition-all bg-white shadow-sm shadow-black w-[300px] min-h-[300px] z-[100] px-3 py-2 "
+                >
+                  <div className="">
+                    <ul className="flex flex-col gap-3">
+                      {cart &&
+                        cart.data.items.map(
+                          (item: cartItemType, index: number) => {
+                            return (
+                              <li
+                                key={item.courseId._id}
+                                className="flex gap-3"
+                              >
+                                <Image
+                                  src={item.courseId.thumbnail.url}
+                                  alt=""
+                                  width={100}
+                                  height={70}
+                                  className="w-[20%] h-[50px] object-cover"
+                                />
+                                <div className="">
+                                  <h4 className="font-semibold text-[14px]">
+                                    {item.courseId.title}
+                                  </h4>
+                                  <p className="text-gray8 text-[13px]">
+                                    {item.courseId.author.lastName}{" "}
+                                    {item.courseId.author.firstName}
+                                  </p>
+                                  <p className="font-semibold text-[14px]">
+                                    ${item.price}
+                                  </p>
+                                </div>
+                              </li>
+                            );
+                          }
+                        )}
+                    </ul>
+                    <div className="flex items-center gap-2 mt-3 font-semibold">
+                      <h3 className="text-[18px]">Total:</h3>
+                      <p className="text-[20px]">
+                        ${cart && cart.data.totalPrice}
+                      </p>
+                    </div>
+                    <button className="w-full h-[40px] bg-violet11 mt-2">
+                      Go to cart
+                    </button>
+                  </div>
+                </HoverCard.Content>
+              </HoverCard.Portal>
+            </HoverCard.Root>
 
             <ThemeSwicher />
 

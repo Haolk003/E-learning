@@ -1,6 +1,4 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import Heading from "@/utils/Heading";
 import CourseLayout from "@/components/course/CourseLayout";
 import Header from "@/components/Header";

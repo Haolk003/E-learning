@@ -66,7 +66,7 @@ class CartService {
       throw new ErrorHandle(400, "Cart not found");
     }
 
-    if (cart.isApplyCoupon) {
+    if (cart?.applyCoupon) {
       throw new ErrorHandle(400, "Coupon has already been applied");
     }
 
@@ -81,7 +81,7 @@ class CartService {
 
     cart.totalPrice -= (cart.totalPrice * coupon.discount) / 100;
     coupon.usedBy.push(cart.userId);
-    cart.isApplyCoupon = true;
+    cart.applyCoupon = coupon._id;
 
     await cart.save();
     await coupon.save();
@@ -118,10 +118,43 @@ class CartService {
   }
 
   async getAddedCart(userId: string) {
-    const cart = await cartModel.findOne({ userId });
+    const cart = await cartModel.findOne({ userId }).populate([
+      {
+        path: "items.courseId",
+
+        populate: {
+          path: "author",
+          select: "firstName lastName",
+        },
+      },
+      { path: "applyCoupon" },
+    ]);
     if (!cart) {
       throw new ErrorHandle(400, "Cart not found");
     }
+    return cart;
+  }
+
+  async deleteCouponInCart(couponId: string, userId: string) {
+    const cart = await cartModel.findOne({ userId });
+    const findCoupon = await couponModel.findById(couponId);
+
+    if (!cart) {
+      throw new ErrorHandle(400, "Cart not found");
+    }
+    if (!cart?.applyCoupon) {
+      throw new ErrorHandle(400, "Coupon in cart not found");
+    }
+    if (!findCoupon) {
+      throw new ErrorHandle(400, "Coupon not found");
+    }
+    findCoupon.usedBy = findCoupon.usedBy.filter(
+      (item, index) => item.toString() !== userId.toString()
+    );
+    await findCoupon.save();
+    cart.applyCoupon = null;
+    cart.totalPrice = (cart.totalPrice * 100) / findCoupon.discount;
+    await cart.save();
     return cart;
   }
 }
