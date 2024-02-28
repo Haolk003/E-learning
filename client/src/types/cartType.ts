@@ -1,3 +1,5 @@
+import { CourseContentType, CourseType } from "./couresContentType";
+
 export type cartType = {
   _id: string;
   userId: string;
@@ -15,22 +17,17 @@ export type cartType = {
     price: number;
   }[];
   totalPrice: number;
+  applyCoupon: couponType;
 };
 
 export type cartItemType = {
-  courseId: {
-    sale: { discount: number };
-    thumbnail: {
-      public_id: string;
-      url: string;
-    };
-    _id: string;
-    title: string;
-    price: number;
-    author: {
-      firstName: string;
-      lastName: string;
-    };
-  };
+  courseId: CourseType;
   price: number;
+};
+
+export type couponType = {
+  _id: string;
+  code: string;
+  discount: string;
+  expiryDate: string;
 };

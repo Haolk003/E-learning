@@ -3,12 +3,12 @@ import mongoose, { Schema, Types } from "mongoose";
 interface IcartShema extends Document {
   userId: Types.ObjectId;
   items: {
-    courseId: mongoose.Types.ObjectId;
+    courseId: Types.ObjectId;
     price: number;
   }[];
   modifiedOn: Date;
   totalPrice: number;
-  isApplyCoupon: boolean;
+  applyCoupon: Types.ObjectId | null;
 }
 
 const cartShema = new mongoose.Schema<IcartShema>(
@@ -34,9 +34,9 @@ const cartShema = new mongoose.Schema<IcartShema>(
       type: Date,
       default: Date.now,
     },
-    isApplyCoupon: {
-      type: Boolean,
-      default: false,
+    applyCoupon: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Coupon",
     },
   },
   { timestamps: true }

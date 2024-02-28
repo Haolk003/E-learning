@@ -229,7 +229,9 @@ const Header = () => {
                     </ul>
                     <div className="flex items-center gap-2 mt-3 font-semibold">
                       <h3 className="text-[18px]">Total:</h3>
-                      <p className="text-[20px]">${cart.data.totalPrice}</p>
+                      <p className="text-[20px]">
+                        ${cart && cart.data.totalPrice}
+                      </p>
                     </div>
                     <button className="w-full h-[40px] bg-violet11 mt-2">
                       Go to cart

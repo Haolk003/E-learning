@@ -79,12 +79,23 @@ export const applyCouponToCart = CatchAsyncError(
     const userId = req.me._id;
     const { couponCode } = req.body;
     const cart = await cartService.applyCoupon(userId, couponCode);
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: cart,
-        message: "Apply coupon for cart successfully",
-      });
+    res.status(200).json({
+      success: true,
+      data: cart,
+      message: "Apply coupon for cart successfully",
+    });
+  }
+);
+
+export const deleteCouponInCart = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.me._id;
+    const { couponId } = req.body;
+    const cart = await cartService.deleteCouponInCart(couponId, userId);
+    res.status(200).json({
+      success: true,
+      data: cart,
+      message: "Remove Coupon successfully",
+    });
   }
 );

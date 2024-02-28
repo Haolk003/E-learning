@@ -53,6 +53,14 @@ const cartApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    deleteCouponInCart: build.mutation({
+      query: (couponId: string) => ({
+        url: "/delete-coupon-in-cart",
+        method: "PUT",
+        body: { couponId },
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -63,4 +71,5 @@ export const {
   useDeleteCourseInCartMutation,
   useGetCartQuery,
   useUpdateToCartMutation,
+  useDeleteCouponInCartMutation,
 } = cartApi;
