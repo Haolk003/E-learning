@@ -5,8 +5,11 @@ import { IoCheckmarkDoneOutline, IoListOutline } from "react-icons/io5";
 import Link from "next/link";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import { CiHeart } from "react-icons/ci";
+import { FiShoppingCart } from "react-icons/fi";
 import dayjs from "dayjs";
 import dompurify from "dompurify";
+
+import { useAddToCartMutation } from "@/features/cart/cartApi";
 type Props = {
   image: string;
   title: string;
@@ -37,6 +40,10 @@ const CoureCardItem: FC<Props> = ({
   updatedAt,
   level,
 }) => {
+  const [addCart] = useAddToCartMutation();
+  const handleAddCart = async () => {
+    await addCart({ courseId: _id, price: price });
+  };
   return (
     <HoverCard.Root>
       <HoverCard.Trigger asChild>
@@ -49,11 +56,8 @@ const CoureCardItem: FC<Props> = ({
               className="w-[300px] h-[200px] object-cover"
             />
           </div>
-          <Link
-            href={`/course/${_id}`}
-            className="text-[14px] leading-6 mt-2 mb-2"
-          >
-            {title}
+          <Link href={`/course/${_id}`}>
+            <h3 className="text-[14px] leading-[5px] mt-2 mb-2"> {title}</h3>
           </Link>
           <div className="flex items-center justify-between">
             <Rating ratings={star} />
@@ -104,7 +108,10 @@ const CoureCardItem: FC<Props> = ({
               ))}
             </ul>
             <div className="flex items-center gap-4 mt-5">
-              <button className="bg-violet11 text-white w-[250px] h-[45px]">
+              <button
+                className="bg-violet11 text-white w-[250px] h-[45px]"
+                onClick={handleAddCart}
+              >
                 Add to cart
               </button>
               <button className="rounded-full w-[50px] h-[50px] border border-gray9 flex items-center justify-center">

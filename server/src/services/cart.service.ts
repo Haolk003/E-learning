@@ -118,7 +118,14 @@ class CartService {
   }
 
   async getAddedCart(userId: string) {
-    const cart = await cartModel.findOne({ userId });
+    const cart = await cartModel.findOne({ userId }).populate({
+      path: "items.courseId",
+      select: "title thumbnail price sale author",
+      populate: {
+        path: "author",
+        select: "firstName lastName",
+      },
+    });
     if (!cart) {
       throw new ErrorHandle(400, "Cart not found");
     }
