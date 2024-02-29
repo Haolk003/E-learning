@@ -34,6 +34,7 @@ export type CourseType = {
 };
 
 export type CourseContentType = {
+  duration: any;
   description: string;
   lectures: {
     videoUrl: {

@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 interface Ireview extends Document {
-  user: mongoose.Schema.Types.ObjectId;
+  user: Schema.Types.ObjectId;
   rating: number;
   comment: string;
   courseId: mongoose.Schema.Types.ObjectId;

@@ -376,6 +376,22 @@ const findCourseCategoryAndSubCategory = async ({
   }
 };
 
+const getMyCourseOfInstructor = async (instructorId: string, page: number) => {
+  const findIntructor = await userModel.findById(instructorId);
+
+  if (!findIntructor || findIntructor.role !== "instructor") {
+    throw new ErrorHandle(
+      400,
+      "The user doesn't exist or you don't have access to this user's profile"
+    );
+  }
+  const courses = await courseModel
+    .find({ author: instructorId })
+    .limit(10)
+    .skip((page - 1) * 10);
+
+  return courses;
+};
 const courseService = {
   createCourseStep1,
   createEditCourseStep2,
@@ -394,6 +410,7 @@ const courseService = {
   findCourseByIdPublic,
   getCoursePurhaser,
   findCourseCategoryAndSubCategory,
+  getMyCourseOfInstructor,
 };
 
 export default courseService;

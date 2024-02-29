@@ -52,6 +52,13 @@ const userApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getProfileInstructor: build.query({
+      query: (id: string) => ({
+        url: `/get-profile-instructor/${id}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -60,4 +67,5 @@ export const {
   useUpdateAvatarMutation,
   useUpdatePasswordMutation,
   useBecomeInstructorMutation,
+  useGetProfileInstructorQuery,
 } = userApi;

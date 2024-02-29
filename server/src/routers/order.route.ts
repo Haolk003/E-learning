@@ -3,6 +3,7 @@ import {
   newPaymentIntent,
   newOrder,
   checkUserPurchaseCousre,
+  newOrderCart,
 } from "../controllers/order.controller";
 import { protect } from "../middlewares/auth";
 
@@ -14,4 +15,5 @@ router.post("/create-order", protect, newOrder);
 
 router.get("/check-purcharse/:courseId", protect, checkUserPurchaseCousre);
 
+router.post("/new-order-cart", protect, newOrderCart);
 export default router;

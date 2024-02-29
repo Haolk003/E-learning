@@ -37,12 +37,21 @@ export const checkUserPurchaseCousre = CatchAsyncError(
       courseId,
       userId
     );
+    res.status(200).json({
+      success: true,
+      data: isPurchased,
+      message: "Check User Is Purchased Successfully",
+    });
+  }
+);
+
+export const newOrderCart = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const userId = req.me._id;
+    const { paymentId } = req.body;
+    const order = await orderService.newOrderCart(paymentId, userId);
     res
       .status(200)
-      .json({
-        success: true,
-        data: isPurchased,
-        message: "Check User Is Purchased Successfully",
-      });
+      .json({ success: true, data: order, message: "Checkout successfully" });
   }
 );

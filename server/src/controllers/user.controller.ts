@@ -112,3 +112,17 @@ export const becomeIntructor = CatchAsyncError(
     });
   }
 );
+
+export const getUserProfileInstructor = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { id } = req.params;
+    const response = await userService.getUserProfileIntructor(id);
+    res
+      .status(200)
+      .json({
+        success: true,
+        data: response,
+        message: "Get Profile Intructor successfully",
+      });
+  }
+);

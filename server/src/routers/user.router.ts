@@ -11,6 +11,7 @@ import {
   updatePassword,
   convertUserToIntructor,
   becomeIntructor,
+  getUserProfileInstructor,
 } from "../controllers/user.controller";
 import { ImgResize, uploadPhoto } from "../middlewares/uploadImage";
 const router = express.Router();
@@ -40,4 +41,6 @@ router.put("/updateProfileUser", protect, updateProfileUser);
 router.put("/update-password", protect, updatePassword);
 
 router.put("/become-instructor", protect, becomeIntructor);
+
+router.get("/get-profile-instructor/:id", getUserProfileInstructor);
 export default router;

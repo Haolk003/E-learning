@@ -156,6 +156,19 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getCoursesOfInstructor: build.query({
+      query: ({
+        instructorId,
+        page,
+      }: {
+        instructorId: string;
+        page: number;
+      }) => ({
+        url: `/get-courses-instructor/${instructorId}?page=${page}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -178,4 +191,5 @@ export const {
   useGetProgressLectureQuery,
   useGetProgressCoursesUserQuery,
   useGetCoursesCategoryPublicQuery,
+  useGetCoursesOfInstructorQuery,
 } = courseApi;
