@@ -4,6 +4,7 @@ import Stripe from "stripe";
 import ErrorHandle from "../utils/errorHandle";
 import courseModel from "../models/course.model";
 import UserCourseProgressModel from "../models/userCourseProgress.model";
+import cartModel from "../models/cart.model";
 
 const stripe = new Stripe(process.env.SECRECT_STRIPE_KEY as string, {
   apiVersion: "2023-10-16",
@@ -35,8 +36,9 @@ const newOrder = async (
   if (!findCourse) {
     throw new ErrorHandle(400, "Course not found");
   }
+
   const newOrder = await orderModel.create({
-    courseId: courseId,
+    products: [courseId],
     userId: userId,
     payment_info: paymentIntent,
     instructorId: findCourse.author,
@@ -64,9 +66,60 @@ const newOrder = async (
   return newOrder;
 };
 
+const newOrderCart = async (stripePaymentInfoId: string, userId: string) => {
+  const findCart = await cartModel.findOne({ userId });
+  if (!findCart || findCart.items.length === 0) {
+    throw new ErrorHandle(
+      400,
+      "Unable to pay because there are no products in the cart"
+    );
+  }
+
+  if (!stripePaymentInfoId) {
+    throw new ErrorHandle(400, "Don't not find stripe payment info id");
+  }
+  const paymentIntent = await stripe.paymentIntents.retrieve(
+    stripePaymentInfoId
+  );
+  if (paymentIntent.status !== "succeeded") {
+    throw new ErrorHandle(400, "Payment not authorized");
+  }
+
+  const coursesToUpdate = findCart.items.map((item) => item.courseId);
+
+  await Promise.all(
+    coursesToUpdate.map(async (courseId) => {
+      await courseModel.findByIdAndUpdate(
+        { _id: courseId },
+        { $inc: { sold: 1 } }
+      );
+      await UserCourseProgressModel.create({
+        userId,
+        courseId,
+      });
+    })
+  );
+
+  const newOrder = await orderModel.create({
+    products: findCart.items,
+    userId: userId,
+    payment_info: {
+      id: paymentIntent.id,
+      amount: paymentIntent.amount / 100,
+      currency: paymentIntent.currency,
+    },
+  });
+
+  findCart.totalPrice = 0;
+  findCart.applyCoupon = null;
+  findCart.items = [];
+  await findCart.save();
+  return newOrder;
+};
+
 const newPaymentIntent = async (amount: number, currency: string) => {
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount * 100,
+    amount: amount,
     currency: "USD",
 
     // Set confirm to false to wait for confirmation on the client
@@ -88,5 +141,10 @@ const checkUserPurchaseCousre = async (courseId: string, userId: string) => {
     return true;
   }
 };
-const orderService = { newPaymentIntent, newOrder, checkUserPurchaseCousre };
+const orderService = {
+  newPaymentIntent,
+  newOrder,
+  checkUserPurchaseCousre,
+  newOrderCart,
+};
 export default orderService;

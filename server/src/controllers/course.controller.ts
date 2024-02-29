@@ -184,12 +184,27 @@ export const findCourseCategoryAndSubCategory = CatchAsyncError(
       pageQuery: page,
       sortQuery: sort,
     });
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: courses,
-        message: "Get Courses Category Successfully",
-      });
+    res.status(200).json({
+      success: true,
+      data: courses,
+      message: "Get Courses Category Successfully",
+    });
+  }
+);
+
+export const getCourseOfInstructor = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { page } = req.query as any;
+    const { instructorId } = req.params;
+    const courses = await courseService.getMyCourseOfInstructor(
+      instructorId,
+      page
+    );
+
+    res.status(200).json({
+      success: true,
+      data: courses,
+      message: "Get Courses Of Instructor successfully",
+    });
   }
 );

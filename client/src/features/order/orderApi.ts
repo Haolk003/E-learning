@@ -28,6 +28,14 @@ const orderApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    newOrderCart: build.mutation({
+      query: (paymentId: string) => ({
+        url: "/new-order-cart",
+        method: "POST",
+        body: { paymentId },
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -35,4 +43,5 @@ export const {
   useCreatePaymentIntentMutation,
   useCreateOrderMutation,
   useCheckPurchaseCourseQuery,
+  useNewOrderCartMutation,
 } = orderApi;

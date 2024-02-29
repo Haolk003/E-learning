@@ -57,7 +57,10 @@ const CoureCardItem: FC<Props> = ({
             />
           </div>
           <Link href={`/course/${_id}`}>
-            <h3 className="text-[14px] leading-[5px] mt-2 mb-2"> {title}</h3>
+            <h3 className="text-[14px] leading-6 mt-2 mb-2  whitespace-wrap  overflow-ellipsis overflow-hidden line-clamp-2">
+              {" "}
+              {title}
+            </h3>
           </Link>
           <div className="flex items-center justify-between">
             <Rating ratings={star} />

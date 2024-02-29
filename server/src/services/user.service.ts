@@ -1,3 +1,6 @@
+import courseModel from "../models/course.model";
+import orderModel from "../models/order.model";
+import reviewModel from "../models/review.model";
 import userModel from "../models/user.model";
 import { uploadFile, deleteImage } from "../utils/cloudinary";
 import ErrorHandle from "../utils/errorHandle";
@@ -101,6 +104,38 @@ const getUserById = async (id: string) => {
   return user;
 };
 
+const countTotalSoldByIntructor = async (instructorId: string) => {
+  const result = await courseModel.aggregate([
+    { $match: { author: instructorId } },
+    { $group: { _id: null, totalSold: { $sum: "$sold" } } },
+  ]);
+
+  const totalSold = result.length > 0 ? result[0].totalSold : 0;
+  return totalSold;
+};
+
+const getUserProfileIntructor = async (id: string) => {
+  const user = await userModel
+    .findById(id)
+    .select("-googleUserId -password -loginType");
+  if (!user || user.role !== "instructor") {
+    throw new ErrorHandle(
+      400,
+      "The user doesn't exist or you don't have access to this user's profile"
+    );
+  }
+  const totalReviews = await reviewModel.countDocuments({
+    instructorId: user._id,
+  });
+  const totalStudents = await countTotalSoldByIntructor(user._id);
+
+  return {
+    user,
+    totalReviews,
+    totalStudents,
+  };
+};
+
 // change password by user
 type ChangePasswordType = {
   newPassword: string;
@@ -160,6 +195,7 @@ const userService = {
   updatePassword,
   convertUserToIntructor,
   becomeIntructor,
+  getUserProfileIntructor,
 };
 
 export default userService;
