@@ -5,6 +5,7 @@ import ErrorHandle from "../utils/errorHandle";
 import courseModel from "../models/course.model";
 import UserCourseProgressModel from "../models/userCourseProgress.model";
 import cartModel from "../models/cart.model";
+import NotifyModel from "../models/notify.model";
 
 const stripe = new Stripe(process.env.SECRECT_STRIPE_KEY as string, {
   apiVersion: "2023-10-16",
@@ -44,7 +45,11 @@ const newOrder = async (
     instructorId: findCourse.author,
   });
   findCourse.sold = Number(findCourse.sold) + 1;
-
+  await NotifyModel.create({
+    message: `purchased ${findCourse.title.slice(0, 40)} course`,
+    sender: userId,
+    receiver: findCourse._id,
+  });
   await findCourse.save();
 
   await UserCourseProgressModel.create({
@@ -89,10 +94,18 @@ const newOrderCart = async (stripePaymentInfoId: string, userId: string) => {
 
   await Promise.all(
     coursesToUpdate.map(async (courseId) => {
-      await courseModel.findByIdAndUpdate(
+      const findCourse = await courseModel.findByIdAndUpdate(
         { _id: courseId },
         { $inc: { sold: 1 } }
       );
+      if (findCourse) {
+        await NotifyModel.create({
+          message: `purchased ${findCourse.title.slice(0, 40)} course`,
+          sender: userId,
+          receiver: findCourse.author,
+        });
+      }
+
       await UserCourseProgressModel.create({
         userId,
         courseId,

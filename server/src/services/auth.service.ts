@@ -5,6 +5,7 @@ import sendEmail from "../utils/sendEmail";
 import ErrorHandle from "../utils/errorHandle";
 import jwt from "jsonwebtoken";
 import { sendToken } from "../utils/jwt";
+import { redis } from "../utils/redis";
 
 interface RegistrationUserType {
   email: string;
@@ -96,6 +97,8 @@ class AuthService {
     if (!isMatchPassword) {
       throw new ErrorHandle(400, "Password is not matched");
     }
+    redis.set(findUser._id, JSON.stringify(findUser), "EX", 604800);
+
     return findUser;
   }
 

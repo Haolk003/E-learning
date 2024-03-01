@@ -1,18 +1,33 @@
-import { Schema, Document, model } from "mongoose";
+import mongoose, { Schema, Document, model } from "mongoose";
 
 interface Notify extends Document {
   message: string;
-  sender: string;
-  receiver: string;
-  createdAt: Date;
+  sender: Schema.Types.ObjectId;
+  receiver: Schema.Types.ObjectId;
+  status: string;
 }
 
-const notifySchema = new Schema<Notify>({
-  message: { type: String, required: true },
-  sender: { type: String, required: true },
-  receiver: { type: String, required: true },
-  createdAt: { type: Date, default: Date.now() },
-});
+const notifySchema = new Schema<Notify>(
+  {
+    message: { type: String, required: true },
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    receiver: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    status: {
+      type: String,
+      required: true,
+      default: "unread",
+    },
+  },
+  { timestamps: true }
+);
 
 const NotifyModel = model<Notify>("Notify", notifySchema);
 

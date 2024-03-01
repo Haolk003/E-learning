@@ -13,6 +13,8 @@ import {
 } from "../utils/cloudinary";
 import userModel from "../models/user.model";
 
+import { redis } from "../utils/redis";
+
 type CreateCourseType = {
   title: string;
   price: number;
@@ -69,6 +71,10 @@ const editCourseStep1 = async (data: CreateCourseStep1, courseId: string) => {
     { $set: data },
     { new: true }
   );
+  const findRedis = await redis.get(courseId);
+  if (findRedis) {
+    redis.hset(courseId, data);
+  }
   return updateCourse;
 };
 type CreateCoursseStep2 = {
@@ -95,6 +101,11 @@ const createEditCourseStep2 = async (
     },
     { new: true }
   );
+
+  const findRedis = await redis.get(courseId);
+  if (findRedis) {
+    redis.hset(courseId, data);
+  }
   return updateCourse;
 };
 
@@ -112,6 +123,10 @@ const createEditCourseStep3 = async (data: ICourseData[], courseId: string) => {
     { $set: { courseData: newData, progress: 100 } },
     { new: true }
   );
+  const findRedis = await redis.get(courseId);
+  if (findRedis) {
+    redis.hset(courseId, { courseData: newData, progress: 100 });
+  }
   return updateCourse;
 };
 
@@ -176,19 +191,26 @@ const findCourseById = async (courseId: string) => {
 };
 
 const findCourseByIdPublic = async (courseId: string) => {
-  const course = await courseModel
-    .findOne({ _id: courseId, status: "public" })
-    .select("-courseData.lectures.videoUrl")
-    .populate("author", "avatar firstName lastName email")
-    .populate({
-      path: "reviews",
-      populate: { path: "user", select: "firstName lastName avatar" },
-    });
+  let courseRedis = await redis.get(courseId);
+  if (!courseRedis) {
+    const course = await courseModel
+      .findOne({ _id: courseId, status: "public" })
+      .select("-courseData.lectures.videoUrl")
+      .populate("author", "avatar firstName lastName email")
+      .populate({
+        path: "reviews",
+        populate: { path: "user", select: "firstName lastName avatar" },
+      });
 
-  if (!course) {
-    throw new ErrorHandle(400, "Course not found");
+    if (!course) {
+      throw new ErrorHandle(400, "Course not found");
+    }
+
+    redis.set(courseId, JSON.stringify(course), "EX", 604800);
+    return course;
   }
-  return course;
+
+  return JSON.parse(courseRedis);
 };
 
 const getCoursePurhaser = async (courseId: string, userId: string) => {

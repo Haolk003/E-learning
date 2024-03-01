@@ -24,10 +24,14 @@ const ProgressCourse: React.FC<Props> = () => {
           async (item: progressLectureProgressType) => {
             const checkLengthWatched = item.progress.find(
               (progress) =>
-                progress.lectureId === item.lastWatchedLecture.lectureId
+                progress.lectureId === item?.lastWatchedLecture?.lectureId
             );
 
-            const response = await fetch(item.lastWatchedLecture.lectureUrl);
+            const response = await fetch(
+              item.lastWatchedLecture
+                ? item.lastWatchedLecture.lectureUrl
+                : item.courseId.courseData[0].lectures[0].videoUrl.url
+            );
             const blob = await response.blob();
             const snapshot = new VideoSnapshot(blob);
             const takeSnapshot = await snapshot.takeSnapshot(
@@ -36,19 +40,25 @@ const ProgressCourse: React.FC<Props> = () => {
 
             const findDuration = item.courseId.courseData.find((course) =>
               course.lectures.some(
-                (lecture) => lecture._id === item.lastWatchedLecture.lectureId
+                (lecture) => lecture._id === item?.lastWatchedLecture?.lectureId
               )
             );
 
             return {
               takeSnapshot,
-              duration: findDuration ? findDuration?.duration : 0,
+              duration: findDuration
+                ? findDuration?.duration
+                : item.courseId.courseData[0].lectures[0].duration,
               lengthWatched: checkLengthWatched
                 ? checkLengthWatched.lengthWatched
                 : 0,
-              lectureTitle: item.lastWatchedLecture.lectureTitle,
+              lectureTitle: item.lastWatchedLecture
+                ? item.lastWatchedLecture.lectureTitle
+                : item.courseId.courseData[0].lectures[0].title,
               courseId: item.courseId._id,
-              lectureId: item.lastWatchedLecture.lectureId,
+              lectureId: item.lastWatchedLecture
+                ? item.lastWatchedLecture.lectureId
+                : item.courseId.courseData[0].lectures[0]._id,
             };
           }
         );

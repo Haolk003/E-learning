@@ -7,8 +7,9 @@ import { BiUserCircle } from "react-icons/bi";
 import { IoIosSearch } from "react-icons/io";
 import { FaAngleRight } from "react-icons/fa";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useLogoutUserMutation } from "@/features/auth/authApi";
+import { useGetAllNotifyUserQuery } from "@/features/notification/notifyApi";
 
-import toast from "react-hot-toast";
 import Image from "next/image";
 import * as HoverCard from "@radix-ui/react-hover-card";
 
@@ -31,19 +32,26 @@ import { FiShoppingCart } from "react-icons/fi";
 
 import { useGetCartQuery } from "@/features/cart/cartApi";
 
-import { cartType, cartItemType } from "@/types/cartType";
+import { cartItemType } from "@/types/cartType";
+import { notifyType } from "@/types/notifyType";
+
+import { IoIosLogOut } from "react-icons/io";
 const Header = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: categories } = useGetAllCategoryQuery("");
   const { data: cart } = useGetCartQuery("");
+  const { data: notifies } = useGetAllNotifyUserQuery("");
+
+  const [logout] = useLogoutUserMutation();
 
   const user = useAppSelector((state) => state.auth.user);
   const open = useAppSelector((state) => state.layout.open);
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [active, setActive] = useState(false);
   const [route, setRoute] = useState("sign-in");
+  const [notifyData, setNotifyData] = useState<notifyType[]>([]);
 
   const handleCloseModalLogin = () => {
     dispatch(closeLogin(undefined));
@@ -75,6 +83,11 @@ const Header = () => {
     }
   };
 
+  useEffect(() => {
+    if (notifies) {
+      setNotifyData(notifies.data);
+    }
+  }, [notifies]);
   return (
     <div className="w-screen relative dark:text-white text-black z-50">
       <div
@@ -245,15 +258,80 @@ const Header = () => {
 
             <div>
               {user ? (
-                <Link href="/profile">
-                  <Image
-                    src={user.avatar ? user.avatar.url : "/assets/avatar.jpg"}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className="object-cover w-[40px] h-[40px] rounded-full cursor-pointer"
-                  />
-                </Link>
+                <HoverCard.Root>
+                  <HoverCard.Trigger asChild>
+                    <Link href="/profile">
+                      <Image
+                        src={
+                          user.avatar ? user.avatar.url : "/assets/avatar.jpg"
+                        }
+                        alt=""
+                        width={40}
+                        height={40}
+                        className="object-cover w-[40px] h-[40px] rounded-full cursor-pointer"
+                      />
+                    </Link>
+                  </HoverCard.Trigger>
+                  <HoverCard.Portal>
+                    <HoverCard.Content
+                      side="bottom"
+                      align="end"
+                      sideOffset={23}
+                      className="dark:bg-gray4 bg-white min-h-[500px] w-[300px] z-[100] shadow-sm shadow-black"
+                    >
+                      <div className="flex items-center justify-between w-full py-5 px-4 border-b border-gray10">
+                        <div className="w-[80px] h-[80px] overflow-hidden rounded-full">
+                          <Image
+                            src={
+                              user.avatar
+                                ? user.avatar.url
+                                : "/assets/avatar.jpg"
+                            }
+                            alt=""
+                            width={80}
+                            height={80}
+                            className="w-[80px] h-[80px] rounded-full"
+                          />
+                        </div>
+                        <div className="flex flex-col gap-2 w-[180px]">
+                          <p>
+                            {user.lastName} {user.firstName}
+                          </p>
+                          <p className="text-[12px] text-gray8  whitespace-wrap  overflow-ellipsis overflow-hidden ">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col px-5 py-5 gap-4 border-b border-gray10 text-[14px]">
+                        <Link href="/my-courses/learning">My learning</Link>
+                        <Link href="/cart">My cart</Link>
+                        {user.role === "instructor" && (
+                          <Link href="/instructor">Instructor Dashboard</Link>
+                        )}
+                        {user.role === "user" && (
+                          <Link href="/instructor">Become Instructor</Link>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col px-5 py-5 gap-4 border-b border-gray10 text-[14px]">
+                        <Link href="/notification">Notification</Link>
+                        <Link href="/cart">Message</Link>
+                      </div>
+
+                      <div className="flex flex-col px-5 py-5 gap-4 text-[14px]">
+                        <Link href="/notification">Account Setting</Link>
+                        <Link href="/profile">Public Profile</Link>
+                        <Link href="/profile">Edit Profile</Link>
+                        <button
+                          onClick={() => logout("")}
+                          className="flex items-center gap-2 font-semibold mt-3 text-[17px]"
+                        >
+                          <IoIosLogOut size={20} /> Logout
+                        </button>
+                      </div>
+                    </HoverCard.Content>
+                  </HoverCard.Portal>
+                </HoverCard.Root>
               ) : (
                 <div onClick={openModal} className="text-3xl">
                   <BiUserCircle />
