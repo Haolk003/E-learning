@@ -4,11 +4,15 @@ import { configureStore } from "@reduxjs/toolkit";
 import apiSlice from "@/features/api/apiSlice";
 import authSlice from "@/features/auth/authSlice";
 import layoutSlice from "@/features/layout/layoutSlice";
+import cartSlice from "@/features/cart/cartSlice";
+import notifySlice from "@/features/notification/notifySlice";
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
     auth: authSlice,
     layout: layoutSlice,
+    cart: cartSlice,
+    notify: notifySlice,
   },
   devTools: false,
   middleware: (getDefaultMiddleware) => {

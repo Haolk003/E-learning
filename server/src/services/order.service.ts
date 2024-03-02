@@ -6,6 +6,7 @@ import courseModel from "../models/course.model";
 import UserCourseProgressModel from "../models/userCourseProgress.model";
 import cartModel from "../models/cart.model";
 import NotifyModel from "../models/notify.model";
+import userModel from "../models/user.model";
 
 const stripe = new Stripe(process.env.SECRECT_STRIPE_KEY as string, {
   apiVersion: "2023-10-16",
@@ -45,34 +46,22 @@ const newOrder = async (
     instructorId: findCourse.author,
   });
   findCourse.sold = Number(findCourse.sold) + 1;
+  await userModel.findByIdAndUpdate(userId, {
+    $push: { myLearning: findCourse._id },
+  });
   await NotifyModel.create({
     message: `purchased ${findCourse.title.slice(0, 40)} course`,
     sender: userId,
-    receiver: findCourse._id,
+    receiver: findCourse.author,
   });
   await findCourse.save();
 
-  await UserCourseProgressModel.create({
-    userId,
-    courseId,
-    lastWatchedLecture: {
-      lectureId: findCourse.courseData[0].lectures[0]._id,
-      lectureTitle: findCourse.courseData[0].lectures[0].title,
-      lectureUrl: findCourse.courseData[0].lectures[0].videoUrl.url,
-    },
-    progress: [
-      {
-        lectureId: findCourse.courseData[0].lectures[0]._id,
-        lengthWatched: 0,
-        isCompleted: false,
-      },
-    ],
-  });
   return newOrder;
 };
 
 const newOrderCart = async (stripePaymentInfoId: string, userId: string) => {
   const findCart = await cartModel.findOne({ userId });
+  const findUser = await userModel.findById(userId);
   if (!findCart || findCart.items.length === 0) {
     throw new ErrorHandle(
       400,
@@ -104,6 +93,7 @@ const newOrderCart = async (stripePaymentInfoId: string, userId: string) => {
           sender: userId,
           receiver: findCourse.author,
         });
+        findUser?.myLearning.push(findCourse._id);
       }
 
       await UserCourseProgressModel.create({
@@ -127,6 +117,7 @@ const newOrderCart = async (stripePaymentInfoId: string, userId: string) => {
   findCart.applyCoupon = null;
   findCart.items = [];
   await findCart.save();
+  await findUser?.save();
   return newOrder;
 };
 

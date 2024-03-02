@@ -6,6 +6,7 @@ import ErrorHandle from "../utils/errorHandle";
 import jwt from "jsonwebtoken";
 import { sendToken } from "../utils/jwt";
 import { redis } from "../utils/redis";
+import cartModel from "../models/cart.model";
 
 interface RegistrationUserType {
   email: string;
@@ -59,6 +60,11 @@ class AuthService {
       email,
       password,
       loginType: "password",
+    });
+
+    const cart = await cartModel.create({
+      userId: user._id,
+      totalPrice: 0,
     });
     return { token, user };
   }

@@ -14,6 +14,7 @@ import {
   getUserProfileInstructor,
 } from "../controllers/user.controller";
 import { ImgResize, uploadPhoto } from "../middlewares/uploadImage";
+
 const router = express.Router();
 
 router.put(

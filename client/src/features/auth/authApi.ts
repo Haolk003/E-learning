@@ -14,7 +14,7 @@ const authApi = apiSlice.injectEndpoints({
           const result = await api.queryFulfilled;
           api.dispatch(userLoggedIn({ user: result.data.user }));
         } catch (err: any) {
-          console.log(err.message);
+          console.log(err.data.message);
         }
       },
     }),

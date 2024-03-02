@@ -19,6 +19,7 @@ export type CourseType = {
   author: {
     firstName: string;
     lastName: string;
+    _id: string;
   };
   price: number;
   sold: number;

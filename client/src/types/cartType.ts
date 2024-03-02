@@ -5,7 +5,7 @@ export type cartType = {
   userId: string;
   items: cartItemType[];
   totalPrice: number;
-  applyCoupon: couponType;
+  applyCoupon?: couponType;
 };
 
 export type cartItemType = {

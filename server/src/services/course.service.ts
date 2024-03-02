@@ -39,6 +39,34 @@ type CreateCourseStep1 = {
 
 //save data when the user completes step 1
 
+async function updateCourseInRedis(courseId: string, updatedData: any) {
+  // Các key Redis cho các danh mục khóa học
+  const categories = ["courses:popular", "courses:new", "courses:overrated"];
+
+  for (const category of categories) {
+    // Lấy dữ liệu hiện tại từ Redis
+    const coursesData = await redis.get(category);
+    if (coursesData) {
+      // Phân tích dữ liệu JSON để lấy danh sách các khóa học
+      const courses = JSON.parse(coursesData);
+
+      // Tìm khóa học trong danh sách
+      const courseIndex = courses.findIndex(
+        (course: any) => course.id === courseId
+      );
+      if (courseIndex !== -1) {
+        // Cập nhật dữ liệu cho khóa học này
+        courses[courseIndex] = { ...courses[courseIndex], ...updatedData };
+
+        // Lưu lại danh sách đã cập nhật vào Redis
+        await redis.set(category, JSON.stringify(courses));
+
+        console.log(`Course ${courseId} updated in category ${category}.`);
+      }
+    }
+  }
+}
+
 const createCourseStep1 = async (
   data: CreateCourseStep1,
   userId: string,
@@ -61,6 +89,7 @@ const createCourseStep1 = async (
       status: "draft",
       progress: 33,
     });
+
     return newCourse;
   }
 };
@@ -75,6 +104,8 @@ const editCourseStep1 = async (data: CreateCourseStep1, courseId: string) => {
   if (findRedis) {
     redis.hset(courseId, data);
   }
+
+  await updateCourseInRedis(courseId, data);
   return updateCourse;
 };
 type CreateCoursseStep2 = {
@@ -105,6 +136,7 @@ const createEditCourseStep2 = async (
   const findRedis = await redis.get(courseId);
   if (findRedis) {
     redis.hset(courseId, data);
+    await updateCourseInRedis(courseId, data);
   }
   return updateCourse;
 };
@@ -126,6 +158,7 @@ const createEditCourseStep3 = async (data: ICourseData[], courseId: string) => {
   const findRedis = await redis.get(courseId);
   if (findRedis) {
     redis.hset(courseId, { courseData: newData, progress: 100 });
+    await updateCourseInRedis(courseId, data);
   }
   return updateCourse;
 };
@@ -213,6 +246,62 @@ const findCourseByIdPublic = async (courseId: string) => {
   return JSON.parse(courseRedis);
 };
 
+const getPopularCourses = async (userId?: string) => {
+  const findUser = await userModel.findById(userId);
+  const courseRedis = await redis.get("courses:popular");
+  if (!courseRedis) {
+    const courses = await courseModel
+      .find(
+        Object.assign(
+          { status: "public" },
+          { _id: { $nin: findUser?.myLearning } }
+        )
+      )
+      .sort("-sold")
+      .limit(20);
+    redis.set("courses:popular", JSON.stringify(courses));
+    return courses;
+  }
+  return JSON.parse(courseRedis);
+};
+
+const getNewCourses = async (userId?: string) => {
+  const findUser = await userModel.findById(userId);
+  const courseRedis = await redis.get("courses:new");
+  if (!courseRedis) {
+    const courses = await courseModel
+      .find(
+        Object.assign(
+          { status: "public" },
+          { _id: { $nin: findUser?.myLearning } }
+        )
+      )
+      .sort("-createdAt")
+      .limit(20);
+
+    return courses;
+  }
+  return JSON.parse(courseRedis);
+};
+
+const getOverratedCourses = async (userId?: string) => {
+  const findUser = await userModel.findById(userId);
+  const courseRedis = await redis.get("courses:overrated");
+  if (!courseRedis) {
+    const courses = await courseModel
+      .find(
+        Object.assign(
+          { status: "public" },
+          { _id: { $nin: findUser?.myLearning } }
+        )
+      )
+      .sort("-ratings")
+      .limit(20);
+
+    return courses;
+  }
+  return JSON.parse(courseRedis);
+};
 const getCoursePurhaser = async (courseId: string, userId: string) => {
   const checkOrder = await orderModel.findOne({ userId, courseId });
   if (!checkOrder) {
@@ -253,9 +342,12 @@ type filterGetAllCourse = {
   ratings?: number;
   level?: string | string[];
 };
-const getAllCourseByAdmin = async (queryObj: filterGetAllCourse) => {
+const getAllCourseByAdmin = async (
+  queryObj: filterGetAllCourse,
+  userId?: string
+) => {
   const filteredObject = _.omitBy(queryObj, _.isEmpty);
-
+  const findUser = await userModel.findById(userId);
   if (
     typeof filteredObject.level === "string" &&
     filteredObject.level.split("").includes(",")
@@ -281,11 +373,18 @@ const getAllCourseByAdmin = async (queryObj: filterGetAllCourse) => {
       Object.assign(
         { title: { $regex: filteredObject.keyword, $options: "i" } },
         { status: "public" },
+        { _id: { $nin: findUser?.myLearning } },
         queryStr
       )
     );
   } else {
-    query = courseModel.find(Object.assign({ status: "public" }, queryStr));
+    query = courseModel.find(
+      Object.assign(
+        { status: "public" },
+        { _id: { $nin: findUser?.myLearning } },
+        queryStr
+      )
+    );
   }
 
   if (filteredObject && typeof filteredObject.sort === "string") {
@@ -433,6 +532,9 @@ const courseService = {
   getCoursePurhaser,
   findCourseCategoryAndSubCategory,
   getMyCourseOfInstructor,
+  getOverratedCourses,
+  getPopularCourses,
+  getNewCourses,
 };
 
 export default courseService;

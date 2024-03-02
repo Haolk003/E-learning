@@ -272,12 +272,14 @@ const CourseLayout = ({ id }: { id: string }) => {
           </div>
         )}
       </div>
-      {paymentIntent && (
+      {paymentIntent && courseData && user && (
         <CustomModal
           component={
             <Checkout
               clientSecret={paymentIntent.data}
               handleCloseCheckout={handleCloseCheckout}
+              courseData={courseData}
+              user={user}
             />
           }
           open={openCheckout}

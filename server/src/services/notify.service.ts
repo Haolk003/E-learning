@@ -63,7 +63,7 @@ class NotifyService {
       if (!notify) {
         throw new ErrorHandle(400, "Notification not found");
       }
-      return notify;
+      return id;
     } catch (error) {
       throw new ErrorHandle(500, "Cannot delete notification");
     }

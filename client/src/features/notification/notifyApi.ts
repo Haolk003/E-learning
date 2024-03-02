@@ -1,4 +1,10 @@
 import apiSlice from "../api/apiSlice";
+import {
+  addNotify,
+  deleteNotify,
+  getAllNotify,
+  updateNotify,
+} from "./notifySlice";
 
 const notifyApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
@@ -15,6 +21,15 @@ const notifyApi = apiSlice.injectEndpoints({
         method: "GET",
         credentials: "include" as const,
       }),
+      async onQueryStarted(arg, api) {
+        try {
+          const result = await api.queryFulfilled;
+
+          api.dispatch(getAllNotify({ notifies: result.data.data }));
+        } catch (err: any) {
+          console.log(err);
+        }
+      },
     }),
     getDetailNotify: build.query({
       query: (id: string) => ({
@@ -29,6 +44,15 @@ const notifyApi = apiSlice.injectEndpoints({
         method: "DELETE",
         credentials: "include" as const,
       }),
+      async onQueryStarted(arg, api) {
+        try {
+          const result = await api.queryFulfilled;
+
+          api.dispatch(deleteNotify(result.data.data));
+        } catch (err: any) {
+          console.log(err);
+        }
+      },
     }),
   }),
 });

@@ -12,35 +12,50 @@ interface AddCartType {
 
 class CartService {
   async addCart({ courseId, userId, price }: AddCartType) {
-    const cart = await cartModel.findOne({ userId });
-    const findCourse = await courseModel.findById(courseId);
-
+    const findCourse = await courseModel
+      .findById(courseId)
+      .populate("author", "firstName lastName");
     if (!findCourse) {
       throw new ErrorHandle(400, "Course not found");
     }
+    const cart = await cartModel.findOne({ userId }).populate("applyCoupon");
 
     if (cart) {
       const item = cart.items.find(
         (item) => item.courseId.toString() === courseId
       );
+
       if (!item) {
+        const coupon = cart.applyCoupon as any;
         cart.items.push({ courseId: findCourse._id, price });
-        cart.totalPrice += price;
+        cart.totalPrice += coupon ? (coupon.discount * price) / 100 : price;
+      } else {
+        throw new ErrorHandle(400, "Item is Exist");
       }
       await cart.save();
-      return cart;
+      return findCourse;
     } else {
       const newCart = await cartModel.create({
         userId,
         items: [{ courseId, price }],
         totalPrice: price,
       });
-      return newCart;
+      return findCourse;
     }
   }
 
   async editCart({ courseId, price, userId }: AddCartType) {
-    const cart = await cartModel.findOne({ userId });
+    const cart = await cartModel.findOne({ userId }).populate([
+      {
+        path: "items.courseId",
+
+        populate: {
+          path: "author",
+          select: "firstName lastName",
+        },
+      },
+      { path: "applyCoupon" },
+    ]);
     if (!cart) {
       throw new ErrorHandle(400, "Cart not found");
     }
@@ -61,7 +76,17 @@ class CartService {
   }
 
   async applyCoupon(userId: Types.ObjectId, couponCode: string) {
-    const cart = await cartModel.findOne({ userId });
+    const cart = await cartModel.findOne({ userId }).populate([
+      {
+        path: "items.courseId",
+
+        populate: {
+          path: "author",
+          select: "firstName lastName",
+        },
+      },
+      { path: "applyCoupon" },
+    ]);
     if (!cart) {
       throw new ErrorHandle(400, "Cart not found");
     }
@@ -79,14 +104,15 @@ class CartService {
       throw new ErrorHandle(400, "Invalid coupon");
     }
 
-    cart.totalPrice -= (cart.totalPrice * coupon.discount) / 100;
+    cart.totalPrice =
+      cart.totalPrice - (cart.totalPrice * coupon.discount) / 100;
     coupon.usedBy.push(cart.userId);
     cart.applyCoupon = coupon._id;
 
     await cart.save();
     await coupon.save();
 
-    return cart;
+    return coupon;
   }
 
   async deleteAllCourseInCart(userId: string) {
@@ -98,23 +124,26 @@ class CartService {
   }
 
   async deleteCourseIdInCart(userId: string, courseId: string) {
-    const cart = await cartModel.findOne({ userId });
+    const cart = await cartModel.findOne({ userId }).populate("applyCoupon");
+
     if (!cart) {
       throw new ErrorHandle(400, "Cart not found");
     }
 
     const index = cart.items.findIndex(
-      (item) => item.courseId.toString() === courseId
+      (item) => item.courseId._id.toString() === courseId
     );
     if (index === -1) {
       throw new ErrorHandle(400, "Item not found in cart");
     }
-
-    cart.totalPrice -= cart.items[index].price;
+    const discount = cart.applyCoupon as any;
+    cart.totalPrice = discount
+      ? cart.totalPrice - (cart.totalPrice * discount.discount) / 100
+      : cart.totalPrice - cart.items[index].price;
     cart.items.splice(index, 1);
 
     await cart.save();
-    return cart;
+    return courseId;
   }
 
   async getAddedCart(userId: string) {
@@ -153,9 +182,11 @@ class CartService {
     );
     await findCoupon.save();
     cart.applyCoupon = null;
-    cart.totalPrice = (cart.totalPrice * 100) / findCoupon.discount;
+    cart.totalPrice = cart.items.reduce((total, item) => {
+      return total + item.price;
+    }, 0);
     await cart.save();
-    return cart;
+    return findCoupon;
   }
 }
 
