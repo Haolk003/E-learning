@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 
 import "./globals.css";
 import { Providers } from "./provider";
@@ -6,6 +7,8 @@ import { ThemeProvider } from "@/utils/next-themes";
 import { Toaster } from "react-hot-toast";
 import { Poppins, Josefin_Sans } from "next/font/google";
 import Custom from "@/utils/Custom";
+import useSocket from "@/hooks/useSocket";
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -23,6 +26,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const socketId = useSocket();
+
+  useEffect(() => {
+    if (socketId) {
+      socketId.on("connection", () => {});
+    }
+  }, [socketId]);
   return (
     <Providers>
       <html lang="en">

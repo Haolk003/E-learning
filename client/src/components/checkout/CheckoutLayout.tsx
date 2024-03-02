@@ -14,12 +14,17 @@ import Image from "next/image";
 import { useStarPercentageQuery } from "@/features/review/reviewApi";
 import toast from "react-hot-toast";
 
+import useSocket from "@/hooks/useSocket";
+import { useAppSelector } from "@/store/hook";
+
 type Props = {
   cart: cartType;
   clientSecretStripe: string;
 };
 const CheckoutLayout: React.FC<Props> = ({ cart, clientSecretStripe }) => {
+  const socket = useSocket();
   const router = useRouter();
+  const user = useAppSelector((state) => state.auth.user);
   const [newOrder, { error, isLoading, isSuccess }] = useNewOrderCartMutation();
 
   const stripe = useStripe();
@@ -47,6 +52,22 @@ const CheckoutLayout: React.FC<Props> = ({ cart, clientSecretStripe }) => {
       toast.error(errorMesasge.message);
     }
     if (isSuccess) {
+      if (socket && user) {
+        cart.items.forEach((item, index) => {
+          socket.emit("notification", {
+            message: `purchased ${item.courseId.title.slice(0, 40)} course`,
+            sender: {
+              firstName: user.firstName,
+              lastName: user.lastName,
+              _id: user._id,
+            },
+            status: "unread",
+            receiver: item.courseId.author._id,
+            createdAt: new Date(),
+          });
+        });
+      }
+
       router.push("/payment/success");
     }
   }, [error, isSuccess]);
