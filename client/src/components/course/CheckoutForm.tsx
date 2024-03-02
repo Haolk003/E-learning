@@ -7,19 +7,24 @@ import {
 } from "@stripe/react-stripe-js";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import {
-  useCreatePaymentIntentMutation,
-  useCreateOrderMutation,
-} from "@/features/order/orderApi";
+import { useCreateOrderMutation } from "@/features/order/orderApi";
 import toast from "react-hot-toast";
+import { CourseType } from "@/types/couresContentType";
+import { UserType } from "@/types/userType";
 
+import useSocket from "@/hooks/useSocket";
 const CheckoutForm = ({
   handleCloseCheckout,
+  courseData,
+  user,
 }: {
   handleCloseCheckout: () => void;
+  courseData: CourseType;
+  user: UserType;
 }) => {
+  const socket = useSocket();
   const params = useParams();
-  console.log(params);
+
   const [createOrder, { isSuccess, error }] = useCreateOrderMutation();
   const elements = useElements();
   const [isLoading, setIsLoading] = useState(false);
@@ -50,10 +55,23 @@ const CheckoutForm = ({
       const errorMesasge = error.data as any;
       toast.error(errorMesasge.message);
     } else if (isSuccess) {
+      if (socket) {
+        socket.emit("notification", {
+          message: `purchased ${courseData.title.slice(0, 40)} course`,
+          sender: {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            _id: user._id,
+          },
+          receiver: courseData.author._id,
+          createdAt: new Date(),
+        });
+      }
       handleCloseCheckout();
       toast.success("Purchase Course Successfully");
     }
   }, [error, isSuccess]);
+
   return (
     <form id="payment-form" onSubmit={handleSubmit} className="text-white">
       <PaymentElement id="payment-element" />

@@ -1,5 +1,5 @@
 import express from "express";
-import { protect, authorizeRoles } from "../middlewares/auth";
+import { protect, authorizeRoles, extractUserId } from "../middlewares/auth";
 import {
   createEditCourseStep1,
   createEditCourseStep2,
@@ -16,6 +16,9 @@ import {
   pucharserCourse,
   findCourseCategoryAndSubCategory,
   getCourseOfInstructor,
+  getNewCourse,
+  getOverratedCourses,
+  getPopularCourses,
 } from "../controllers/course.controller";
 import { ImgResize, uploadPhoto } from "../middlewares/uploadImage";
 import { uploadVideoMulter } from "../middlewares/uploadVideo";
@@ -75,7 +78,7 @@ router.put(
   publicCourse
 );
 
-router.get("/get-all-courses", getAllCoursePublic);
+router.get("/get-all-courses", extractUserId, getAllCoursePublic);
 
 router.delete(
   "/delete-course/:id",
@@ -101,4 +104,10 @@ router.get(
 );
 
 router.get("/get-courses-instructor/:instructorId", getCourseOfInstructor);
+
+router.get("/get-new-courses-home", extractUserId, getNewCourse);
+
+router.get("/get-popular-courses-home", extractUserId, getPopularCourses);
+
+router.get("/get-overrated-courses-home", extractUserId, getOverratedCourses);
 export default router;

@@ -1,4 +1,13 @@
 import apiSlice from "../api/apiSlice";
+import { courseApi } from "../course/courseApi";
+
+import {
+  getAllCart,
+  addCart,
+  applyCoupon,
+  deleteApplyCoupon,
+  deleteItemCart,
+} from "./cartSlice";
 
 const cartApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
@@ -12,6 +21,21 @@ const cartApi = apiSlice.injectEndpoints({
         },
         credentials: "include" as const,
       }),
+      async onQueryStarted(arg, api) {
+        try {
+          const result = await api.queryFulfilled;
+          api.dispatch(
+            addCart({
+              item: {
+                courseId: result.data.data,
+                price: result.data.data.price,
+              },
+            })
+          );
+        } catch (err: any) {
+          console.log(err);
+        }
+      },
     }),
     updateToCart: build.mutation({
       query: ({ courseId, price }) => ({
@@ -30,6 +54,14 @@ const cartApi = apiSlice.injectEndpoints({
         method: "DELETE",
         credentials: "include" as const,
       }),
+      async onQueryStarted(arg, api) {
+        try {
+          const result = await api.queryFulfilled;
+          api.dispatch(deleteItemCart(result.data.data));
+        } catch (err: any) {
+          console.log(err);
+        }
+      },
     }),
     deleteAllCourseInCart: build.mutation({
       query: () => ({
@@ -45,6 +77,14 @@ const cartApi = apiSlice.injectEndpoints({
         body: { couponCode },
         credentials: "include" as const,
       }),
+      async onQueryStarted(arg, api) {
+        try {
+          const result = await api.queryFulfilled;
+          api.dispatch(applyCoupon(result.data.data));
+        } catch (err: any) {
+          console.log(err);
+        }
+      },
     }),
     getCart: build.query({
       query: () => ({
@@ -52,6 +92,15 @@ const cartApi = apiSlice.injectEndpoints({
         method: "GET",
         credentials: "include" as const,
       }),
+      async onQueryStarted(arg, api) {
+        try {
+          const result = await api.queryFulfilled;
+          console.log(result);
+          api.dispatch(getAllCart({ cart: result.data.data }));
+        } catch (err: any) {
+          console.log(err.message);
+        }
+      },
     }),
     deleteCouponInCart: build.mutation({
       query: (couponId: string) => ({
@@ -60,6 +109,14 @@ const cartApi = apiSlice.injectEndpoints({
         body: { couponId },
         credentials: "include" as const,
       }),
+      async onQueryStarted(arg, api) {
+        try {
+          const result = await api.queryFulfilled;
+          api.dispatch(deleteApplyCoupon());
+        } catch (err: any) {
+          console.log(err);
+        }
+      },
     }),
   }),
 });

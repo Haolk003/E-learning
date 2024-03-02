@@ -1,5 +1,5 @@
 import apiSlice from "../api/apiSlice";
-
+import useSocket from "@/hooks/useSocket";
 const orderApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     createPaymentIntent: build.mutation({
@@ -9,6 +9,17 @@ const orderApi = apiSlice.injectEndpoints({
         body: { amount, currency },
         credentials: "include" as const,
       }),
+      async onQueryStarted(arg, api) {
+        try {
+          const socket = useSocket();
+          const result = await api.queryFulfilled;
+          if (socket) {
+            socket.emit("notification", result.data.data);
+          }
+        } catch (err: any) {
+          console.log(err);
+        }
+      },
     }),
     createOrder: build.mutation({
       query: ({ courseId, payment_intent_id }) => ({

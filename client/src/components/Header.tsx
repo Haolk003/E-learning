@@ -7,6 +7,11 @@ import { BiUserCircle } from "react-icons/bi";
 import { IoIosSearch } from "react-icons/io";
 import { FaAngleRight } from "react-icons/fa";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useLogoutUserMutation } from "@/features/auth/authApi";
+import {
+  useGetAllNotifyUserQuery,
+  useDeleteNotifyMutation,
+} from "@/features/notification/notifyApi";
 
 import toast from "react-hot-toast";
 import Image from "next/image";
@@ -26,21 +31,35 @@ import { useGetAllCategoryQuery } from "@/features/category/categoryApi";
 import { CategoryType } from "@/types/categoryType";
 
 import { IoIosNotificationsOutline } from "react-icons/io";
-
 import { FiShoppingCart } from "react-icons/fi";
+import { IoMdClose } from "react-icons/io";
+import { IoIosLogOut } from "react-icons/io";
 
 import { useGetCartQuery } from "@/features/cart/cartApi";
+import { cartItemType } from "@/types/cartType";
+import useSocket from "@/hooks/useSocket";
+import { addNotify } from "@/features/notification/notifySlice";
 
-import { cartType, cartItemType } from "@/types/cartType";
+import ToastNotify from "./ui/toast/ToastNotify";
+
 const Header = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: categories } = useGetAllCategoryQuery("");
-  const { data: cart } = useGetCartQuery("");
+  const {} = useGetCartQuery("");
+  const { refetch } = useGetAllNotifyUserQuery("");
+  const [deleteNotify, { isLoading, isSuccess }] = useDeleteNotifyMutation();
 
+  const [logout] = useLogoutUserMutation();
+
+  const socketId = useSocket();
   const user = useAppSelector((state) => state.auth.user);
+
   const open = useAppSelector((state) => state.layout.open);
+  const cart = useAppSelector((state) => state.cart.cart);
+  const notifies = useAppSelector((state) => state.notify.notifies);
+
   const [search, setSearch] = useState(searchParams.get("q") || "");
   const [active, setActive] = useState(false);
   const [route, setRoute] = useState("sign-in");
@@ -51,6 +70,7 @@ const Header = () => {
   const openModal = () => {
     dispatch(openLogin(""));
   };
+
   useEffect(() => {
     const handelScroll = () => {
       if (typeof window !== "undefined") {
@@ -75,6 +95,34 @@ const Header = () => {
     }
   };
 
+  const handleDeleteNotify = async (id: string) => {
+    await deleteNotify(id);
+  };
+
+  useEffect(() => {
+    if (isSuccess) {
+      refetch();
+    }
+  }, [isSuccess]);
+
+  useEffect(() => {
+    if (socketId) {
+      socketId.on("newOrder", (data) => {
+        dispatch(addNotify({ notify: data }));
+        console.log(data);
+        toast(<ToastNotify data={notifies[0]} />, {
+          position: "bottom-right",
+          className: "dark:bg-gray2 bg-white w-[400px]",
+        });
+      });
+    }
+  }, [socketId]);
+
+  useEffect(() => {
+    if (socketId && user) {
+      socketId.emit("new_connection", { userId: user._id });
+    }
+  }, [user, socketId]);
   return (
     <div className="w-screen relative dark:text-white text-black z-50">
       <div
@@ -103,12 +151,15 @@ const Header = () => {
                           return (
                             <HoverCard.Root key={item._id}>
                               <HoverCard.Trigger asChild>
-                                <div className="flex items-center justify-between">
+                                <Link
+                                  href={`/courses/${item._id}`}
+                                  className="flex items-center justify-between"
+                                >
                                   <p className="cursor-pointer text-[17px]">
                                     {item.name}
                                   </p>
                                   <FaAngleRight />
-                                </div>
+                                </Link>
                               </HoverCard.Trigger>
                               <HoverCard.Portal>
                                 <HoverCard.Content
@@ -126,9 +177,12 @@ const Header = () => {
                                         ) => {
                                           return (
                                             <HoverCard.Root key={item2._id}>
-                                              <div className="cursor-pointer">
+                                              <Link
+                                                href={`/courses/${item._id}/${item2._id}`}
+                                                className="cursor-pointer"
+                                              >
                                                 {item2.name}
-                                              </div>
+                                              </Link>
                                             </HoverCard.Root>
                                           );
                                         }
@@ -175,14 +229,86 @@ const Header = () => {
             )}
 
             <Link href="/my-learning">My Learning</Link>
-            <button className="relative">
-              <IoIosNotificationsOutline size={25} />
-              <span className="animate-ping absolute top-1 right-[7px] inline-flex h-[5px] w-[5px] rounded-full bg-blue8"></span>
-            </button>
             <HoverCard.Root>
               <HoverCard.Trigger asChild>
-                <div>
+                <button className="relative">
+                  <IoIosNotificationsOutline size={25} />
+                  <span className="animate-ping absolute top-1 right-[7px] inline-flex h-[5px] w-[5px] rounded-full bg-blue8"></span>
+                </button>
+              </HoverCard.Trigger>
+              <HoverCard.Portal>
+                <HoverCard.Content
+                  side="bottom"
+                  align="end"
+                  sideOffset={25}
+                  className="dark:bg-gray1 rounded-md bg-white shadow-sm dark:shadow-gray10 shadow-gray4 w-[300px] min-h-[500px] z-[100]"
+                >
+                  <div className="py-3 px-5 border-b border-gray8 flex items-center justify-between">
+                    <h2 className="text-[16px]">Notifications</h2>
+                    <p className="text-[12px] text-blue10 bg-blue2/10 rounded-sm py-[2px] px-3 font-semibold">
+                      {notifies &&
+                        notifies.filter((item) => item.status === "unread")
+                          .length}{" "}
+                      Unread
+                    </p>
+                  </div>
+                  <div className="">
+                    {notifies &&
+                      notifies.map((item) => {
+                        return (
+                          <div
+                            className="py-3 px-5 border-b border-gray8 flex items-center justify-between gap-2"
+                            key={item._id}
+                          >
+                            <div className="w-[35px] h-[35px] overflow-hidden rounded-full">
+                              <Image
+                                src={
+                                  item.sender.avatar
+                                    ? item.sender.avatar.url
+                                    : "/assets/avatar.jpg"
+                                }
+                                alt=""
+                                width={35}
+                                height={35}
+                                className="w-[35px] h-[35px] object-cover rounded-full"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-1 w-[200px]">
+                              <h4 className="text-[13px] font-semibold">
+                                {item.sender.lastName} {item.sender.firstName}
+                              </h4>
+                              <p className="text-[13px] dark:text-gray11 text-gray2">
+                                {item.message}
+                              </p>
+                            </div>
+                            <button
+                              className="flex items-center justify-between"
+                              onClick={() => handleDeleteNotify(item._id)}
+                            >
+                              <IoMdClose />
+                            </button>
+                          </div>
+                        );
+                      })}
+                  </div>
+                  <div className="px-5 py-4">
+                    <button className=" rounded-md font-semibold w-full h-[35px] bg-cyan12">
+                      View All
+                    </button>
+                  </div>
+                </HoverCard.Content>
+              </HoverCard.Portal>
+            </HoverCard.Root>
+
+            <HoverCard.Root>
+              <HoverCard.Trigger asChild>
+                <div className="relative">
                   <FiShoppingCart size={25} className="cursor-pointer" />
+                  {cart && (
+                    <div className="absolute -top-2 -right-1 w-4 h-4 text-[14px]  rounded-full text-white bg-blue11 flex items-center justify-center">
+                      {cart?.items.length}
+                    </div>
+                  )}
                 </div>
               </HoverCard.Trigger>
 
@@ -196,46 +322,43 @@ const Header = () => {
                   <div className="">
                     <ul className="flex flex-col gap-3">
                       {cart &&
-                        cart.data.items.map(
-                          (item: cartItemType, index: number) => {
-                            return (
-                              <li
-                                key={item.courseId._id}
-                                className="flex gap-3"
-                              >
-                                <Image
-                                  src={item.courseId.thumbnail.url}
-                                  alt=""
-                                  width={100}
-                                  height={70}
-                                  className="w-[20%] h-[50px] object-cover"
-                                />
-                                <div className="">
-                                  <h4 className="font-semibold text-[14px]">
-                                    {item.courseId.title}
-                                  </h4>
-                                  <p className="text-gray8 text-[13px]">
-                                    {item.courseId.author.lastName}{" "}
-                                    {item.courseId.author.firstName}
-                                  </p>
-                                  <p className="font-semibold text-[14px]">
-                                    ${item.price}
-                                  </p>
-                                </div>
-                              </li>
-                            );
-                          }
-                        )}
+                        cart.items.length > 0 &&
+                        cart.items.map((item: cartItemType, index: number) => {
+                          return (
+                            <li key={item.courseId._id} className="flex gap-3">
+                              <Image
+                                src={item.courseId.thumbnail?.url || ""}
+                                alt=""
+                                width={100}
+                                height={70}
+                                className="w-[20%] h-[50px] object-cover"
+                              />
+                              <div className="">
+                                <h4 className="font-semibold text-[14px]">
+                                  {item.courseId.title}
+                                </h4>
+                                <p className="text-gray8 text-[13px]">
+                                  {item.courseId.author.lastName}{" "}
+                                  {item.courseId.author.firstName}
+                                </p>
+                                <p className="font-semibold text-[14px]">
+                                  ${item.price}
+                                </p>
+                              </div>
+                            </li>
+                          );
+                        })}
                     </ul>
                     <div className="flex items-center gap-2 mt-3 font-semibold">
                       <h3 className="text-[18px]">Total:</h3>
-                      <p className="text-[20px]">
-                        ${cart && cart.data.totalPrice}
-                      </p>
+                      <p className="text-[20px]">${cart && cart.totalPrice}</p>
                     </div>
-                    <button className="w-full h-[40px] bg-violet11 mt-2">
+                    <Link
+                      href="/cart"
+                      className="w-full flex items-center justify-center h-[40px] bg-violet11 mt-2"
+                    >
                       Go to cart
-                    </button>
+                    </Link>
                   </div>
                 </HoverCard.Content>
               </HoverCard.Portal>
@@ -245,15 +368,80 @@ const Header = () => {
 
             <div>
               {user ? (
-                <Link href="/profile">
-                  <Image
-                    src={user.avatar ? user.avatar.url : "/assets/avatar.jpg"}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className="object-cover w-[40px] h-[40px] rounded-full cursor-pointer"
-                  />
-                </Link>
+                <HoverCard.Root>
+                  <HoverCard.Trigger asChild>
+                    <Link href="/profile">
+                      <Image
+                        src={
+                          user.avatar ? user.avatar.url : "/assets/avatar.jpg"
+                        }
+                        alt=""
+                        width={40}
+                        height={40}
+                        className="object-cover w-[40px] h-[40px] rounded-full cursor-pointer"
+                      />
+                    </Link>
+                  </HoverCard.Trigger>
+                  <HoverCard.Portal>
+                    <HoverCard.Content
+                      side="bottom"
+                      align="end"
+                      sideOffset={23}
+                      className="dark:bg-gray4 bg-white min-h-[500px] w-[300px] z-[100] shadow-sm shadow-black"
+                    >
+                      <div className="flex items-center justify-between w-full py-5 px-4 border-b border-gray10">
+                        <div className="w-[80px] h-[80px] overflow-hidden rounded-full">
+                          <Image
+                            src={
+                              user.avatar
+                                ? user.avatar.url
+                                : "/assets/avatar.jpg"
+                            }
+                            alt=""
+                            width={80}
+                            height={80}
+                            className="w-[80px] h-[80px] rounded-full"
+                          />
+                        </div>
+                        <div className="flex flex-col gap-2 w-[180px]">
+                          <p>
+                            {user.lastName} {user.firstName}
+                          </p>
+                          <p className="text-[12px] text-gray8  whitespace-wrap  overflow-ellipsis overflow-hidden ">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex flex-col px-5 py-5 gap-4 border-b border-gray10 text-[14px]">
+                        <Link href="/my-courses/learning">My learning</Link>
+                        <Link href="/cart">My cart</Link>
+                        {user.role === "instructor" && (
+                          <Link href="/instructor">Instructor Dashboard</Link>
+                        )}
+                        {user.role === "user" && (
+                          <Link href="/instructor">Become Instructor</Link>
+                        )}
+                      </div>
+
+                      <div className="flex flex-col px-5 py-5 gap-4 border-b border-gray10 text-[14px]">
+                        <Link href="/notification">Notification</Link>
+                        <Link href="/cart">Message</Link>
+                      </div>
+
+                      <div className="flex flex-col px-5 py-5 gap-4 text-[14px]">
+                        <Link href="/notification">Account Setting</Link>
+                        <Link href="/profile">Public Profile</Link>
+                        <Link href="/profile">Edit Profile</Link>
+                        <button
+                          onClick={() => logout("")}
+                          className="flex items-center gap-2 font-semibold mt-3 text-[17px]"
+                        >
+                          <IoIosLogOut size={20} /> Logout
+                        </button>
+                      </div>
+                    </HoverCard.Content>
+                  </HoverCard.Portal>
+                </HoverCard.Root>
               ) : (
                 <div onClick={openModal} className="text-3xl">
                   <BiUserCircle />

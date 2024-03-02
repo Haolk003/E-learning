@@ -4,6 +4,7 @@ import reviewModel from "../models/review.model";
 import userModel from "../models/user.model";
 import { uploadFile, deleteImage } from "../utils/cloudinary";
 import ErrorHandle from "../utils/errorHandle";
+import { redis } from "../utils/redis";
 
 const getAllUser = async () => {
   const user = await userModel.find().select("-password");
@@ -56,6 +57,8 @@ const uploadAvatarUser = async (id: string, file: any) => {
   const result = await uploadFile("avatar", path);
   findUser.avatar = { public_id: result.public_id, url: result.url };
   await findUser.save();
+
+  redis.set(findUser._id, JSON.stringify(findUser), "EX", 604800);
 
   return findUser;
 };

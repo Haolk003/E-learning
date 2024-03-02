@@ -5,6 +5,8 @@ import sendEmail from "../utils/sendEmail";
 import ErrorHandle from "../utils/errorHandle";
 import jwt from "jsonwebtoken";
 import { sendToken } from "../utils/jwt";
+import { redis } from "../utils/redis";
+import cartModel from "../models/cart.model";
 
 interface RegistrationUserType {
   email: string;
@@ -59,6 +61,11 @@ class AuthService {
       password,
       loginType: "password",
     });
+
+    const cart = await cartModel.create({
+      userId: user._id,
+      totalPrice: 0,
+    });
     return { token, user };
   }
 
@@ -96,6 +103,8 @@ class AuthService {
     if (!isMatchPassword) {
       throw new ErrorHandle(400, "Password is not matched");
     }
+    redis.set(findUser._id, JSON.stringify(findUser), "EX", 604800);
+
     return findUser;
   }
 

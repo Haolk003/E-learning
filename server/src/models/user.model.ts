@@ -16,7 +16,7 @@ export interface IUser extends Document {
   password: string;
   email: string;
   isBanned: boolean;
-  myLearning: Schema.Types.ObjectId[];
+  myLearning: mongoose.Types.ObjectId[];
   website: string;
   facebookLink: string;
   youtubeLink: string;

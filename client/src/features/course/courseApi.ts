@@ -169,6 +169,27 @@ export const courseApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getNewCoursesHome: build.query({
+      query: () => ({
+        url: "/get-new-courses-home",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    getPopularCoursesHome: build.query({
+      query: () => ({
+        url: "/get-popular-courses-home",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    getOverratedCoursesHome: build.query({
+      query: () => ({
+        url: "/get-overrated-courses-home",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -192,4 +213,7 @@ export const {
   useGetProgressCoursesUserQuery,
   useGetCoursesCategoryPublicQuery,
   useGetCoursesOfInstructorQuery,
+  useGetOverratedCoursesHomeQuery,
+  useGetNewCoursesHomeQuery,
+  useGetPopularCoursesHomeQuery,
 } = courseApi;

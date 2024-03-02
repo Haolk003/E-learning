@@ -108,9 +108,13 @@ interface QueryType {
 }
 export const getAllCoursePublic = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { courses, totalCount } = await courseService.getAllCourseByAdmin({
-      ...req.query,
-    });
+    const id = req.me?._id;
+    const { courses, totalCount } = await courseService.getAllCourseByAdmin(
+      {
+        ...req.query,
+      },
+      id
+    );
     res.status(200).json({
       success: true,
       data: { courses, totalCount },
@@ -206,5 +210,43 @@ export const getCourseOfInstructor = CatchAsyncError(
       data: courses,
       message: "Get Courses Of Instructor successfully",
     });
+  }
+);
+
+export const getOverratedCourses = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.me ? req.me._id : undefined;
+    const courses = await courseService.getOverratedCourses(id);
+    res.status(200).json({
+      success: true,
+      data: courses,
+      message: "GEt Overrated Courses Successfully",
+    });
+  }
+);
+
+export const getPopularCourses = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.me ? req.me._id : undefined;
+    const courses = await courseService.getPopularCourses(id);
+    res.status(200).json({
+      success: true,
+      data: courses,
+      message: "Get Popular Courses Successfully",
+    });
+  }
+);
+
+export const getNewCourse = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.me ? req.me._id : undefined;
+    const courses = await courseService.getNewCourses(id);
+    res
+      .status(200)
+      .json({
+        success: true,
+        data: courses,
+        message: "Get New Courses Successfully",
+      });
   }
 );

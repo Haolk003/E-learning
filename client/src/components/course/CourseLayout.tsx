@@ -46,11 +46,7 @@ const CourseLayout = ({ id }: { id: string }) => {
 
   const [isCollapsed, setIsCollapsed] = useState<boolean[]>([]);
   const [openCheckout, setOpenCheckout] = useState(false);
-
-  let course;
-  if (data?.data) {
-    course = data.data as CourseType;
-  }
+  const [courseData, setCourseData] = useState<CourseType | null>(null);
 
   const changeIsCollapsed = (index: number) => {
     const newIsCollapse = [...isCollapsed];
@@ -69,29 +65,36 @@ const CourseLayout = ({ id }: { id: string }) => {
     setOpenCheckout(false);
   };
   useEffect(() => {
-    if (data) {
+    if (courseData) {
       setIsCollapsed(Array(data.data.courseData.length).fill(true));
-      createPaymentIntent({ amount: 20, currency: "USD" });
+      createPaymentIntent({
+        amount: courseData.price * 100,
+        currency: "USD",
+      });
+    }
+  }, [courseData]);
+  useEffect(() => {
+    if (data) {
+      setCourseData(data.data);
     }
   }, [data]);
-
   return (
     <>
       <div className="w-[90%] mx-auto">
-        {course && (
+        {courseData && (
           <div className="flex  gap-10">
             <div className="w-[65%]">
-              <h2 className="text-2xl">{course.title}</h2>
+              <h2 className="text-2xl">{courseData.title}</h2>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 mt-4">
-                  <Rating ratings={course.ratings} />
+                  <Rating ratings={courseData.ratings} />
                   <p className="flex ">
-                    <span className="mr-2">{course.reviews.length}</span>{" "}
+                    <span className="mr-2">{courseData.reviews.length}</span>{" "}
                     Reviews
                   </p>
                 </div>
                 <div>
-                  <span className="mr-2">{course.sold}</span> Students
+                  <span className="mr-2">{courseData.sold}</span> Students
                 </div>
               </div>
               <div className="">
@@ -99,7 +102,7 @@ const CourseLayout = ({ id }: { id: string }) => {
                   What you will learn from this course?
                 </h3>
                 <ul className="flex flex-col gap-5 text-[15px]">
-                  {course.benefits.map((item, index) => (
+                  {courseData.benefits.map((item, index) => (
                     <li className="flex items-center gap-3" key={item._id}>
                       <IoCheckmarkDoneOutline size={20} />
                       <p>{item.title}</p>
@@ -112,7 +115,7 @@ const CourseLayout = ({ id }: { id: string }) => {
                   What are the prequisites for starting this course?
                 </h3>
                 <ul className="flex flex-col gap-5 text-[15px]">
-                  {course.prerequisites.map((item, index) => (
+                  {courseData.prerequisites.map((item, index) => (
                     <li className="flex items-center gap-3" key={item._id}>
                       <IoCheckmarkDoneOutline size={20} />
                       <p>{item.title}</p>
@@ -123,7 +126,7 @@ const CourseLayout = ({ id }: { id: string }) => {
               <div>
                 <h3 className="text-2xl mt-12 mb-8">Course Overview</h3>
                 <div className="flex flex-col gap-4">
-                  {course.courseData.map((item, index) => {
+                  {courseData.courseData.map((item, index) => {
                     return (
                       <div key={item._id}>
                         <div className="flex items-center justify-between mb-5">
@@ -171,22 +174,22 @@ const CourseLayout = ({ id }: { id: string }) => {
                 <div
                   className="leading-8"
                   dangerouslySetInnerHTML={{
-                    __html: dompurify.sanitize(course.description),
+                    __html: dompurify.sanitize(courseData.description),
                   }}
                 ></div>
               </div>
               <div className="flex items-center gap-2 mt-4">
-                <Rating ratings={course.ratings || 0} />
+                <Rating ratings={courseData.ratings || 0} />
                 <h3 className="text-2xl">
-                  {course.ratings.toFixed(2)} Course Rating
+                  {courseData.ratings.toFixed(2)} Course Rating
                 </h3>
                 <span className="text-2xl">•</span>
-                <p className="text-2xl">{course.reviews.length} Reviews</p>
+                <p className="text-2xl">{courseData.reviews.length} Reviews</p>
               </div>
               <div className="mb-5">
-                {course.reviews &&
-                  course.reviews.length > 0 &&
-                  course.reviews.map((review, reviewIndex) => (
+                {courseData.reviews &&
+                  courseData.reviews.length > 0 &&
+                  courseData.reviews.map((review, reviewIndex) => (
                     <div className="flex gap-3 mt-5" key={review._id}>
                       <Image
                         src={
@@ -217,25 +220,30 @@ const CourseLayout = ({ id }: { id: string }) => {
             </div>
 
             <div className="w-[35%]">
-              <CoursePlayer videoUrl={course.demoUrl.url} />
+              <CoursePlayer videoUrl={courseData.demoUrl.url} />
               <div className="flex gap-2 dark:text-white text-black text-3xl mt-3">
-                {course.sale.discount > 0 && (
-                  <p>{useCaculatorSale(course.price, course.sale.discount)}</p>
+                {courseData.sale.discount > 0 && (
+                  <p>
+                    {useCaculatorSale(
+                      courseData.price,
+                      courseData.sale.discount
+                    )}
+                  </p>
                 )}
 
                 <p
                   className={`${
-                    course.sale.discount > 0
+                    courseData.sale.discount > 0
                       ? "relative -top-2 left-0"
                       : " font-semibold text-3xl"
                   }`}
                 >
-                  ${course.price.toFixed(2)}
+                  ${courseData.price.toFixed(2)}
                 </p>
               </div>
               {isPurchased && isPurchased.data ? (
                 <Link
-                  href={`/course-access/${id}/lecture/${course.courseData[0].lectures[0]._id}`}
+                  href={`/course-access/${id}/lecture/${courseData.courseData[0].lectures[0]._id}`}
                   className=" text-white  "
                 >
                   <button className="!w-[180px] !h-[50px] bg-ruby11 !mt-5 rounded-[50px]">
@@ -264,12 +272,14 @@ const CourseLayout = ({ id }: { id: string }) => {
           </div>
         )}
       </div>
-      {paymentIntent && (
+      {paymentIntent && courseData && user && (
         <CustomModal
           component={
             <Checkout
               clientSecret={paymentIntent.data}
               handleCloseCheckout={handleCloseCheckout}
+              courseData={courseData}
+              user={user}
             />
           }
           open={openCheckout}

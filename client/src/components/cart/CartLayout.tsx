@@ -11,8 +11,12 @@ import {
   useApplyCouponCartMutation,
   useDeleteCouponInCartMutation,
 } from "@/features/cart/cartApi";
+
+import { useAppSelector } from "@/store/hook";
 import { IoIosClose } from "react-icons/io";
+import Link from "next/link";
 const CartLayout = () => {
+  const cart = useAppSelector((state) => state.cart.cart);
   const [
     applyCoupon,
     { isSuccess: isSuccessApplyCoupon, error: errorApplyCoupon },
@@ -73,11 +77,11 @@ const CartLayout = () => {
         <h2 className="text-2xl font-bold mb-7">Shopping Cart</h2>
 
         <p className="font-semibold text-[17px] mb-2">
-          {data ? data.data.items.length : 0} Courses in Cart
+          {cart ? cart.items.length : 0} Courses in Cart
         </p>
         <div>
-          {data &&
-            data.data.items.map((item: cartItemType, index: number) => {
+          {cart &&
+            cart.items.map((item: cartItemType, index: number) => {
               const totalLecture = item.courseId.courseData.reduce(
                 (total, lecture) => {
                   return total + lecture.lectures.length;
@@ -114,17 +118,19 @@ const CartLayout = () => {
         </div>
       </div>
       <div className="bg-[rgb(26,28,30)] w-[30%]  py-5 mt-10">
-        {data && data.data.applyCoupon && (
+        {cart && cart.applyCoupon && (
           <div className="border-dotted border-gray8 border mb-3 mx-5 rounded-md px-3 p-1 text-gray8">
             <div className="text-[14px] flex items-center justify-between">
               <div>
-                {data.data.applyCoupon.code}
+                {cart.applyCoupon.code}
                 <span className="text-[12px]">is applied</span>
               </div>
               <button
                 className="text-xl flex items-center justify-center"
                 onClick={() =>
-                  handleDeleteCouponInCart(data.data.applyCoupon._id)
+                  handleDeleteCouponInCart(
+                    cart.applyCoupon ? cart.applyCoupon._id : ""
+                  )
                 }
               >
                 <IoIosClose />
@@ -158,16 +164,25 @@ const CartLayout = () => {
           <div className="flex justify-between items-center">
             <h4 className="text-gray7 font-semibold text-[15px]">Sub Total</h4>
             <p className="font-semibold text-[16px]">
-              ${data && data.data.totalPrice.toFixed(2)}
+              $
+              {cart &&
+                cart.items
+                  .reduce((total, item) => {
+                    return total + item.price;
+                  }, 0)
+                  .toFixed(2)}
             </p>
           </div>
-          {data && data.data.applyCoupon && (
+          {cart && cart.applyCoupon && (
             <div className="flex items-center justify-between">
               <h4 className="text-gray7 font-semibold text-[15px]">Discount</h4>
               <p className="font-semibold text-[16px] text-green-green11">
-                {data.data.applyCoupon.discount}% - $
+                {cart.applyCoupon.discount}% - $
                 {(
-                  (data.data.totalPrice * data.data.applyCoupon.discount) /
+                  (cart.items.reduce((total, item) => {
+                    return total + item.price;
+                  }, 0) *
+                    cart.applyCoupon.discount) /
                   100
                 ).toFixed(2)}
               </p>
@@ -183,22 +198,17 @@ const CartLayout = () => {
           <div className="flex items-center justify-between">
             <h4 className="text-gray7 font-semibold text-[15px]">Total:</h4>
             <p className="font-semibold text-[16px] text-blue11">
-              $
-              {data &&
-                (
-                  data.data.totalPrice -
-                  (data.data.applyCoupon
-                    ? (data.data.totalPrice * data.data.applyCoupon.discount) /
-                      100
-                    : 0)
-                ).toFixed(2)}
+              ${cart && cart.totalPrice}
             </p>
           </div>
         </div>
         <div className="pt-4 px-5">
-          <button className="w-full h-[40px] bg-cyan-700 rounded-md">
+          <Link
+            href="/payment/checkout"
+            className="w-full flex items-center justify-center h-[40px] bg-cyan-700 rounded-md"
+          >
             Proceed To Checkout
-          </button>
+          </Link>
         </div>
       </div>
     </div>
