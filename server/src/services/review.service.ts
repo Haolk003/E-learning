@@ -114,6 +114,7 @@ const getAllReviewUserId = async (userId: string) => {
   const reviews = await reviewModel.find({ user: userId });
   return reviews;
 };
+
 const reviewService = {
   addReview,
   getAllReview,

@@ -13,25 +13,25 @@ type Props = {
   handleCloseCheckout: () => void;
   courseData: CourseType;
   user: UserType;
+  refesh: () => void;
 };
 const Checkout: FC<Props> = ({
   clientSecret,
   handleCloseCheckout,
   courseData,
   user,
+  refesh,
 }) => {
   const stripePromise = loadStripe(
     "pk_test_51NVtbtCMmhi1B7dqSi1E779o0KyxapInxFc8HLaz7l0TnJMUSZRDptnGoOYpeufkSCG7mZMPO8lHsKO7pwJfodEI00nmMP2ihh"
   );
-  console.log(`${process.env.NEXT_PUBLISHABLE_STRIPE_KEY}`);
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("first");
-  };
+
   return (
     <div>
       {stripePromise && clientSecret && (
         <Elements stripe={stripePromise} options={{ clientSecret }}>
           <CheckoutForm
+            refesh={refesh}
             handleCloseCheckout={handleCloseCheckout}
             courseData={courseData}
             user={user}

@@ -9,17 +9,16 @@ import {
   useGetOverratedCoursesHomeQuery,
 } from "@/features/course/courseApi";
 import { CourseType } from "@/types/couresContentType";
+import { useAppSelector } from "@/store/hook";
 const CoursesHome = () => {
-  const { data, error, isSuccess, isLoading } = useGetAllCourseQuery({
-    keyword: "",
-    page: 1,
-    limit: 20,
-    sort: "-sold",
-  });
+  const user = useAppSelector((state) => state.auth.user);
 
-  const { data: coursesOverrated } = useGetOverratedCoursesHomeQuery("");
-  const { data: coursePopular } = useGetPopularCoursesHomeQuery("");
-  const { data: courseNew } = useGetNewCoursesHomeQuery("");
+  const { data: coursesOverrated, refetch: refetchCourseOverrated } =
+    useGetOverratedCoursesHomeQuery("");
+  const { data: coursePopular, refetch: refetchCoursePopular } =
+    useGetPopularCoursesHomeQuery("");
+  const { data: courseNew, refetch: refetchCourseNew } =
+    useGetNewCoursesHomeQuery("");
 
   const [courseDataOverrated, setCourseDataOverrated] = useState<CourseType[]>(
     []
@@ -45,7 +44,12 @@ const CoursesHome = () => {
       setCourseDataPopular(coursePopular.data);
     }
   }, [coursePopular]);
-
+  useEffect(() => {
+    refetchCourseNew();
+    refetchCourseOverrated();
+    refetchCoursePopular();
+    console.log("refetch");
+  }, [user]);
   return (
     <div>
       {/* new courses */}

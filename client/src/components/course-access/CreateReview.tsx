@@ -8,15 +8,18 @@ import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 
 import { useCreateReviewMutation } from "@/features/review/reviewApi";
+import toast from "react-hot-toast";
 type Props = {
   courseId: string;
   isOpenModal: boolean;
   setIsOpenModal: Dispatch<SetStateAction<boolean>>;
+  refetch: () => void;
 };
 const CreateReview: React.FC<Props> = ({
   courseId,
   isOpenModal,
   setIsOpenModal,
+  refetch,
 }) => {
   const [CreateReview, { isLoading, isSuccess, error }] =
     useCreateReviewMutation();
@@ -31,9 +34,6 @@ const CreateReview: React.FC<Props> = ({
   const handleNextStep = () => {
     setStep(step + 1);
   };
-  useEffect(() => {
-    console.log(rating);
-  }, [rating]);
 
   const handleCreateReview = async () => {
     CreateReview({
@@ -42,6 +42,14 @@ const CreateReview: React.FC<Props> = ({
       rating: rating,
     });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("You have successfully evaluated the course");
+      refetch();
+      setIsOpenModal(false);
+    }
+  }, [isSuccess]);
   return (
     <div>
       <Dialog.Root

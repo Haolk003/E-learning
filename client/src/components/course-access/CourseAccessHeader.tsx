@@ -24,8 +24,9 @@ const CourseAccessHeader: React.FC<Props> = ({
   totalLecture,
   totalProgressComplete,
 }) => {
-  const { isLoading, data } = useCheckExistReviewPersonalQuery(courseId);
-  console.log(data);
+  const { isLoading, data, refetch } =
+    useCheckExistReviewPersonalQuery(courseId);
+
   const [isOpenCreateRating, setIsOpenCreateRating] = useState(false);
   return (
     <div className="w-screen relative dark:text-white text-black z-50">
@@ -96,6 +97,7 @@ const CourseAccessHeader: React.FC<Props> = ({
         </div>
       </div>
       <CreateReview
+        refetch={refetch}
         courseId={courseId}
         isOpenModal={isOpenCreateRating}
         setIsOpenModal={setIsOpenCreateRating}

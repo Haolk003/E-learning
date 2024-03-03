@@ -24,7 +24,7 @@ const reviewShema: Schema<Ireview> = new mongoose.Schema(
       required: true,
     },
     courseId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
     instructorId: {

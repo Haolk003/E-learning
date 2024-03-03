@@ -23,9 +23,6 @@ const CourseIntructorLayout = () => {
       },
       { skip: false }
     );
-  useEffect(() => {
-    console.log(isFetching);
-  }, [isFetching]);
 
   useEffect(() => {
     // Mỗi lần sortOrder hoặc searchTerm thay đổi, refetch data
@@ -70,7 +67,7 @@ const CourseIntructorLayout = () => {
                   <h4 className="text-[18px]">Jump Into Course Creation</h4>
                   <Link
                     href="/instructor/create-course/step1"
-                    className="bg-violet11 w-[200px] h-[45px] text-[17px] font-semibold text-white"
+                    className="bg-violet11 w-[200px] h-[45px] flex items-center justify-center text-[17px] font-semibold text-white"
                   >
                     Create Your Course
                   </Link>

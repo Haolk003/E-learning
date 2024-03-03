@@ -35,7 +35,7 @@ const CourseLayout = ({ id }: { id: string }) => {
   const [createPaymentIntent, { data: paymentIntent }] =
     useCreatePaymentIntentMutation();
 
-  const { data: isPurchased } = useCheckPurchaseCourseQuery(id);
+  const { data: isPurchased, refetch } = useCheckPurchaseCourseQuery(id);
   const { data, isLoading, isSuccess, error } = useGetCourseByIdPublicQuery(
     id,
     {
@@ -276,6 +276,7 @@ const CourseLayout = ({ id }: { id: string }) => {
         <CustomModal
           component={
             <Checkout
+              refesh={refetch}
               clientSecret={paymentIntent.data}
               handleCloseCheckout={handleCloseCheckout}
               courseData={courseData}

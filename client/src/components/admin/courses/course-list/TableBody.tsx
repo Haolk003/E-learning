@@ -1,8 +1,8 @@
 import React, { FC } from "react";
-import { CiEdit } from "react-icons/ci";
 import { FaTrashAlt } from "react-icons/fa";
 import Image from "next/image";
 import useSetTimeAgo from "@/hooks/useSetTimeAgo";
+
 type Props = {
   data: {
     id: number;
@@ -75,10 +75,7 @@ const TableBody: FC<Props> = ({ data }) => {
                 <th className="border border-gray11 px-3">{item.instructor}</th>
                 <th className="border border-gray11 px-3">{item.students}</th>
                 <th className="border border-gray11 px-3">${item.price}</th>
-                <th className="h-[50px] flex items-center gap-1 justify-center ">
-                  <button className="bg-blue8/30 text-blue9 rounded w-[30px] h-[30px] flex items-center justify-center ">
-                    <CiEdit />
-                  </button>
+                <th className="h-[50px] flex items-center gap-1 justify-center border border-gray11 px-3">
                   <button className="bg-red8/30 text-red9 rounded w-[30px] h-[30px] flex items-center justify-center">
                     <FaTrashAlt />
                   </button>

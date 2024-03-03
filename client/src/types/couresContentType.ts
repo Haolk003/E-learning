@@ -1,3 +1,4 @@
+import { CategoryType } from "./categoryType";
 import { reviewContentPublic } from "./reviewType";
 
 export type CourseType = {
@@ -15,6 +16,7 @@ export type CourseType = {
   };
   title: string;
   category: string;
+  subCategory: string;
   level: string;
   author: {
     firstName: string;

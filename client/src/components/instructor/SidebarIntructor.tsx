@@ -19,7 +19,7 @@ import {
 } from "react-pro-sidebar";
 import { MdLiveTv, MdOutlineChat } from "react-icons/md";
 import Link from "next/link";
-
+import Image from "next/image";
 const SideBarAdmin = () => {
   const { theme } = useTheme();
   const [collapsed, setCollapsed] = useState(false);
@@ -49,7 +49,20 @@ const SideBarAdmin = () => {
     >
       <div className="flex justify-center align-center p-4 mb-5">
         {/* You can add a logo or text here */}
-        <div className="text-2xl">{!collapsed && <span>Elearning</span>}</div>
+        <div className="text-2xl">
+          {!collapsed && (
+            <Link href="/" className="flex items-center flex-col ">
+              <Image
+                src="/assets/logo2.png"
+                alt=""
+                width={100}
+                height={80}
+                className="w-[100px] h-[80px] object-contain"
+              />
+              <h4 className="font-bold">Elearning</h4>
+            </Link>
+          )}
+        </div>
       </div>
 
       <Menu className="">
@@ -94,7 +107,7 @@ const SideBarAdmin = () => {
           Communication
         </MenuItem>
         <MenuItem
-          component={<Link href="/instructor/performance" />}
+          component={<Link href="/instructor/performance/overview/revenue" />}
           rootStyles={{
             ["& > ." + menuClasses.button]: {
               backgroundColor: "transparent",
@@ -114,6 +127,7 @@ const SideBarAdmin = () => {
           Performance
         </MenuItem>
         <MenuItem
+          component={<Link href="/instructor/tools" />}
           rootStyles={{
             ["& > ." + menuClasses.button]: {
               backgroundColor: "transparent",
@@ -133,6 +147,7 @@ const SideBarAdmin = () => {
           Tools
         </MenuItem>
         <MenuItem
+          component={<Link href="/instructor/resources" />}
           rootStyles={{
             ["& > ." + menuClasses.button]: {
               backgroundColor: "transparent",
@@ -152,11 +167,11 @@ const SideBarAdmin = () => {
           Resources
         </MenuItem>
       </Menu>
-      <div className="text-center">
+      {/* <div className="text-center">
         <button className="text-xl" onClick={handleCollapsedChange}>
           {collapsed ? "Expand" : "Collapse"}
         </button>
-      </div>
+      </div> */}
     </Sidebar>
   );
 };

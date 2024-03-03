@@ -27,9 +27,7 @@ const authApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, api) {
         try {
           api.dispatch(userLoggout());
-        } catch (err: any) {
-          console.log(err.message);
-        }
+        } catch (err: any) {}
       },
     }),
     registerUser: build.mutation({
