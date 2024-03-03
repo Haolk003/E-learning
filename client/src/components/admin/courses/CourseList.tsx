@@ -53,11 +53,11 @@ const CourseList = () => {
 
   useEffect(() => {
     if (data) {
-      const courseData = data.data.courses as CourseType[];
+      const courseData = data.data.courses;
       setRowData(
-        courseData.map((item, index) => {
+        courseData.map((item: any, index: number) => {
           return {
-            category: item.category,
+            category: item.category.name,
             instructor: item.author.lastName + " " + item.author.firstName,
             price: item.price,
             students: item.sold,
