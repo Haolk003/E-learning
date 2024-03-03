@@ -44,6 +44,7 @@ type Props = {
     percent: number;
     id: string;
   }[][];
+  handleDeleteVideo: (sectionIndex: number, linkIndex: number) => void;
 };
 const UploadVideo: FC<Props> = ({
   changeIdLoading,
@@ -55,6 +56,7 @@ const UploadVideo: FC<Props> = ({
   handleCancelUpload,
   loadingUploadVideo,
   percentUploadVideo,
+  handleDeleteVideo,
 }) => {
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles) {
@@ -89,22 +91,24 @@ const UploadVideo: FC<Props> = ({
             {...getInputProps()}
             className="w-full h-full absolute bg-transparent cursor-pointer"
           />
-
-          {!loadingUploadVideo[sectionIndex][lectureIndex].isLoading &&
-            videoUrl !== "" && (
-              <button
-                type="button"
-                className="absolute bottom-2 bg-gray8 py-2 px-3 rounded-md left-[50%] -translate-x-1/2 text-[14px]"
-              >
-                Change Video
-              </button>
-            )}
         </div>
       )}
       {!loadingUploadVideo[sectionIndex][lectureIndex].isLoading &&
       videoUrl !== "" ? (
-        <div className="absolute top-[50%]  left-[50%] z-50 -translate-y-1/2 -translate-x-1/2 w-[80%] h-[300px] flex items-center justify-center">
-          <CoursePlayer videoUrl={videoUrl} />
+        <div>
+          <div className="absolute top-[50%]  left-[50%] z-50 -translate-y-1/2 -translate-x-1/2 w-[80%] h-[300px] flex items-center justify-center">
+            <CoursePlayer videoUrl={videoUrl} />
+          </div>
+          {!loadingUploadVideo[sectionIndex][lectureIndex].isLoading &&
+            videoUrl !== "" && (
+              <button
+                type="button"
+                onClick={() => handleDeleteVideo(sectionIndex, lectureIndex)}
+                className="absolute bottom-2 bg-red10 py-2 z-[100] px-3 rounded-md left-[50%] -translate-x-1/2 text-[14px]"
+              >
+                Delete Video
+              </button>
+            )}
         </div>
       ) : (
         <></>

@@ -19,6 +19,7 @@ import { CourseType } from "@/types/couresContentType";
 
 import { NoteCourseType } from "@/types/noteCouresType";
 import dompurify from "dompurify";
+import Link from "next/link";
 type Props = {
   played: number;
   courseId: string;
@@ -26,6 +27,7 @@ type Props = {
   courseData: CourseType;
   notes: NoteCourseType[];
   refetch: () => void;
+  triggleReload: () => void;
 };
 const CourseAccessNote: React.FC<Props> = ({
   played,
@@ -34,6 +36,7 @@ const CourseAccessNote: React.FC<Props> = ({
   courseData,
   notes,
   refetch,
+  triggleReload,
 }) => {
   const editor = useEditor({
     extensions: [StarterKit],
@@ -192,7 +195,11 @@ const CourseAccessNote: React.FC<Props> = ({
             });
 
             return (
-              <div className="flex gap-5 mt-7 w-full">
+              <Link
+                href={`/course-access/${item.courseId}/lecture/${item.lectureId}?start=${item.timing}&option=note`}
+                onClick={triggleReload}
+                className="flex gap-5 mt-7 w-full"
+              >
                 <p className="dark:bg-white  bg-black h-[30px] w-[80px] flex justify-center text-center rounded-full  py-1 dark:text-black text-white">
                   {ConvertDuratonVideo({ duration: item.timing })}
                 </p>
@@ -248,7 +255,7 @@ const CourseAccessNote: React.FC<Props> = ({
                     </div>
                   )}
                 </div>
-              </div>
+              </Link>
             );
           })}
       </div>

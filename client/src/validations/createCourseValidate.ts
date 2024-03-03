@@ -41,7 +41,7 @@ export const CourseContentDataValidate =
               Yup.object().shape({
                 title: Yup.string().required(),
                 videoUrl: Yup.object().shape({
-                  public_id: Yup.string().required(),
+                  public_id: Yup.string(),
                   url: Yup.string().required(),
                 }),
                 duration: Yup.number().required(),

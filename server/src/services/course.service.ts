@@ -248,63 +248,61 @@ const findCourseByIdPublic = async (courseId: string) => {
 
 const getPopularCourses = async (userId?: string) => {
   const findUser = await userModel.findById(userId);
-  const courseRedis = await redis.get("courses:popular");
-  if (!courseRedis) {
-    const courses = await courseModel
-      .find(
-        Object.assign(
-          { status: "public" },
-          { _id: { $nin: findUser?.myLearning } }
-        )
+
+  const courses = await courseModel
+    .find(
+      Object.assign(
+        { status: "public" },
+        { _id: { $nin: findUser?.myLearning } }
       )
-      .sort("-sold")
-      .limit(20);
-    redis.set("courses:popular", JSON.stringify(courses));
-    return courses;
-  }
-  return JSON.parse(courseRedis);
+    )
+    .sort("-sold")
+    .limit(20);
+
+  return courses;
 };
 
 const getNewCourses = async (userId?: string) => {
   const findUser = await userModel.findById(userId);
-  const courseRedis = await redis.get("courses:new");
-  if (!courseRedis) {
-    const courses = await courseModel
-      .find(
-        Object.assign(
-          { status: "public" },
-          { _id: { $nin: findUser?.myLearning } }
-        )
-      )
-      .sort("-createdAt")
-      .limit(20);
 
-    return courses;
-  }
-  return JSON.parse(courseRedis);
+  const courses = await courseModel
+    .find(
+      Object.assign(
+        { status: "public" },
+        { _id: { $nin: findUser?.myLearning } }
+      )
+    )
+    .sort("-createdAt")
+    .limit(20);
+
+  return courses;
 };
 
 const getOverratedCourses = async (userId?: string) => {
   const findUser = await userModel.findById(userId);
-  const courseRedis = await redis.get("courses:overrated");
-  if (!courseRedis) {
-    const courses = await courseModel
-      .find(
-        Object.assign(
-          { status: "public" },
-          { _id: { $nin: findUser?.myLearning } }
-        )
-      )
-      .sort("-ratings")
-      .limit(20);
 
-    return courses;
-  }
-  return JSON.parse(courseRedis);
+  const courses = await courseModel
+    .find(
+      Object.assign(
+        { status: "public" },
+        { _id: { $nin: findUser?.myLearning } }
+      )
+    )
+    .sort("-ratings")
+    .limit(20);
+
+  return courses;
 };
 const getCoursePurhaser = async (courseId: string, userId: string) => {
-  const checkOrder = await orderModel.findOne({ userId, courseId });
-  if (!checkOrder) {
+  const findCourseInUser = await userModel.findById(userId);
+  if (!findCourseInUser) {
+    throw new ErrorHandle(400, "User not found");
+  }
+  if (
+    !findCourseInUser.myLearning.find(
+      (item) => item.toString() === courseId.toString()
+    )
+  ) {
     throw new ErrorHandle(400, "You haven't purchased this course yet");
   }
   const findCourse = await courseModel
@@ -314,6 +312,7 @@ const getCoursePurhaser = async (courseId: string, userId: string) => {
       path: "reviews",
       populate: { path: "user", select: "firstName lastName avatar" },
     });
+
   if (!findCourse) {
     throw new ErrorHandle(400, "Course not found");
   }

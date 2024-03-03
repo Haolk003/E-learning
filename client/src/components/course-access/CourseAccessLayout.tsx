@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import * as Collapible from "@radix-ui/react-collapsible";
 import { useSearchParams } from "next/navigation";
 import CreateReview from "./CreateReview";
@@ -31,6 +31,7 @@ import {
 } from "@/types/progressLectureUserType";
 import { CourseContentType } from "@/types/couresContentType";
 import { textPasteRule } from "@tiptap/react";
+import ReactPlayer from "react-player";
 
 type Props = {
   id: string;
@@ -39,11 +40,12 @@ type Props = {
 
 const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
   const { data: notes, refetch } = useGetNoteCourseQuery(id);
-
+  const playerRef = useRef<ReactPlayer>(null);
   const searchParams = useSearchParams();
   const { data, isLoading, isSuccess, error } = useGetpurchaserCourseQuery(id);
   const { data: progress } = useGetProgressLectureQuery(id);
   const [played, setPlayed] = useState(0);
+  const [reload, setReload] = useState(false);
   const totalProgressCompleted = progress
     ? progress.data.progress.reduce(
         (total: number, progress: ProgressDataLectureType) => {
@@ -65,6 +67,7 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
         0
       )
     : 0;
+  const triggerReload = () => setReload((prev) => !prev);
   return (
     <div>
       {data && (
@@ -79,6 +82,7 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
         <div className="w-[calc(100%-350px)] overflow-hidden">
           {progress && notes && data && (
             <CourseSuccessPlayer
+              reload={reload}
               played={played}
               setPlayed={setPlayed}
               courseId={id}
@@ -98,6 +102,7 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
             )}
           {data && notes.data && searchParams.get("option") === "note" && (
             <CourseAccessNote
+              triggleReload={triggerReload}
               notes={notes.data}
               refetch={refetch}
               courseData={data.data}

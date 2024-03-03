@@ -55,7 +55,10 @@ const newOrder = async (
     receiver: findCourse.author,
   });
   await findCourse.save();
-
+  await UserCourseProgressModel.create({
+    userId,
+    courseId,
+  });
   return newOrder;
 };
 
@@ -138,7 +141,10 @@ const newPaymentIntent = async (amount: number, currency: string) => {
 };
 
 const checkUserPurchaseCousre = async (courseId: string, userId: string) => {
-  const findOrder = await orderModel.findOne({ courseId, userId });
+  const findOrder = await orderModel.findOne({
+    products: { $in: [courseId] },
+    userId,
+  });
   if (!findOrder) {
     return false;
   } else {

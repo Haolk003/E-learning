@@ -28,21 +28,21 @@ const router = express.Router();
 router.post(
   "/create-course-step1/:id",
   protect,
-  authorizeRoles("instructor"),
+  authorizeRoles("instructor", "admin"),
   createEditCourseStep1
 );
 router;
 router.put(
   "/create-edit-course-step2/:id",
   protect,
-  authorizeRoles("instructor"),
+  authorizeRoles("instructor", "admin"),
   createEditCourseStep2
 );
 
 router.put(
   "/create-edit-course-step3/:id",
   protect,
-  authorizeRoles("instructor"),
+  authorizeRoles("instructor", "admin"),
   createEditCourseStep3
 );
 
@@ -57,7 +57,7 @@ router.post(
 router.get(
   "/get-course-instructor/:id",
   protect,
-  authorizeRoles("instructor"),
+  authorizeRoles("instructor", "admin"),
   findCourseById
 );
 

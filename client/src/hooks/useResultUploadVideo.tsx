@@ -48,6 +48,18 @@ const useResultUpload = (fields: Array<any>) => {
     });
     setResultUpload(newResult);
   };
+  const deleteResulteUploadVideo = (
+    sectionIndex: number,
+    linkIndex: number
+  ) => {
+    const newResult = [...resultUpload];
+    newResult[sectionIndex][linkIndex] = {
+      videoUrl: null,
+      videoLength: 0,
+      id: uuidv4(),
+    };
+    setResultUpload(newResult);
+  };
   const removeResultSection = (index: number) => {
     const newResult = [...resultUpload];
     newResult.splice(index, 1);
@@ -91,6 +103,7 @@ const useResultUpload = (fields: Array<any>) => {
     addResultLectures,
     resultUpload,
     setResultUpload,
+    deleteResulteUploadVideo,
   };
 };
 

@@ -25,6 +25,15 @@ const usePercentUploadVideo = (fields: Array<any>) => {
     newLoading.push([{ percent: 0, id: uuidv4() }]);
     setPercentUploadVideo(newLoading);
   };
+
+  const deleteVideoPercentLecture = (
+    sectionIndex: number,
+    linkIndex: number
+  ) => {
+    const newPercent = [...percentUploadVideo];
+    newPercent[sectionIndex][linkIndex].percent = 0;
+    setPercentUploadVideo(newPercent);
+  };
   const addPercentLink = (index: number) => {
     // const newLoading = [percentUploadVideo];
     // newLoading[index].push({ percent: 0, id: uuidv4() });
@@ -70,6 +79,7 @@ const usePercentUploadVideo = (fields: Array<any>) => {
     addPercentLectures,
     changeIdUpload,
     findIdAndUpdatePercent,
+    deleteVideoPercentLecture,
   };
 };
 

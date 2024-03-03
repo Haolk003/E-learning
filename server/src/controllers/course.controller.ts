@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { CatchAsyncError } from "../middlewares/catchAsyncError";
 import courseService from "../services/course.service";
-import axios from "axios";
 
 export const createEditCourseStep1 = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -241,12 +240,10 @@ export const getNewCourse = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.me ? req.me._id : undefined;
     const courses = await courseService.getNewCourses(id);
-    res
-      .status(200)
-      .json({
-        success: true,
-        data: courses,
-        message: "Get New Courses Successfully",
-      });
+    res.status(200).json({
+      success: true,
+      data: courses,
+      message: "Get New Courses Successfully",
+    });
   }
 );

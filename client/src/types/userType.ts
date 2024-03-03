@@ -10,6 +10,7 @@ export type UserType = {
   role: string;
   isVerified: boolean;
   courses: Array<{ courseId: string }>;
+  myLearning: string[];
   bio?: string;
   headline?: string;
   linkedin?: string;

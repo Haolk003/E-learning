@@ -20,7 +20,8 @@ import couponRouter from "./routers/coupon.router";
 import notifyRouter from "./routers/notify.router";
 import multer from "multer";
 import http from "http";
-
+import job from "./utils/cronJob";
+job.start();
 import "./app/passport";
 import { mongoConnect } from "./app/mongoConnect";
 

@@ -56,7 +56,7 @@ export interface CourseContentDataTypeForm {
   description: string;
   lectures: {
     title: string;
-    videoUrl: { public_id: string; url: string };
+    videoUrl: { public_id?: string; url: string };
     duration: number;
   }[];
 }
