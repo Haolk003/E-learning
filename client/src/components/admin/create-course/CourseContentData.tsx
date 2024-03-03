@@ -91,6 +91,7 @@ const CourseContentData: FC<Props> = ({ id }) => {
     removePercentSection,
     findIdAndUpdatePercent,
     setPercentUploadVideo,
+    deleteVideoPercentLecture,
   } = usePercentUploadVideo(watch().test);
 
   const [isCollased, setIsCollapsed] = useState<boolean[]>(
@@ -99,6 +100,9 @@ const CourseContentData: FC<Props> = ({ id }) => {
   const [typeButton, setTypeButton] = useState("next");
   // const [contentData,setContentData]=useState<CourseContentDataTypeForm[]>([])
   const [cancleFileId, setCancleFileId] = useState<string[]>([]);
+  const [videoType, setVideoType] = useState<string[][]>(
+    Array(1).fill(Array(1).fill("file"))
+  );
   //toggle collapse section
   const toggleCollased = (index: number) => {
     const updateCollased = [...isCollased];
@@ -122,6 +126,9 @@ const CourseContentData: FC<Props> = ({ id }) => {
   const handleAddNewSection = () => {
     addLoadingLectures();
     addPercentLectures();
+    const newVideoType = [...videoType];
+    newVideoType.push(["file"]);
+    setVideoType(newVideoType);
     append({
       description: "",
       lectures: [
@@ -141,7 +148,9 @@ const CourseContentData: FC<Props> = ({ id }) => {
 
     addLoadingLink(sectionIndex);
     addPercentLink(sectionIndex);
-
+    const newVideoType = [...videoType];
+    newVideoType[sectionIndex].push("file");
+    setVideoType(newVideoType);
     update(sectionIndex, {
       ...values.test[sectionIndex],
       lectures: [
@@ -155,8 +164,13 @@ const CourseContentData: FC<Props> = ({ id }) => {
     removeLoadingLink(sectionIndex, linkIndex);
     removePercentLink(sectionIndex, linkIndex);
     const values = watch();
+
     const newSection = { ...values.test[sectionIndex] };
     newSection.lectures.splice(linkIndex, 1);
+
+    const newVideoType = [...videoType];
+    newVideoType[sectionIndex].splice(linkIndex, 1);
+    setVideoType(newVideoType);
     update(sectionIndex, { ...newSection });
   };
   //remove section
@@ -164,10 +178,23 @@ const CourseContentData: FC<Props> = ({ id }) => {
     removeLoadingSection(sectionIndex);
     removePercentSection(sectionIndex);
     remove(sectionIndex);
+    const newVideoType = [...videoType];
+    newVideoType.splice(sectionIndex, 1);
+    setVideoType(newVideoType);
   };
   //back to step 2
   const prevButton = () => {
     router.push(`/instructor/create-course/step2/${id}`);
+  };
+
+  const handleChangeTypeVideoIndex = (
+    sectionIndex: number,
+    linkIndex: number,
+    value: string
+  ) => {
+    const newVideoType = [...videoType];
+    newVideoType[sectionIndex][linkIndex] = value;
+    setVideoType(newVideoType);
   };
 
   //show error
@@ -253,6 +280,36 @@ const CourseContentData: FC<Props> = ({ id }) => {
     });
   }, [cancleFileId, watch(), loadingUploadVideo]);
 
+  const handelDeleteVideo = (sectionIndex: number, linkIndex: number) => {
+    const values = watch();
+    const public_id =
+      values.test[sectionIndex].lectures[linkIndex].videoUrl.public_id;
+    if (public_id) {
+      deleteFile(public_id);
+    }
+    const fieldLectures = values.test[sectionIndex].lectures.map(
+      (item3, lectureIndex) => {
+        if (lectureIndex === linkIndex) {
+          return {
+            ...item3,
+            videoUrl: {
+              public_id: "",
+              url: "",
+            },
+            duration: 0,
+          };
+        } else {
+          return item3;
+        }
+      }
+    );
+    deleteVideoPercentLecture(sectionIndex, linkIndex);
+    update(sectionIndex, {
+      ...values.test[sectionIndex],
+      lectures: fieldLectures,
+    });
+  };
+
   useEffect(() => {
     if (courseData && courseData.data.courseData.length > 0) {
       const dataCourse = courseData.data.courseData as CourseContentType[];
@@ -291,30 +348,34 @@ const CourseContentData: FC<Props> = ({ id }) => {
     <div className="dark:text-white text-black">
       <Form.Root onSubmit={handleSubmit(onSubmit)}>
         <div>
-          {fields.map((item, index) => {
-            return (
-              <FormControlContent
-                changeIdLoading={changeIdLoading}
-                changeIdUpload={changeIdUpload}
-                errors={errors}
-                fields={fields}
-                findIdAndUpdate={findIdAndUpdate}
-                handelRemoveSection={handelRemoveSection}
-                handleAddLink={handleAddLink}
-                handleAddNewSection={handleAddNewSection}
-                handleCancelUpload={handleCancelUpload}
-                index={index}
-                handleRemoveLink={handleRemoveLink}
-                isCollased={isCollased}
-                item={item}
-                loadingUploadVideo={loadingUploadVideo}
-                percentUploadVideo={percentUploadVideo}
-                register={register}
-                toggleCollased={toggleCollased}
-                key={item.id}
-              />
-            );
-          })}
+          {fields &&
+            fields.map((item, index) => {
+              return (
+                <FormControlContent
+                  handleDeleteVideo={handelDeleteVideo}
+                  videoType={videoType}
+                  changeIdLoading={changeIdLoading}
+                  changeIdUpload={changeIdUpload}
+                  errors={errors}
+                  fields={fields}
+                  findIdAndUpdate={findIdAndUpdate}
+                  handelRemoveSection={handelRemoveSection}
+                  handleAddLink={handleAddLink}
+                  handleAddNewSection={handleAddNewSection}
+                  handleCancelUpload={handleCancelUpload}
+                  index={index}
+                  handleRemoveLink={handleRemoveLink}
+                  isCollased={isCollased}
+                  item={item}
+                  loadingUploadVideo={loadingUploadVideo}
+                  percentUploadVideo={percentUploadVideo}
+                  register={register}
+                  toggleCollased={toggleCollased}
+                  key={item.id}
+                  handleChangeVideoType={handleChangeTypeVideoIndex}
+                />
+              );
+            })}
         </div>
         <div className="flex items-center justify-between mt-4">
           <button

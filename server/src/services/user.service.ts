@@ -72,6 +72,7 @@ const blockUser = async (id: string) => {
   if (!blockUser) {
     throw new ErrorHandle(400, "User not found");
   }
+  redis.set(id, JSON.stringify(blockUser), "EX", 604800);
   return;
 };
 
@@ -84,6 +85,7 @@ const unBlockUser = async (id: string) => {
   if (!blockUser) {
     throw new ErrorHandle(400, "User not found");
   }
+  redis.set(id, JSON.stringify(unBlockUser), "EX", 604800);
   return;
 };
 
@@ -92,6 +94,7 @@ const removeUser = async (id: string) => {
   if (!removeUser) {
     throw new ErrorHandle(400, "User not found");
   }
+  redis.del(id);
   return;
 };
 
@@ -165,6 +168,7 @@ const updatePassword = async (
     throw new ErrorHandle(400, "New Password not found");
   }
   await findUser.save();
+  redis.set(findUser._id, JSON.stringify(findUser), "EX", 604800);
   return;
 };
 
@@ -177,7 +181,7 @@ const convertUserToIntructor = async (userId: string) => {
   if (!updateUser) {
     throw new ErrorHandle(400, "Update User Failure");
   }
-
+  redis.set(updateUser._id, JSON.stringify(updateUser), "EX", 604800);
   return updateUser;
 };
 
@@ -185,6 +189,10 @@ const becomeIntructor = async (userId: string) => {
   const updateUser = await userModel.findByIdAndUpdate(userId, {
     role: "instructor",
   });
+  if (!updateUser) {
+    throw new ErrorHandle(400, "Update User Failure");
+  }
+  redis.set(updateUser._id, JSON.stringify(updateUser), "EX", 604800);
   return updateUser;
 };
 const userService = {

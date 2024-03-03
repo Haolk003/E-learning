@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import ReactPlayer from "react-player";
 import _ from "lodash";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import useVideoProgress from "@/hooks/useVideoProgress";
 
@@ -35,6 +35,7 @@ type Props = {
   played: number;
   setPlayed: Dispatch<SetStateAction<number>>;
   notes: NoteCourseType[];
+  reload: boolean;
 };
 const CustomVideoPlayer: React.FC<Props> = ({
   lectureId,
@@ -44,9 +45,10 @@ const CustomVideoPlayer: React.FC<Props> = ({
   played,
   setPlayed,
   notes,
+  reload,
 }) => {
   const router = useRouter();
-
+  const searchParams = useSearchParams();
   // Setting initial states and references
   const [playing, setPlaying] = useState(false);
   const [isOpenVolumeCard, setIsOpenVolumeCard] = useState(false);
@@ -73,7 +75,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
   const [startTime, setStartTime] = useState(0);
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
-
+  const [ready, setReady] = useState(false);
   const [pointSaved, setPointSaved] = useState<number[]>([]);
 
   const { handleProgress, loaded } = useVideoProgress({
@@ -146,9 +148,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
     setSeeking(true);
   };
   const handleReady = useCallback(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
+    setReady(true);
 
     // Set loading to false when video is ready
   }, []);
@@ -383,6 +383,21 @@ const CustomVideoPlayer: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
+    if (ready) {
+      if (searchParams.get("start")) {
+        const start = searchParams.get("start") as any;
+        playerRef.current?.seekTo(Number(start));
+        setPlayed(Number(start));
+      } else {
+        playerRef.current?.seekTo(startTime);
+        setPlayed(startTime);
+      }
+
+      setLoading(false);
+    }
+  }, [ready, searchParams.get("start"), reload]);
+
+  useEffect(() => {
     if (notes && duration > 0) {
       const fomatterSaved = notes.reduce((list: number[], note) => {
         if (note.lectureId === lectureId) {
@@ -411,17 +426,12 @@ const CustomVideoPlayer: React.FC<Props> = ({
         >
           {videoUrl !== "" && (
             <ReactPlayer
-              onStart={() => {
-                playerRef.current?.seekTo(startTime);
-                setPlayed(startTime);
-              }}
               key={videoUrl}
               ref={playerRef}
               url={videoUrl}
               playing={playing}
               volume={volume}
               playbackRate={Number(playbackRate)}
-              onClickPreview={handleVideoClick}
               onProgress={handleProgress}
               onDuration={handleDuration}
               onEnded={handleEnded}
