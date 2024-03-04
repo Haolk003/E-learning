@@ -23,6 +23,7 @@ const ToggleGroupEarningReport: React.FC<Props> = ({
       >
         {data.map((item, index) => (
           <ToggleGroup.Item
+            key={index}
             value={item.value}
             className="hover:bg-violet8 color-mauve11 data-[state=on]:bg-violet12 flex px-3 py-3 items-center justify-center bg-gray1   first:rounded-l last:rounded-r focus:z-10 focus:shadow-[0_0_0_2px] focus:shadow-black focus:outline-none text-white "
           >
