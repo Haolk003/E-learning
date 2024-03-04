@@ -38,6 +38,20 @@ export const categoryApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    updateCategoryById: build.mutation({
+      query: ({
+        id,
+        data,
+      }: {
+        id: string;
+        data: { name?: string; description?: string };
+      }) => ({
+        url: `/update-category/${id}`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -47,4 +61,5 @@ export const {
   useGetCategoryByIdQuery,
   useNewCategoryMutation,
   useGetAllSubCategoryQuery,
+  useUpdateCategoryByIdMutation,
 } = categoryApi;

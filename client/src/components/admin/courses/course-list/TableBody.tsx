@@ -53,8 +53,8 @@ const TableBody: FC<Props> = ({ data }) => {
           {data.map((item, index) => {
             return (
               <tr key={item.id} className="h-[50px] text-[13px] text-left ">
-                <th className="border border-gray11 px-3">{item.id}</th>
-                <th className="border border-gray11 px-3 ">
+                <td className="border border-gray11 px-3">{item.id}</td>
+                <td className="border border-gray11 px-3 ">
                   <div className="flex items-center gap-3">
                     {" "}
                     <Image
@@ -66,20 +66,20 @@ const TableBody: FC<Props> = ({ data }) => {
                     />
                     <p>{item.title}</p>
                   </div>
-                </th>
-                <th className="border border-gray11 px-3">{item.category}</th>
+                </td>
+                <td className="border border-gray11 px-3">{item.category}</td>
 
-                <th className="border border-gray11 px-3">
+                <td className="border border-gray11 px-3">
                   {useSetTimeAgo({ time: item.updatedAt })}
-                </th>
-                <th className="border border-gray11 px-3">{item.instructor}</th>
-                <th className="border border-gray11 px-3">{item.students}</th>
-                <th className="border border-gray11 px-3">${item.price}</th>
-                <th className="h-[50px] flex items-center gap-1 justify-center border border-gray11 px-3">
+                </td>
+                <td className="border border-gray11 px-3">{item.instructor}</td>
+                <td className="border border-gray11 px-3">{item.students}</td>
+                <td className="border border-gray11 px-3">${item.price}</td>
+                <td className="h-[50px] flex items-center gap-1 justify-center border border-gray11 px-3">
                   <button className="bg-red8/30 text-red9 rounded w-[30px] h-[30px] flex items-center justify-center">
                     <FaTrashAlt />
                   </button>
-                </th>
+                </td>
               </tr>
             );
           })}
