@@ -4,7 +4,7 @@ type Props = {
   name: string;
   value: string;
 };
-const useUpdateQueryString = (
+const UseUpdateQueryString = (
   params: URLSearchParams,
   name: string,
   value: string
@@ -21,4 +21,4 @@ const useUpdateQueryString = (
   return params.toString();
 };
 
-export default useUpdateQueryString;
+export default UseUpdateQueryString;

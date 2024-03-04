@@ -1,5 +1,5 @@
-function useFormatNumberWithCommas(value: number): string {
+function UseFormatNumberWithCommas(value: number): string {
   return value.toLocaleString("en-US");
 }
 
-export default useFormatNumberWithCommas;
+export default UseFormatNumberWithCommas;

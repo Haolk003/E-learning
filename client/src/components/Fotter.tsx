@@ -23,9 +23,9 @@ const Fotter = () => {
             graphic design to demonstrate the visual form of a document or a
             typeface without relying on meaningful content1234. It is
             essentially nonsense text that still gives an idea of what real
-            words will look like in the final product3. The phrase "lorem ipsum"
-            derives from the Latin phrase "dolorem ipsum," which translates to
-            "pain itself"
+            words will look like in the final product3. The phrase lorem ipsum
+            derives from the Latin phrase dolorem ipsum, which translates to
+            pain itself
           </p>
         </div>
         <div className="w-[10%]">

@@ -13,8 +13,8 @@ import {
   useCalculateSumUserQuery,
 } from "@/features/analytic/analyticApi";
 
-import useFormatNumberWithCommas from "@/hooks/useFomatNumberWithComams";
-import useFormatLargeNumbers from "@/hooks/useFomatLarge";
+import UseFormatNumberWithCommas from "@/hooks/useFomatNumberWithComams";
+import UseFormatLargeNumbers from "@/hooks/useFomatLarge";
 import { MdOutlineTrendingDown, MdOutlineTrendingUp } from "react-icons/md";
 import { CiUser } from "react-icons/ci";
 import { TbArrowBounce } from "react-icons/tb";
@@ -33,7 +33,7 @@ const MetricSum = () => {
                 Total Users
               </div>
               <div className="text-2xl font-bold mb-3">
-                {useFormatLargeNumbers(userData.data.totalUser[0].total)}
+                {UseFormatLargeNumbers(userData.data.totalUser[0].total)}
               </div>
               <div
                 className={`${
@@ -62,7 +62,7 @@ const MetricSum = () => {
                 Live Visitor
               </div>
               <div className="text-2xl font-bold mb-3">
-                {useFormatLargeNumbers(data.data.currentMonthTotalVisits)}
+                {UseFormatLargeNumbers(data.data.currentMonthTotalVisits)}
               </div>
               <div
                 className={`${

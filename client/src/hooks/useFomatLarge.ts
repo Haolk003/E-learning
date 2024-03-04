@@ -1,4 +1,4 @@
-function useFormatLargeNumbers(value: number): string {
+function UseFormatLargeNumbers(value: number): string {
   // Define the value for a million, billion, etc.
   const million = 1e6;
   const billion = 1e9;
@@ -16,4 +16,4 @@ function useFormatLargeNumbers(value: number): string {
   }
 }
 
-export default useFormatLargeNumbers;
+export default UseFormatLargeNumbers;

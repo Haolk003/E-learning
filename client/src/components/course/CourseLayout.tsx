@@ -16,8 +16,8 @@ import {
   useCheckPurchaseCourseQuery,
 } from "@/features/order/orderApi";
 import { openLogin } from "@/features/layout/layoutSlice";
-import useSetTimeAgo from "@/hooks/useSetTimeAgo";
-import useCaculatorSale from "@/hooks/useCaculatorSale";
+import UseSetTimeAgo from "@/hooks/useSetTimeAgo";
+import UseCaculatorSale from "@/hooks/useCaculatorSale";
 
 import Checkout from "./Checkout";
 import Loader from "../loader/Loader";
@@ -211,7 +211,7 @@ const CourseLayout = ({ id }: { id: string }) => {
                         </div>
                         <p className="text-[14px]">{review.comment}</p>
                         <span className="text-[13px]">
-                          {useSetTimeAgo({ time: review.createdAt })} •
+                          {UseSetTimeAgo({ time: review.createdAt })} •
                         </span>
                       </div>
                     </div>
@@ -224,7 +224,7 @@ const CourseLayout = ({ id }: { id: string }) => {
               <div className="flex gap-2 dark:text-white text-black text-3xl mt-3">
                 {courseData.sale.discount > 0 && (
                   <p>
-                    {useCaculatorSale(
+                    {UseCaculatorSale(
                       courseData.price,
                       courseData.sale.discount
                     )}

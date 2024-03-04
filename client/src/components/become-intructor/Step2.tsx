@@ -14,7 +14,7 @@ const Step2: React.FC<Step2Props> = ({ onNext, onBack }) => {
       </h2>
       <p className="mt-4 text-gray-600">
         Creating a compelling instructor profile is crucial in connecting with
-        your future students. Here's how to make your profile stand out.2
+        your future students. Here is how to make your profile stand out.2
       </p>
       {/* Profile form or information goes here */}
       <div className="mt-8">

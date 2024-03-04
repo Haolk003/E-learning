@@ -2,7 +2,7 @@
 
 import { ExtendDocument } from "@/types/extendDocument";
 import { useRouter } from "next/navigation";
-export default function useAnimatedRouter() {
+export default function UseAnimatedRouter() {
   const router = useRouter();
   const viewTransitionsStatus = () => {
     const extendedDocument = document as ExtendDocument;

@@ -5,8 +5,8 @@ dayjs.extend(relativeTime);
 type Props = {
   time: string | Date;
 };
-const useSetTimeAgo: FC<Props> = ({ time }) => {
+const UseSetTimeAgo: FC<Props> = ({ time }) => {
   return dayjs(time).fromNow();
 };
 
-export default useSetTimeAgo;
+export default UseSetTimeAgo;

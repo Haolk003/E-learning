@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import { FaTrashAlt } from "react-icons/fa";
 import Image from "next/image";
-import useSetTimeAgo from "@/hooks/useSetTimeAgo";
+import UseSetTimeAgo from "@/hooks/useSetTimeAgo";
 
 type Props = {
   data: {
@@ -70,7 +70,7 @@ const TableBody: FC<Props> = ({ data }) => {
                 <td className="border border-gray11 px-3">{item.category}</td>
 
                 <td className="border border-gray11 px-3">
-                  {useSetTimeAgo({ time: item.updatedAt })}
+                  {UseSetTimeAgo({ time: item.updatedAt })}
                 </td>
                 <td className="border border-gray11 px-3">{item.instructor}</td>
                 <td className="border border-gray11 px-3">{item.students}</td>
