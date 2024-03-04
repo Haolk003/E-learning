@@ -7,6 +7,10 @@ const nextConfig = {
       "z-p3-scontent.fsgn5-11.fna.fbcdn.net",
     ],
   },
+  experimental: {
+    reactRoot: true,
+    suppressHydrationWarning: true,
+  },
 };
 
 module.exports = nextConfig;

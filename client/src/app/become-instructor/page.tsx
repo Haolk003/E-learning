@@ -12,8 +12,6 @@ import Step3 from "@/components/become-intructor/Step3";
 import { useRouter } from "next/navigation";
 
 import { useBecomeInstructorMutation } from "@/features/user/userApi";
-import { useEditReviewMutation } from "@/features/review/reviewApi";
-import ErrorHandle from "../../../../server/src/utils/errorHandle";
 
 const BecomeInstructorProcess = () => {
   const [currentStep, setCurrentStep] = useState(1);

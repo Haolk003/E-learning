@@ -1,4 +1,3 @@
-import { checkExistReviewPersonal } from "../../../../server/src/controllers/review.controller";
 import apiSlice from "../api/apiSlice";
 
 export const reviewApi = apiSlice.injectEndpoints({

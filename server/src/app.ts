@@ -21,6 +21,7 @@ import notifyRouter from "./routers/notify.router";
 import multer from "multer";
 import http from "http";
 import job from "./utils/cronJob";
+import { rateLimit } from "express-rate-limit";
 job.start();
 import "./app/passport";
 import { mongoConnect } from "./app/mongoConnect";
@@ -38,18 +39,30 @@ app.use(logger("dev"));
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: [
+      process.env.CLIENT_HOST as string,
+      process.env.CLIENT_HOST2 as string,
+    ],
     credentials: true,
   })
 );
 app.use(
   session({
     secret: "secret",
-    resave: false,
+    resave: true,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { secure: true },
   })
 );
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: "draft-7",
+  legacyHeaders: false,
+});
+
+app.use(limiter);
 // app.use(upload.single("myFile"));
 app.use(passport.initialize());
 app.use(passport.session());

@@ -34,17 +34,18 @@ export default function RootLayout({
     }
   }, [socketId]);
   return (
-    <Providers>
-      <html lang="en">
-        <body
-          className={`${poppins.variable} ${josefind.variable} bg-white custom-scrollbar bg-no-repeat dark:bg-gradient-to-b  duration-300 dark:bg-iris1 min-h-[100vh] h-full`}
-        >
+    <html lang="en" suppressHydrationWarning={true}>
+      <body
+        className={`${poppins.variable} ${josefind.variable} bg-white custom-scrollbar bg-no-repeat dark:bg-gradient-to-b  duration-300 dark:bg-iris1 min-h-[100vh] h-full`}
+      >
+        {" "}
+        <Providers>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Custom>{children}</Custom>
             <Toaster position="top-center" toastOptions={{ duration: 2000 }} />
-          </ThemeProvider>
-        </body>
-      </html>
-    </Providers>
+          </ThemeProvider>{" "}
+        </Providers>
+      </body>
+    </html>
   );
 }

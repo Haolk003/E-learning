@@ -4,26 +4,27 @@ import jwt from "jsonwebtoken";
 import { CookieOptions, Response } from "express";
 
 export const accessTokenOptions: CookieOptions = {
-  sameSite: "lax",
   maxAge: 60 * 60 * 1000,
   httpOnly: true,
-  secure: false,
+  secure: true,
   expires: new Date(Date.now() + 60 * 60 * 1000),
+  domain: "elearning-client-14k1c5p2x-haolk003.vercel.app",
+  sameSite: "none",
 };
 export const refeshTokenOptions: CookieOptions = {
-  sameSite: "lax",
   maxAge: 30 * 24 * 60 * 60 * 1000,
   httpOnly: true,
-  secure: false,
+  secure: true,
   expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+  domain: "elearning-client-14k1c5p2x-haolk003.vercel.app",
+  sameSite: "none",
 };
 export const sendToken = async (user: IUser, res: Response) => {
   const accessToken = await user.signAccessToken();
   const refeshToken = await user.signRefeshToken();
-  if (process.env.NODE_ENV === "production") {
-    accessTokenOptions.secure = true;
-  }
 
+  res.set("access_token", accessToken);
+  res.set("refesh_token", refeshToken);
   res.cookie("access_token", accessToken, accessTokenOptions);
   res.cookie("refesh_token", refeshToken, refeshTokenOptions);
 };

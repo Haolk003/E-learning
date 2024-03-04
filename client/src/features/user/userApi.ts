@@ -1,4 +1,3 @@
-import { becomeIntructor } from "../../../../server/src/controllers/user.controller";
 import apiSlice from "../api/apiSlice";
 import { updateProfile } from "../auth/authSlice";
 const userApi = apiSlice.injectEndpoints({
