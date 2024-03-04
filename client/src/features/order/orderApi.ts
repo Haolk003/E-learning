@@ -1,5 +1,5 @@
 import apiSlice from "../api/apiSlice";
-import useSocket from "@/hooks/useSocket";
+
 const orderApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     createPaymentIntent: build.mutation({
@@ -11,11 +11,7 @@ const orderApi = apiSlice.injectEndpoints({
       }),
       async onQueryStarted(arg, api) {
         try {
-          const socket = useSocket();
           const result = await api.queryFulfilled;
-          if (socket) {
-            socket.emit("notification", result.data.data);
-          }
         } catch (err: any) {
           console.log(err);
         }
