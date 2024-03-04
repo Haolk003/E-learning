@@ -399,7 +399,12 @@ const getAllCourseByAdmin = async (
     .limit(limit);
 
   const totalCount = await courseModel.countDocuments(query.getFilter()).exec();
-  const courses = await query.exec();
+  const courses = await query
+    .populate([
+      { path: "category" },
+      { path: "author", select: "firstName lastName email" },
+    ])
+    .exec();
 
   return { courses, totalCount };
 };

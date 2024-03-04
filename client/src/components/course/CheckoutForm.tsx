@@ -17,10 +17,12 @@ const CheckoutForm = ({
   handleCloseCheckout,
   courseData,
   user,
+  refesh,
 }: {
   handleCloseCheckout: () => void;
   courseData: CourseType;
   user: UserType;
+  refesh: () => void;
 }) => {
   const socket = useSocket();
   const params = useParams();
@@ -68,6 +70,7 @@ const CheckoutForm = ({
         });
       }
       handleCloseCheckout();
+      refesh();
       toast.success("Purchase Course Successfully");
     }
   }, [error, isSuccess]);

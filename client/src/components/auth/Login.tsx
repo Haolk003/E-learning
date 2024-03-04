@@ -1,8 +1,16 @@
-import React, { Dispatch, SetStateAction, useEffect, FC } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  FC,
+  useState,
+} from "react";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { object, string } from "yup";
 import Link from "next/link";
+import { useLoadUserQuery } from "@/features/api/apiSlice";
 import * as Form from "@radix-ui/react-form";
 import { FcGoogle } from "react-icons/fc";
 import { BsFacebook } from "react-icons/bs";
@@ -10,6 +18,7 @@ import { BiLogoFacebookCircle, BiLogoFacebook } from "react-icons/bi";
 
 import { useLoginUserMutation } from "@/features/auth/authApi";
 import toast from "react-hot-toast";
+import { skip } from "node:test";
 
 type Inputs = {
   email: string;
@@ -33,7 +42,9 @@ const Login: FC<Props> = ({ setRoute, handleCloseModal }) => {
     formState: { errors },
   } = useForm<Inputs>({ resolver: yupResolver(Shema) });
 
+  const router = useRouter();
   const [login, { isSuccess, error, isLoading }] = useLoginUserMutation();
+
   const googleLogin = () => {
     window.open(`${process.env.NEXT_PUBLIC_SERVER_API}google`, "self");
   };
@@ -48,6 +59,7 @@ const Login: FC<Props> = ({ setRoute, handleCloseModal }) => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("User Logged Successfully");
+
       handleCloseModal();
     }
     if (error && "data" in error) {

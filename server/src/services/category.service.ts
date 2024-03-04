@@ -58,6 +58,11 @@ class CategoryService {
           as: "subcategories",
         },
       },
+      {
+        $sort: {
+          courseCount: -1, // Sắp xếp giảm dần, sử dụng 1 để sắp xếp tăng dần
+        },
+      },
     ]);
     return categories;
   }
@@ -67,6 +72,7 @@ class CategoryService {
     if (!category) {
       throw new ErrorHandle(400, "Category not found");
     }
+    const deleteSubCategory = await CategoryModel.deleteMany({ parent_id: id });
     return category;
   }
 

@@ -3,6 +3,7 @@ import { CatchAsyncError } from "../middlewares/catchAsyncError";
 import authService from "../services/auth.service";
 import { sendToken } from "../utils/jwt";
 import ErrorHandle from "../utils/errorHandle";
+import { redis } from "../utils/redis";
 
 const registrationUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -75,8 +76,10 @@ const resetPassword = CatchAsyncError(
 
 const logoutUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    res.clearCookie("access_token");
-    res.clearCookie("refesh_token");
+    res.cookie("access_token", "", { maxAge: 1 });
+    res.cookie("refesh_token", "", { maxAge: 1 });
+    const userId = req.me?._id;
+    redis.del(userId);
     req.logout(function (err) {
       if (err) return next(new ErrorHandle(400, err.message));
     });

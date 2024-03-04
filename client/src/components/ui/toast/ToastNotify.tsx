@@ -17,7 +17,7 @@ const ToastNotify = ({ data }: { data: notifyType }) => {
           Success Alert
         </strong>
         <span className="text-xs dark:text-white text-black">
-          {data.message}
+          {data.message || ""}
         </span>
       </div>
 

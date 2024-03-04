@@ -8,6 +8,7 @@ import { IoIosSearch } from "react-icons/io";
 import { FaAngleRight } from "react-icons/fa";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useLogoutUserMutation } from "@/features/auth/authApi";
+
 import {
   useGetAllNotifyUserQuery,
   useDeleteNotifyMutation,
@@ -51,7 +52,7 @@ const Header = () => {
   const { refetch } = useGetAllNotifyUserQuery("");
   const [deleteNotify, { isLoading, isSuccess }] = useDeleteNotifyMutation();
 
-  const [logout] = useLogoutUserMutation();
+  const [logout, { isSuccess: isSuccessLogout }] = useLogoutUserMutation();
 
   const socketId = useSocket();
   const user = useAppSelector((state) => state.auth.user);
@@ -109,8 +110,8 @@ const Header = () => {
     if (socketId) {
       socketId.on("newOrder", (data) => {
         dispatch(addNotify({ notify: data }));
-        console.log(data);
-        toast(<ToastNotify data={notifies[0]} />, {
+
+        toast(<ToastNotify data={data} />, {
           position: "bottom-right",
           className: "dark:bg-gray2 bg-white w-[400px]",
         });
@@ -123,6 +124,15 @@ const Header = () => {
       socketId.emit("new_connection", { userId: user._id });
     }
   }, [user, socketId]);
+
+  const handleLogout = async () => {
+    await logout("");
+  };
+  useEffect(() => {
+    if (isSuccessLogout) {
+      window.location.reload();
+    }
+  }, [isSuccessLogout]);
   return (
     <div className="w-screen relative dark:text-white text-black z-50">
       <div
@@ -433,7 +443,7 @@ const Header = () => {
                         <Link href="/profile">Public Profile</Link>
                         <Link href="/profile">Edit Profile</Link>
                         <button
-                          onClick={() => logout("")}
+                          onClick={() => handleLogout()}
                           className="flex items-center gap-2 font-semibold mt-3 text-[17px]"
                         >
                           <IoIosLogOut size={20} /> Logout

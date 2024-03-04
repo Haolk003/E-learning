@@ -42,6 +42,7 @@ import { CourseType } from "@/types/couresContentType";
 import SelectCategory from "@/components/ui/select/SelectIntructor";
 
 import { CategoryType } from "@/types/categoryType";
+import { Shippori_Antique_B1 } from "next/font/google";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "";
 const socketId = socketIO(`${ENDPOINT}`, { transports: ["websocket"] });
@@ -74,13 +75,18 @@ const levelDataSelect = [
     value: "beginner",
   },
   {
-    label: "Inme",
+    label: "Intermediate",
+    value: "intermediate",
+  },
+  {
+    label: "Expert",
+    value: "expert",
   },
 ];
 const CoureInfo: FC<Props> = ({ id }) => {
   const { data: categories, isLoading: categoriesLoading } =
     useGetAllCategoryQuery("");
-  console.log(categories);
+
   const router = useRouter();
   const {
     error: errorGetCourse,
@@ -186,17 +192,26 @@ const CoureInfo: FC<Props> = ({ id }) => {
   const handleChangeCategory = (value: string) => {
     setValue("category", value);
     setCategory(value);
-    if (value !== "") {
+  };
+
+  useEffect(() => {
+    if (category !== "" && course) {
       const newCategories = categories.data as CategoryType[];
       const findParentCategory = newCategories.find(
-        (item) => item._id === value
+        (item) => item._id === category
       );
       if (findParentCategory) {
         setSubCategoryData(findParentCategory.subcategories);
+        setSubCategory(course.data.subCategory);
       }
     }
-  };
+  }, [category]);
 
+  useEffect(() => {
+    if (course) {
+      setSubCategory(course.data.subCategory);
+    }
+  }, [subCategoryData]);
   const handelChangeLevel = (value: string) => {
     setValue("level", value);
     setLevel(value);
@@ -263,7 +278,11 @@ const CoureInfo: FC<Props> = ({ id }) => {
   useEffect(() => {
     if (course) {
       const courseInfo = course.data as CourseType;
+
       reset(courseInfo);
+      setLevel(courseInfo.level);
+      setCategory(courseInfo.category);
+      setSubCategory(courseInfo.subCategory);
       setVideoResult(courseInfo.demoUrl);
       setSelectFile(courseInfo.thumbnail.url);
       editor?.commands.setContent(courseInfo.description);
@@ -313,61 +332,11 @@ const CoureInfo: FC<Props> = ({ id }) => {
           <Form.Field name="level" className="flex flex-col gap-2 w-[45%]">
             <Form.Label>Course Level</Form.Label>
             <Form.Control asChild>
-              <Select.Root
+              <SelectPrimary
+                data={levelDataSelect}
                 value={level}
-                onValueChange={(value) => handelChangeLevel(value)}
-              >
-                <Select.Trigger className="inline-flex items-center w-full justify-center rounded px-[15px]  text-[13px] leading-none h-[40px] gap-[5px] bg-transparent  border dark:border-white   outline-none">
-                  <Select.Value
-                    placeholder="Choose an option"
-                    aria-label="Level"
-                  />
-                  <Select.Icon />
-                </Select.Trigger>
-                <Select.Portal>
-                  <Select.Content
-                    side="bottom"
-                    align="start"
-                    position="popper"
-                    className="min-w-[200px] w-full  dark:bg-gray3 bg-white flex items-center rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]"
-                  >
-                    <Select.Viewport className="py-3 flex flex-col  ">
-                      <Select.Item
-                        value="all"
-                        className="text-[15px] text-left w-full px-3 mb-2 leading-none text-gray11 cursor-pointers rounded-[3px]  h-[25px]  relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none  data-[highlighted]:text-violet12  "
-                      >
-                        <Select.ItemText className="cursor-pointer">
-                          All
-                        </Select.ItemText>
-                      </Select.Item>
-                      <Select.Item
-                        value="beginner"
-                        className="text-[15px] text-left w-full px-3 mb-2 leading-none text-gray11 cursor-pointers rounded-[3px]  h-[25px]  relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none  data-[highlighted]:text-violet12  "
-                      >
-                        <Select.ItemText className="cursor-pointer">
-                          Beginner
-                        </Select.ItemText>
-                      </Select.Item>
-                      <Select.Item
-                        value="intermediate"
-                        className="text-[15px] text-left w-full px-3 mb-2 leading-none text-gray11 cursor-pointers rounded-[3px]  h-[25px]  relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none  data-[highlighted]:text-violet12  "
-                      >
-                        <Select.ItemText className="cursor-pointer">
-                          Intermediate
-                        </Select.ItemText>
-                      </Select.Item>
-                      <Select.Item
-                        value="expert"
-                        className="text-[15px] text-left w-full px-3 mb-2 leading-none text-gray11 cursor-pointers rounded-[3px]  h-[25px]  relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none  data-[highlighted]:text-violet12  "
-                      >
-                        <Select.ItemText className="cursor-pointer">
-                          Expert
-                        </Select.ItemText>
-                      </Select.Item>
-                    </Select.Viewport>
-                  </Select.Content>
-                </Select.Portal>
-              </Select.Root>
+                handleChangeValue={handelChangeLevel}
+              />
             </Form.Control>
             <span className="text-red-500 text-[13px]">
               {errors.level?.message}

@@ -74,29 +74,35 @@ const SideBarAdmin = () => {
           width: isCollapse ? "0%" : "18%",
         }}
       >
-        <div className="flex items-center gap-4 justify-center mb-4 py-3">
+        <div className="flex items-center gap-4 justify-center mb-4 py-3 relative">
           {!isCollapse && (
             <Link href="/" className="text-2xl tracking-wider cursor-pointer ">
               ELEARNING
             </Link>
           )}
-          <button onClick={() => setIsCollapse(!isCollapse)}>
+
+          <button
+            onClick={() => setIsCollapse(!isCollapse)}
+            className={`${isCollapse && "rotate-180"} duration-100`}
+          >
             <IoIosArrowBack className="text-3xl" />
           </button>
         </div>
-        <div className="flex flex-col items-center gap-4 mb-4">
-          <Image
-            src={user?.avatar ? user?.avatar.url : "/assets/avatar.jpg"}
-            alt=""
-            width={80}
-            height={80}
-            className="w-[80px] h-[80px] object-cover rounded-full border-[3px] border-indigo-500"
-          />
-          <h4 className="text-xl">
-            {user?.lastName} {user?.firstName}
-          </h4>
-          <p className="capitalize">{user?.role}</p>
-        </div>
+        {!isCollapse && (
+          <div className="flex flex-col items-center gap-4 mb-4">
+            <Image
+              src={user?.avatar ? user?.avatar.url : "/assets/avatar.jpg"}
+              alt=""
+              width={80}
+              height={80}
+              className="w-[80px] h-[80px] object-cover rounded-full border-[3px] border-indigo-500"
+            />
+            <h4 className="text-xl">
+              {user?.lastName} {user?.firstName}
+            </h4>
+            <p className="capitalize">{user?.role}</p>
+          </div>
+        )}
         <Menu
           menuItemStyles={{
             button: {
@@ -132,8 +138,31 @@ const SideBarAdmin = () => {
               {!isCollapse && <div>Dashboard</div>}
             </div>
           </MenuItem>
+          <MenuItem
+            active={pathName === "/admin/analytics"}
+            component={<Link href="/admin/analytics" />}
+            rootStyles={{
+              ["." + menuClasses.button]: {
+                "&:hover": {
+                  color: "#000",
+                },
+              },
+            }}
+            className={`${theme === "dark" && "menu-dark"} hover:text-black`}
+          >
+            <div
+              className={`flex items-center ${
+                isCollapse ? "justify-center" : "ml-[7px]"
+              } gap-4  `}
+            >
+              <div className="">
+                <IoAnalyticsSharp />
+              </div>
+              {!isCollapse && <div>Analytics</div>}
+            </div>
+          </MenuItem>
 
-          <SubMenu
+          {/* <SubMenu
             icon={<BsClipboardData className="" />}
             defaultOpen={false}
             rootStyles={{
@@ -151,34 +180,58 @@ const SideBarAdmin = () => {
             }}
             label="Data"
             className="!bg-transparent hover:!bg-transparent"
-          >
-            <MenuItem
-              active={pathName === "/admin/data/users"}
-              component={<Link href="/admin/data/users" />}
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <FaRegUserCircle />
-                </div>
-                <div>Users</div>
-              </div>
-            </MenuItem>
-            <MenuItem
-              active={pathName === "/admin/data/invoices"}
-              component={<Link href="/admin/data/invoices" />}
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <LiaFileInvoiceSolid />
-                </div>
-                <div>Invoices</div>
-              </div>
-            </MenuItem>
-          </SubMenu>
+          > */}
 
-          <SubMenu
+          <MenuItem
+            active={pathName === "/admin/data/users"}
+            component={<Link href="/admin/data/users" />}
+            rootStyles={{
+              ["." + menuClasses.button]: {
+                "&:hover": {
+                  color: "#000",
+                },
+              },
+            }}
+            className={`${theme === "dark" && "menu-dark"} hover:text-black`}
+          >
+            <div
+              className={`flex items-center ${
+                isCollapse ? "justify-center" : "ml-[7px]"
+              } gap-4  `}
+            >
+              <div className="">
+                <FaRegUserCircle />
+              </div>
+              {!isCollapse && <div>Users</div>}
+            </div>
+          </MenuItem>
+
+          <MenuItem
+            active={pathName === "/admin/data/invoices"}
+            component={<Link href="/admin/data/invoices" />}
+            rootStyles={{
+              ["." + menuClasses.button]: {
+                "&:hover": {
+                  color: "#000",
+                },
+              },
+            }}
+            className={`${theme === "dark" && "menu-dark"} hover:text-black`}
+          >
+            <div
+              className={`flex items-center ${
+                isCollapse ? "justify-center" : "ml-[7px]"
+              } gap-4  `}
+            >
+              <div className="">
+                <LiaFileInvoiceSolid />
+              </div>
+              {!isCollapse && <div>Invoices</div>}
+            </div>
+          </MenuItem>
+          {/* </SubMenu> */}
+
+          {/* <SubMenu
             icon={<SiCoursera className="" />}
             defaultOpen={false}
             rootStyles={{
@@ -196,147 +249,105 @@ const SideBarAdmin = () => {
             }}
             label="Content"
             className="!bg-transparent hover:!bg-transparent"
-          >
-            <MenuItem
-              active={pathName === "/admin/create-course/step1"}
-              component={<Link href="/admin/create-course/step1" />}
-              className={`${theme === "dark" && "menu-dark"}hover:text-black`}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <FaRegUserCircle />
-                </div>
-                <div>Create Course</div>
-              </div>
-            </MenuItem>
-            <MenuItem
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-              active={pathName === "/admin/live-course"}
-              component={<Link href="/admin/live-course" />}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <MdLiveTv />
-                </div>
-                <div>Live Course</div>
-              </div>
-            </MenuItem>
-            <MenuItem
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-              active={pathName === "/admin/my-courses"}
-              component={<Link href="/admin/my-courses" />}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <MdLiveTv />
-                </div>
-                <div>My Courses</div>
-              </div>
-            </MenuItem>
-          </SubMenu>
-
-          <SubMenu
-            icon={<BiCustomize className="" />}
-            defaultOpen={false}
-            rootStyles={{
-              ["& > ." + menuClasses.button]: {
-                backgroundColor: "transparent",
-                color: "#000",
-                "&:hover": {
-                  color: "#000000",
-                  background: "#333",
-                },
-              },
-              ["." + menuClasses.subMenuContent]: {
-                backgroundColor: "transparent",
-              },
-            }}
-            label="Customization"
-            className="!bg-transparent hover:!bg-transparent"
-          >
-            <MenuItem
-              active={pathName === "/admin/hero"}
-              component={<Link href="/admin/hero" />}
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <BsLayoutTextWindow />
-                </div>
-                <div>Hero</div>
-              </div>
-            </MenuItem>
-            <MenuItem
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-              active={pathName === "/admin/faq"}
-              component={<Link href="/admin/faq" />}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <FaQuestion />
-                </div>
-                <div>FAQ</div>
-              </div>
-            </MenuItem>
-            <MenuItem
-              active={pathName === "/admin/categories"}
-              component={<Link href="/admin/categories" />}
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <BiCategoryAlt />
-                </div>
-                <div>Categories</div>
-              </div>
-            </MenuItem>
-          </SubMenu>
-
-          <SubMenu
-            icon={<CgController className="" />}
-            defaultOpen={false}
-            rootStyles={{
-              ["& > ." + menuClasses.button]: {
-                backgroundColor: "transparent",
-                color: "#000",
-                "&:hover": {
-                  color: "#000000",
-                  background: "#333",
-                },
-              },
-              ["." + menuClasses.subMenuContent]: {
-                backgroundColor: "transparent",
-              },
-            }}
-            label="Controllers"
-            className="!bg-transparent hover:!bg-transparent"
-          >
-            <MenuItem
-              active={pathName === "/admin/manage-team"}
-              component={<Link href="/admin/manage-team" />}
-              className={`${theme === "dark" && "menu-dark"} hover:text-black`}
-            >
-              <div className="flex items-center">
-                <div className="w-[50px]">
-                  <AiOutlineTeam />
-                </div>
-                <div>Manage Team</div>
-              </div>
-            </MenuItem>
-          </SubMenu>
-
+          > */}
           <MenuItem
-            active={pathName === "/admin/analytics"}
-            component={<Link href="/admin/analytics" />}
+            active={pathName.includes("/admin/create-course")}
+            component={<Link href="/admin/create-course/step1" />}
+            rootStyles={{
+              ["." + menuClasses.button]: {
+                "&:hover": {
+                  color: "#000",
+                },
+              },
+            }}
             className={`${theme === "dark" && "menu-dark"} hover:text-black`}
           >
-            <div className="flex items-center">
-              <div className="w-[50px]">
-                <IoAnalyticsSharp />
+            <div
+              className={`flex items-center ${
+                isCollapse ? "justify-center" : "ml-[7px]"
+              } gap-4  `}
+            >
+              <div className="">
+                <FaRegUserCircle />
               </div>
-              <div>Analytics</div>
+              {!isCollapse && <div>Create Course</div>}
             </div>
           </MenuItem>
+
+          <MenuItem
+            active={pathName === "/admin/live-courses"}
+            component={<Link href="/admin/live-courses" />}
+            rootStyles={{
+              ["." + menuClasses.button]: {
+                "&:hover": {
+                  color: "#000",
+                },
+              },
+            }}
+            className={`${theme === "dark" && "menu-dark"} hover:text-black`}
+          >
+            <div
+              className={`flex items-center ${
+                isCollapse ? "justify-center" : "ml-[7px]"
+              } gap-4  `}
+            >
+              <div className="">
+                <MdLiveTv />
+              </div>
+              {!isCollapse && <div>Live Course</div>}
+            </div>
+          </MenuItem>
+
+          <MenuItem
+            active={pathName === "/admin/my-courses"}
+            component={<Link href="/admin/my-courses" />}
+            rootStyles={{
+              ["." + menuClasses.button]: {
+                "&:hover": {
+                  color: "#000",
+                },
+              },
+            }}
+            className={`${theme === "dark" && "menu-dark"} hover:text-black`}
+          >
+            <div
+              className={`flex items-center ${
+                isCollapse ? "justify-center" : "ml-[7px]"
+              } gap-4  `}
+            >
+              <div className="">
+                <MdLiveTv />
+              </div>
+              {!isCollapse && <div>My Course</div>}
+            </div>
+          </MenuItem>
+
+          {/* </SubMenu> */}
+
+          <MenuItem
+            active={pathName === "/admin/categories"}
+            component={<Link href="/admin/categories" />}
+            rootStyles={{
+              ["." + menuClasses.button]: {
+                "&:hover": {
+                  color: "#000",
+                },
+              },
+            }}
+            className={`${theme === "dark" && "menu-dark"} hover:text-black`}
+          >
+            <div
+              className={`flex items-center ${
+                isCollapse ? "justify-center" : "ml-[7px]"
+              } gap-4  `}
+            >
+              <div className="">
+                <BiCategoryAlt />
+              </div>
+              {!isCollapse && <div>Categories</div>}
+            </div>
+          </MenuItem>
+
           <MenuItem
             active={pathName === "/admin/setting"}
             component={<Link href="/admin/setting" />}
