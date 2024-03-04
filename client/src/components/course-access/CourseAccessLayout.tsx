@@ -1,19 +1,12 @@
 "use client";
 
 import React, { FC, useEffect, useRef, useState } from "react";
-import * as Collapible from "@radix-ui/react-collapsible";
 import { useSearchParams } from "next/navigation";
-import CreateReview from "./CreateReview";
 import {
   useGetpurchaserCourseQuery,
   useGetProgressLectureQuery,
 } from "@/features/course/courseApi";
-import {
-  useGetNoteCourseQuery,
-  useCreateNoteCourseMutation,
-  useUpdateNoteCourseMutation,
-  useDeleteNoteCourseMutation,
-} from "@/features/noteCourse/noteCourseApi";
+import { useGetNoteCourseQuery } from "@/features/noteCourse/noteCourseApi";
 
 import CourseSuccessPlayer from "./CourseSuccessPlayer";
 
@@ -25,12 +18,8 @@ import CourseAccessOverview from "./CourseAccessOverview";
 import CourseAccessNote from "./CourseAccessNote";
 import CourseAccessReview from "./CourseAccessReview";
 import CourseAccessHeader from "./CourseAccessHeader";
-import {
-  progressLectureProgressType,
-  ProgressDataLectureType,
-} from "@/types/progressLectureUserType";
+import { ProgressDataLectureType } from "@/types/progressLectureUserType";
 import { CourseContentType } from "@/types/couresContentType";
-import { textPasteRule } from "@tiptap/react";
 import ReactPlayer from "react-player";
 
 type Props = {
