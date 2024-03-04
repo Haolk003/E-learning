@@ -44,6 +44,7 @@
     "apexcharts": "^3.45.1",
     "dayjs": "^1.11.10",
     "dompurify": "^3.0.6",
+    "framer-motion": "^11.0.8",
     "next": "14.0.1",
     "next-themes": "^0.2.1",
     "react": "^18",
