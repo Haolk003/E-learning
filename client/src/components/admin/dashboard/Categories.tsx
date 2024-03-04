@@ -38,7 +38,7 @@ const Categories = () => {
               className=" border dark:border-gray8 borer-gray3 rounded-md flex items-center justify-center flex-col py-4 text-[12px] text-center gap-3"
               key={item._id}
             >
-              <div
+              {/* <div
                 className={`${index === 0 && "fill-violet-500"} ${
                   index === 3 && "fill-amber-900"
                 }  ${
@@ -47,7 +47,7 @@ const Categories = () => {
                 dangerouslySetInnerHTML={{
                   __html: dompurify.sanitize(item.icon),
                 }}
-              ></div>
+              ></div> */}
               <p>{item.name}</p>
               <span className="text-gray10 text-[11px]">
                 {item.courseCount}+ Course
