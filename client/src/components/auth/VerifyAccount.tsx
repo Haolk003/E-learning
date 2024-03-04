@@ -94,6 +94,7 @@ const VerifyAccount: FC<Props> = ({ setRoute }) => {
         {Object.keys(verifyNumber).map((item, index) => {
           return (
             <input
+              key={index}
               type="number"
               pattern="[0-9]*"
               ref={inputRef[index]}

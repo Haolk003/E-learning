@@ -3,7 +3,7 @@
 import React from "react";
 import { useAppSelector } from "@/store/hook";
 import Image from "next/image";
-import useSetTimeAgo from "@/hooks/useSetTimeAgo";
+import UseSetTimeAgo from "@/hooks/useSetTimeAgo";
 import { IoMdTrash } from "react-icons/io";
 
 import { useDeleteNotifyMutation } from "@/features/notification/notifyApi";
@@ -46,7 +46,7 @@ const NotificationLayout = () => {
                     </h2>
                     <p className="text-[13px] text-gray9">{item.message}</p>
                     <span className="text-[12px] text-gray8">
-                      {useSetTimeAgo({ time: item.createdAt })}
+                      {UseSetTimeAgo({ time: item.createdAt })}
                     </span>
                   </div>
                 </div>

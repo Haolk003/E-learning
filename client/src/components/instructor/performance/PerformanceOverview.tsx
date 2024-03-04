@@ -10,7 +10,7 @@ import {
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import ChartLineIntructor from "@/components/ui/chart/ChartLineInstructor";
 import ToggleGroupEarningReport from "@/components/ui/toggleGroup/ToggleGroupEarningReport";
-import useUpdateQueryString from "@/hooks/useUpdateQueryString";
+import UseUpdateQueryString from "@/hooks/useUpdateQueryString";
 import Loader from "@/components/loader/Loader";
 type Props = {
   slug: string;
@@ -51,7 +51,7 @@ const PerformanceOverview: React.FC<Props> = ({ slug }) => {
     setPeriodEarning(value);
 
     const params = new URLSearchParams(searchParams.toString());
-    router.push(pathname + "?" + useUpdateQueryString(params, "period", value));
+    router.push(pathname + "?" + UseUpdateQueryString(params, "period", value));
   };
 
   return (

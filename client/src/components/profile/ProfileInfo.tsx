@@ -131,8 +131,8 @@ const ProfileInfo = () => {
               </div>
             </Form.Control>
             <Form.Message className="text-[12px] font-thin text-gray6">
-              Add a professional headline like,"Instructor at Elearning" or
-              "Architect.
+              Add a professional headline like,Instructor at Elearning or
+              Architect.
             </Form.Message>
           </Form.Field>
           <Form.Field name="description">

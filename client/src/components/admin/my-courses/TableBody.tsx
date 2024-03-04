@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { CiEdit } from "react-icons/ci";
 import { FaTrashAlt } from "react-icons/fa";
 import Image from "next/image";
-import useSetTimeAgo from "@/hooks/useSetTimeAgo";
+import UseSetTimeAgo from "@/hooks/useSetTimeAgo";
 import * as Progress from "@radix-ui/react-progress";
 import Link from "next/link";
 type Props = {
@@ -77,7 +77,7 @@ const TableBody: FC<Props> = ({ data }) => {
                 <th className="border border-gray11 px-3">{item.category}</th>
 
                 <th className="border border-gray11 px-3">
-                  {useSetTimeAgo({ time: item.updatedAt })}
+                  {UseSetTimeAgo({ time: item.updatedAt })}
                 </th>
                 <th className="border border-gray11 px-3">{item.status}</th>
 

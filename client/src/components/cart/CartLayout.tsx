@@ -96,6 +96,7 @@ const CartLayout = () => {
               );
               return (
                 <CartItemPage
+                  key={item.courseId._id}
                   _id={item.courseId._id}
                   author={
                     item.courseId.author.lastName +
