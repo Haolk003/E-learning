@@ -89,7 +89,7 @@ const CreateEditCategoriesModal: React.FC<Props> = ({
             {type === "update" && "Update Category"}
           </Dialog.Title>
           <Dialog.Description className="text-mauve5 dark:text-mauve11 mt-[10px] mb-5 text-[15px] leading-normal">
-            Make changes to your category here. Click save when you're done.
+            Make changes to your category here. Click save when you are done.
           </Dialog.Description>
           <fieldset className="mb-[15px] flex items-center gap-5">
             <input

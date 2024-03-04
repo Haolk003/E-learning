@@ -2,7 +2,7 @@ import { useDeleteFileCloudinaryMutation } from "@/features/course/courseApi";
 import React, { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-const useResultUpload = (fields: Array<any>) => {
+const UseResultUpload = (fields: Array<any>) => {
   const [deleteFile] = useDeleteFileCloudinaryMutation();
   const [resultUpload, setResultUpload] = useState<
     {
@@ -107,4 +107,4 @@ const useResultUpload = (fields: Array<any>) => {
   };
 };
 
-export default useResultUpload;
+export default UseResultUpload;

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import socketIO, { Socket } from "socket.io-client";
 
 // Tạo custom hook useSocket
-const useSocket = () => {
+const UseSocket = () => {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
@@ -24,4 +24,4 @@ const useSocket = () => {
   return socket;
 };
 
-export default useSocket;
+export default UseSocket;

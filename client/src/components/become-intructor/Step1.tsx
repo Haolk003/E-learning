@@ -21,20 +21,20 @@ const Step1: React.FC<Step1Props> = ({ onNext }) => {
       <p className="mt-1">
         <span className="text-[16px] font-semibold">
           Track Your Performance:
-        </span>{" "}
-        Our analytics tools will help you monitor your courses' performance,
-        understand your students' needs, and optimize your content for better
+        </span>
+        Our analytics tools will help you monitor your courses performance,
+        understand your students needs, and optimize your content for better
         engagement.
       </p>
       <p className="mt-1">
         <span className="text-[16px] font-semibold ">Earn Revenue:</span>
         Monetize your expertise and earn income for every student who enrolls in
-        your courses. We are thrilled to have you with us, and we're here to
+        your courses. We are thrilled to have you with us, and we are here to
         support you every step of the way. Get started by creating your first
         course today!
       </p>
       <p className="mt-2 text-gray-600">
-        In the next steps, we'll guide you through setting up your instructor
+        In the next steps, we will guide you through setting up your instructor
         profile, creating your first course, and understanding how to engage
         effectively with your students.
       </p>

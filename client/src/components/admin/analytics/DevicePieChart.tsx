@@ -73,7 +73,7 @@ const DevicePieChart = () => {
           <div className="grid grid-cols-3 gap-5 px-3 py-3  border-t border-gray8">
             {data.data.map((item: any, index: number) => {
               return (
-                <div className="flex flex-col justify-center gap-1">
+                <div className="flex flex-col justify-center gap-1" key={index}>
                   <span className="text-[14px]">
                     {item.deviceType ? item.deviceType : "Others"}
                   </span>

@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-const usePercentUploadVideo = (fields: Array<any>) => {
+const UsePercentUploadVideo = (fields: Array<any>) => {
   const [percentUploadVideo, setPercentUploadVideo] = useState<
     { percent: number; id: string }[][]
   >(
@@ -83,4 +83,4 @@ const usePercentUploadVideo = (fields: Array<any>) => {
   };
 };
 
-export default usePercentUploadVideo;
+export default UsePercentUploadVideo;

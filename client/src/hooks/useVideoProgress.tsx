@@ -8,7 +8,7 @@ import {
 import _ from "lodash";
 import { useUpdateLengthWatchedMutation } from "@/features/course/courseApi";
 import videoSnapshot from "video-snapshot";
-const useVideoProgress = ({
+const UseVideoProgress = ({
   videoUrl,
   seeking,
   courseId,
@@ -79,4 +79,4 @@ const useVideoProgress = ({
   };
 };
 
-export default useVideoProgress;
+export default UseVideoProgress;

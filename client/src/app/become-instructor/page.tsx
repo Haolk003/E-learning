@@ -87,7 +87,7 @@ const BecomeInstructorProcess = () => {
         </div>
         <div className="divide-y divide-gray-300">
           {steps.map((s) => (
-            <div>
+            <div key={s.title}>
               <StepDisplay key={s.step} {...s} />
               {s.step === 1 && currentStep === 1 && (
                 <Step1 onNext={handleNextStep} />

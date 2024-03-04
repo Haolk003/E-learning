@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-const useLoadingUploadVideo = (fields: Array<any>) => {
+const UseLoadingUploadVideo = (fields: Array<any>) => {
   const [loadingUploadVideo, setLoadingUploadVideo] = useState<
     { isLoading: boolean; id: string }[][]
   >([[{ isLoading: false, id: uuidv4() }]]);
@@ -79,4 +79,4 @@ const useLoadingUploadVideo = (fields: Array<any>) => {
   };
 };
 
-export default useLoadingUploadVideo;
+export default UseLoadingUploadVideo;
