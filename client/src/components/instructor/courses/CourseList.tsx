@@ -11,6 +11,7 @@ const CourseList: React.FC<Props> = ({ data }) => {
       <div className="flex flex-col gap-4">
         {data.map((item, index) => (
           <CourseCardIntructor
+            key={item._id}
             _id={item._id}
             image={item.thumbnail.url}
             progress={item.progress}

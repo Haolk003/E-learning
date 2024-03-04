@@ -4,7 +4,7 @@ import { IoIosSearch } from "react-icons/io";
 
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
-import useUpdateQueryString from "@/hooks/useUpdateQueryString";
+import UseUpdateQueryString from "@/hooks/useUpdateQueryString";
 const sortData = [
   {
     label: "Recently Accessed",
@@ -64,28 +64,28 @@ const MyLearningFilter: React.FC<Props> = ({
   const handleChangeSort = (value: string) => {
     setSort(value);
     const params = new URLSearchParams(searchParams.toString());
-    router.push(pathname + "?" + useUpdateQueryString(params, "sort", value));
+    router.push(pathname + "?" + UseUpdateQueryString(params, "sort", value));
   };
 
   const handleChangeCategories = (value: string) => {
     setCategories(value);
     const params = new URLSearchParams(searchParams.toString());
     router.push(
-      pathname + "?" + useUpdateQueryString(params, "category", value)
+      pathname + "?" + UseUpdateQueryString(params, "category", value)
     );
   };
   const handleChangeIntructor = (value: string) => {
     setInstructor(value);
     const params = new URLSearchParams(searchParams.toString());
     router.push(
-      pathname + "?" + useUpdateQueryString(params, "instructor", value)
+      pathname + "?" + UseUpdateQueryString(params, "instructor", value)
     );
   };
   const handleChangeProgress = (value: string) => {
     setProgress(value);
     const params = new URLSearchParams(searchParams.toString());
     router.push(
-      pathname + "?" + useUpdateQueryString(params, "progress", value)
+      pathname + "?" + UseUpdateQueryString(params, "progress", value)
     );
   };
   return (

@@ -47,7 +47,7 @@ const CoursesSearchLayout = () => {
     <div className="flex gap-5 mt-5">
       <div className="w-[400px]">
         <h2 className="font-semibold text-2xl mb-5">
-          1000 results for "development"
+          1000 results for &quot;development&quot;
         </h2>
         <div className="flex items-center gap-3 w-[400px] justify-between">
           <div className="flex items-center justify-center gap-2 border h-[60px] w-[150px] dark:border-gray8 border-gray3">
@@ -109,23 +109,21 @@ type SelectItemType = {
   value: string;
 };
 
-const SelectItem = React.forwardRef(
-  (
-    { children, classname, value, ...props }: SelectItemType,
-    forwardedRef: React.ForwardedRef<React.ElementRef<typeof Select.Item>>
-  ) => {
-    return (
-      <Select.Item
-        value={value}
-        className={
-          "text-[13px] leading-none text-violet11 rounded-[3px] flex items-center h-[25px] pr-[35px] pl-[25px] relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1"
-        }
-        {...props}
-        ref={forwardedRef}
-      >
-        <Select.ItemText>{children}</Select.ItemText>
-      </Select.Item>
-    );
-  }
-);
+const SelectItem = (
+  { children, classname, value, ...props }: SelectItemType,
+  forwardedRef: React.ForwardedRef<React.ElementRef<typeof Select.Item>>
+) => {
+  return (
+    <Select.Item
+      value={value}
+      className={
+        "text-[13px] leading-none text-violet11 rounded-[3px] flex items-center h-[25px] pr-[35px] pl-[25px] relative select-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:outline-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1"
+      }
+      {...props}
+      ref={forwardedRef}
+    >
+      <Select.ItemText>{children}</Select.ItemText>
+    </Select.Item>
+  );
+};
 export default CoursesSearchLayout;

@@ -196,6 +196,7 @@ const CourseAccessNote: React.FC<Props> = ({
 
             return (
               <Link
+                key={item._id}
                 href={`/course-access/${item.courseId}/lecture/${item.lectureId}?start=${item.timing}&option=note`}
                 onClick={triggleReload}
                 className="flex gap-5 mt-7 w-full"

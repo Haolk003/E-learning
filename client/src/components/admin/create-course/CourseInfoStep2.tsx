@@ -125,7 +125,7 @@ const CourseInfoStep2 = ({ id }: { id: string }) => {
       <h3>What are the benefits for student in this course?</h3>
       <div className="flex flex-col w-full">
         {benefits.map((benefit, index) => (
-          <div className="flex items-center gap-4 w-full">
+          <div className="flex items-center gap-4 w-full" key={index}>
             <input
               type="text"
               placeholder="You will be able to build a fullstack LMS Flaform"
@@ -154,7 +154,7 @@ const CourseInfoStep2 = ({ id }: { id: string }) => {
       </h3>
       <div className="flex flex-col w-full">
         {prerequisites.map((prerequisite, index) => (
-          <div className="flex items-center gap-4 w-full">
+          <div className="flex items-center gap-4 w-full" key={index}>
             <input
               type="text"
               placeholder="You will be able to build a fullstack LMS Flaform..."

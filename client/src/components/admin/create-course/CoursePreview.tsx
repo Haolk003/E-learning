@@ -11,7 +11,7 @@ import { BiMoviePlay } from "react-icons/bi";
 
 import CoursePlayer from "@/components/ui/CoursePlayer";
 import { CourseType } from "@/types/couresContentType";
-import useCaculatorSale from "@/hooks/useCaculatorSale";
+import UseCaculatorSale from "@/hooks/useCaculatorSale";
 import Rating from "@/components/ui/Rating";
 
 import {
@@ -69,7 +69,7 @@ const CoursePreview = ({ id }: { id: string }) => {
           <div className="flex gap-2 dark:text-white text-black text-3xl mt-3">
             {courseData.sale.discount > 0 && (
               <p>
-                {useCaculatorSale(courseData.price, courseData.sale.discount)}
+                {UseCaculatorSale(courseData.price, courseData.sale.discount)}
               </p>
             )}
 
@@ -125,7 +125,7 @@ const CoursePreview = ({ id }: { id: string }) => {
           </ul>
           <h3 className="text-2xl mt-4">Course Overview</h3>
           {courseData.courseData.map((item, index) => (
-            <div>
+            <div key={item._id}>
               <div
                 key={item._id}
                 className="flex mt-5 items-center justify-between"

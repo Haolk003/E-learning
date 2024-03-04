@@ -146,6 +146,7 @@ const CoureAccessLectureList: FC<Props> = ({
                         );
                       return (
                         <li
+                          key={lecture._id}
                           className={`flex gap-3  py-3 px-4 ${
                             lectureId === lecture._id && "bg-slate-900"
                           }`}
