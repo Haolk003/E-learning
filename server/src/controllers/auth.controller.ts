@@ -76,8 +76,31 @@ const resetPassword = CatchAsyncError(
 
 const logoutUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    res.cookie("access_token", "", { maxAge: 1 });
-    res.cookie("refesh_token", "", { maxAge: 1 });
+    res.clearCookie("access_token", {
+      maxAge: 60 * 60 * 1000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      expires: new Date(Date.now() + 60 * 60 * 1000),
+      domain:
+        process.env.NODE_ENV === "production"
+          ? process.env.BACKEND_DOMAIN
+          : "localhost",
+      path: "/",
+      sameSite: "none",
+    });
+    res.clearCookie("refesh_token"),
+      {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        domain:
+          process.env.NODE_ENV === "production"
+            ? process.env.BACKEND_DOMAIN
+            : "localhost",
+        path: "/",
+        sameSite: "none",
+      };
     const userId = req.me?._id;
     redis.del(userId);
     req.logout(function (err) {
@@ -115,6 +138,12 @@ const resendEmail = CatchAsyncError(
       .json({ status: 200, data: token, message: "Resend Email Successfully" });
   }
 );
+
+const loginFailure = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    res.status(200).json({ message: "error login " });
+  }
+);
 export {
   registrationUser,
   verifyUser,
@@ -126,4 +155,5 @@ export {
   googleCallback,
   facebookCallback,
   resendEmail,
+  loginFailure,
 };

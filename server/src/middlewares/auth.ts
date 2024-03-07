@@ -9,7 +9,6 @@ import { redis } from "../utils/redis";
 export const protect = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     let accessToken = req.cookies.access_token as string;
-    const cookie = req.cookies._vercel_jwt as string;
 
     if (!accessToken) {
       const refeshToken = req.cookies.refesh_token as string;

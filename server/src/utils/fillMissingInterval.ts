@@ -53,10 +53,10 @@ function fillMissingIntervals(
     return newData;
   } else if (period === "D") {
     const newData = expectedIntervals.map((item) => {
-      const newData = data.find((item2) => item._id.day == item2._id.day);
+      const findData = data.find((item2) => item._id.day == item2._id.day);
 
-      if (newData) {
-        return newData;
+      if (findData) {
+        return findData;
       } else {
         return { ...item, totalAmount: 0, count: 0 };
       }

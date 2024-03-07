@@ -56,11 +56,10 @@ export const uploadVideo = async (path: string, id: string) => {
       stream.end();
       fs.unlinkSync(path);
       if (error) {
-        console.log(error);
+        throw new ErrorHandle(400, error.message);
       }
       if (result) {
         io.emit(`video-result`, { id: id, result: result });
-        console.log(result);
       }
     }
   );
@@ -70,7 +69,6 @@ export const uploadVideo = async (path: string, id: string) => {
     const percentUpload = Math.round((file.bytesRead / total) * 100);
     if (resend !== percentUpload) {
       io.emit(`percent-upload`, { result: percentUpload, id: id });
-      console.log(percentUpload + "%");
     }
     resend = percentUpload;
   });

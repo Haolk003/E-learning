@@ -4,8 +4,6 @@ import orderModel from "../models/order.model";
 import courseInteractModel from "../models/courseInteract.model";
 import dayjs from "dayjs";
 
-import ErrorHandle from "../utils/errorHandle";
-
 import fillMissingIntervals from "../utils/fillMissingInterval";
 import {
   createExpectedIntervals,
@@ -234,7 +232,8 @@ async function generateEarningsReport(period: string) {
         $project: {
           amount: "$payment_info.amount",
           createdAt: 1,
-          dayOfYear: { $dayOfYear: "$createdAt" },
+          dayOfYear: { $dayOfMonth: "$createdAt" },
+          month: { $month: "$createdAt" },
           year: { $year: "$createdAt" },
         },
       },
@@ -262,7 +261,7 @@ async function generateEarningsReport(period: string) {
     const query = {
       createdAt: {
         $gte: getStartDate("1M"),
-        $lt: new Date(new Date().getFullYear(), new Date().getMonth(), 0),
+        $lt: new Date(),
       },
     };
 
@@ -299,10 +298,7 @@ async function generateEarningsReport(period: string) {
     const query = {
       createdAt: {
         $gte: getStartDate("6M"),
-        $lt:
-          new Date().getMonth() <= 5
-            ? new Date(new Date().getFullYear(), 0, 1)
-            : new Date(),
+        $lt: new Date(),
       },
     };
 
@@ -427,7 +423,7 @@ async function generateEarningReportForInstructor(
       earningTotal,
       expectedIntervals
     );
-    console.log(earningTotal);
+
     earningTotal = filledResults;
   } else if (period === "30D") {
     const startDate = new Date();
@@ -463,7 +459,7 @@ async function generateEarningReportForInstructor(
         },
       },
     ]);
-    console.log(earningTotal);
+
     const expectedIntervals = createExpectedIntervals("30D");
 
     const filledResults = fillMissingIntervals(
@@ -601,7 +597,7 @@ async function generateReviewReportForInstructor(
       reviewTotal,
       expectedIntervals
     );
-    console.log(reviewTotal);
+
     reviewTotal = filledResults;
   } else if (period === "30D") {
     const startDate = new Date();
@@ -642,7 +638,7 @@ async function generateReviewReportForInstructor(
         },
       },
     ]);
-    console.log(reviewTotal);
+
     const expectedIntervals = createExpectedIntervals("30D");
 
     const filledResults = fillMissingIntervals(
@@ -1055,7 +1051,7 @@ const calculateMonthNewUserSessionDuration = async () => {
     },
   ]);
   const expectedIntervals = createExpectedIntervals("1M");
-  console.log(newUserSessions);
+
   const newDataUserSession = expectedIntervals.map((interval) => {
     const newData = newUserSessions.find(
       (item2) =>

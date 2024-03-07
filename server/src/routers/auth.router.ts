@@ -12,6 +12,7 @@ import {
   googleCallback,
   facebookCallback,
   resendEmail,
+  loginFailure,
 } from "../controllers/auth.controller";
 import { protect } from "../middlewares/auth";
 const router = express.Router();
@@ -32,11 +33,12 @@ router.post("/logout", logoutUser);
 router.get(
   "/google/callback",
   passport.authenticate("oauth2", {
-    failureRedirect: "/login",
+    failureRedirect: "/api/v1/login-failure",
   }),
   googleCallback
 );
 
+router.get("/login-failure", loginFailure);
 router.get(
   "/google",
   passport.authenticate("oauth2", {

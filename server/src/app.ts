@@ -25,6 +25,7 @@ import { rateLimit } from "express-rate-limit";
 job.start();
 import "./app/passport";
 import { mongoConnect } from "./app/mongoConnect";
+import path from "path";
 
 export const app = express();
 const server = http.createServer(app);
@@ -32,6 +33,7 @@ const server = http.createServer(app);
 const upload = multer({
   storage: multer.memoryStorage(),
 });
+app.use(express.static(path.join(__dirname, "..", "..", "public")));
 app.use(cookiesParser());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -49,15 +51,19 @@ app.use(
 app.use(
   session({
     secret: "secret",
-    resave: true,
-    saveUninitialized: true,
-    cookie: { secure: true },
+    resave: false,
+    saveUninitialized: false,
+    // cookie: {
+    //   secure: process.env.NODE_ENV === "developer" ? false : true,
+    //   maxAge: 604800000, //one week(1000*60*60*24*7)
+    //   sameSite: "none",
+    // },
   })
 );
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
+  windowMs: 60 * 60 * 1000,
+  max: 1000,
   standardHeaders: "draft-7",
   legacyHeaders: false,
 });

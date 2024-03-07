@@ -6,25 +6,31 @@ import { CookieOptions, Response } from "express";
 export const accessTokenOptions: CookieOptions = {
   maxAge: 60 * 60 * 1000,
   httpOnly: true,
-  secure: true,
+  secure: process.env.NODE_ENV === "production",
   expires: new Date(Date.now() + 60 * 60 * 1000),
-  domain: "elearning-client-14k1c5p2x-haolk003.vercel.app",
+  domain:
+    process.env.NODE_ENV === "production"
+      ? process.env.BACKEND_DOMAIN
+      : "localhost",
+  path: "/",
   sameSite: "none",
 };
 export const refeshTokenOptions: CookieOptions = {
   maxAge: 30 * 24 * 60 * 60 * 1000,
   httpOnly: true,
-  secure: true,
+  secure: process.env.NODE_ENV === "production",
   expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-  domain: "elearning-client-14k1c5p2x-haolk003.vercel.app",
+  domain:
+    process.env.NODE_ENV === "production"
+      ? process.env.BACKEND_DOMAIN
+      : "localhost",
+  path: "/",
   sameSite: "none",
 };
 export const sendToken = async (user: IUser, res: Response) => {
-  const accessToken = await user.signAccessToken();
-  const refeshToken = await user.signRefeshToken();
+  const accessToken = user.signAccessToken();
+  const refeshToken = user.signRefeshToken();
 
-  res.set("access_token", accessToken);
-  res.set("refesh_token", refeshToken);
   res.cookie("access_token", accessToken, accessTokenOptions);
   res.cookie("refesh_token", refeshToken, refeshTokenOptions);
 };

@@ -60,8 +60,6 @@ async function updateCourseInRedis(courseId: string, updatedData: any) {
 
         // Lưu lại danh sách đã cập nhật vào Redis
         await redis.set(category, JSON.stringify(courses));
-
-        console.log(`Course ${courseId} updated in category ${category}.`);
       }
     }
   }
@@ -79,8 +77,7 @@ const createCourseStep1 = async (
     const isExistCategory = await CategoryModel.findById(data.category);
 
     if (!isExistCategory) throw new ErrorHandle(400, "Category not found");
-    isExistCategory.courseCount = isExistCategory.courseCount++;
-    await isExistCategory.save();
+
     return updateCourse;
   } else {
     const newCourse = await courseModel.create({
@@ -229,11 +226,7 @@ const findCourseByIdPublic = async (courseId: string) => {
     const course = await courseModel
       .findOne({ _id: courseId, status: "public" })
       .select("-courseData.lectures.videoUrl")
-      .populate("author", "avatar firstName lastName email")
-      .populate({
-        path: "reviews",
-        populate: { path: "user", select: "firstName lastName avatar" },
-      });
+      .populate("author", "avatar firstName lastName email");
 
     if (!course) {
       throw new ErrorHandle(400, "Course not found");
@@ -337,6 +330,7 @@ type filterGetAllCourse = {
   page?: number;
   limit?: number;
   category?: string;
+  subCategory?: string;
   price?: string | string[];
   ratings?: number;
   level?: string | string[];
@@ -485,7 +479,15 @@ const findCourseCategoryAndSubCategory = async ({
       .sort(sort)
       .skip(skip)
       .limit(10);
-    return findCourses;
+
+    const totalCount = await courseModel
+      .countDocuments({
+        category: categoryId,
+        subCategory: subCategoryId,
+        status: "public",
+      })
+      .exec();
+    return { courses: findCourses, totalCount };
   } else {
     const findCourses = await courseModel
       .find({ category: categoryId, status: "public" })
@@ -497,7 +499,13 @@ const findCourseCategoryAndSubCategory = async ({
       .sort(sort)
       .limit(10)
       .skip(skip);
-    return findCourses;
+    const totalCount = await courseModel
+      .countDocuments({
+        category: categoryId,
+        status: "public",
+      })
+      .exec();
+    return { courses: findCourses, totalCount };
   }
 };
 
@@ -517,6 +525,15 @@ const getMyCourseOfInstructor = async (instructorId: string, page: number) => {
 
   return courses;
 };
+
+type queryFindCourseCategory = {
+  sort?: string;
+  page?: number;
+  category: string;
+  subCategory?: string;
+  limit?: number;
+};
+
 const courseService = {
   createCourseStep1,
   createEditCourseStep2,

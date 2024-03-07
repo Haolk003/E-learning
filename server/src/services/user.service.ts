@@ -43,7 +43,6 @@ const updateProfileUser = async (id: string, data: updateUserType) => {
 
 const uploadAvatarUser = async (id: string, file: any) => {
   const { path } = file;
-  console.log(id);
 
   const findUser = await userModel
     .findById(id.toString())

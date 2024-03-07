@@ -3,6 +3,7 @@ import userModel from "../models/user.model";
 import reviewModel from "../models/review.model";
 import ErrorHandle from "../utils/errorHandle";
 import sendEmail from "../utils/sendEmail";
+import { redis } from "../utils/redis";
 
 type addReviewType = {
   comment: string;
@@ -42,6 +43,7 @@ const addReview = async ({
     findCourse.reviews?.push(newReview._id);
     findCourse.ratings = totalRatingReview;
     await findCourse.save();
+    redis.set(courseId, JSON.stringify(findCourse), "EX", 604800);
   }
   return newReview;
 };

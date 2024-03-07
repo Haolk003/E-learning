@@ -3,10 +3,7 @@ import dayjs from "dayjs";
 function createExpectedIntervals(period: string) {
   const intervals = [];
   if (period === "6M") {
-    const endYear =
-      dayjs().get("month") <= 6
-        ? dayjs().subtract(1, "year").get("year")
-        : dayjs().get("year");
+    const endYear = dayjs().get("year");
     for (
       let year = dayjs().subtract(6, "year").get("year");
       year <= endYear;
@@ -22,7 +19,7 @@ function createExpectedIntervals(period: string) {
       }
     }
   } else if (period === "1M") {
-    for (let i = 12; i >= 1; i--) {
+    for (let i = 11; i >= 0; i--) {
       const month = dayjs().subtract(i, "month").get("month");
       const year = dayjs().subtract(i, "month").get("year");
       intervals.push({
