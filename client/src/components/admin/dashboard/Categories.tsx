@@ -30,8 +30,10 @@ const Categories = () => {
           View All
         </button>
       </div>
+
       <div className="px-3 py-4 grid lg:grid-cols-4 gap-4 w-full">
         {categoryData &&
+          categoryData.length > 0 &&
           categoryData.slice(0, 4).map((item, index) => (
             <div
               className=" border dark:border-gray8 borer-gray3 rounded-md flex items-center justify-center flex-col py-4 text-[12px] text-center gap-3"

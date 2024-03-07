@@ -96,6 +96,15 @@ const CourseLayout = ({ id }: { id: string }) => {
           <div className="flex  gap-10">
             <div className="w-[65%]">
               <h2 className="text-2xl">{courseData.title}</h2>
+              <div className="flex items-center gap-3">
+                <p>Create By:</p>
+                <Link
+                  href={`/user/${courseData.author}`}
+                  className="text-blue9 underline text-[13px]"
+                >
+                  {courseData.author.lastName} {courseData.author.firstName}
+                </Link>
+              </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3 mt-4">
                   <Rating ratings={courseData.ratings} />

@@ -53,11 +53,6 @@ app.use(
     secret: "secret",
     resave: false,
     saveUninitialized: false,
-    // cookie: {
-    //   secure: process.env.NODE_ENV === "developer" ? false : true,
-    //   maxAge: 604800000, //one week(1000*60*60*24*7)
-    //   sameSite: "none",
-    // },
   })
 );
 

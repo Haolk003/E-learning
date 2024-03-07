@@ -1,3 +1,4 @@
+import { query } from "express";
 import courseModel from "../models/course.model";
 import orderModel from "../models/order.model";
 import reviewModel from "../models/review.model";
@@ -193,6 +194,37 @@ const becomeIntructor = async (userId: string) => {
   }
   redis.set(updateUser._id, JSON.stringify(updateUser), "EX", 604800);
   return updateUser;
+};
+
+type QueryGetAllStudent = {
+  sort?: string;
+  page?: number;
+  pageNumber?: number;
+};
+const getAllStudentsByAdmin = async (query: QueryGetAllStudent) => {
+  const limit = query.pageNumber ? query.pageNumber : 10;
+  const skip = query.page ? (query.page - 1) * limit : 0;
+  const students = await userModel
+    .find({ myLearning: { $gt: 0 } })
+    .sort("-updatedAt")
+    .skip(skip)
+    .limit(limit)
+    .select("firstName lastName email myLearning").exec;
+
+  return students;
+};
+
+const getAllIntructor = async (query: QueryGetAllStudent) => {
+  const limit = query.pageNumber ? query.pageNumber : 10;
+  const skip = query.page ? (query.page - 1) * limit : 0;
+  const students = await userModel
+    .find({ role: "instructor" })
+    .sort("-")
+    .skip(skip)
+    .limit(limit)
+    .select("firstName lastName email myLearning").exec;
+
+  return students;
 };
 const userService = {
   updateProfileUser,

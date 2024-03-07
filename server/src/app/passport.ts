@@ -19,7 +19,10 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      callbackURL: `${process.env.BACKEND_HOST}/api/v1/google/callback`,
+      callbackURL:
+        process.env.NODE_ENV !== "production"
+          ? `${process.env.BACKEND_HOST}/api/v1/google/callback`
+          : `${process.env.BACKEND_HOST2}/api/v1/google/callback`,
       authorizationURL: "https://accounts.google.com/o/oauth2/v2/auth",
       tokenURL: "https://oauth2.googleapis.com/token",
       passReqToCallback: true,
@@ -64,7 +67,10 @@ passport.use(
     {
       clientID: process.env.FACEBOOK_CLIENT_ID as string,
       clientSecret: process.env.FACEBOOK_SECRET_KEY as string,
-      callbackURL: `${process.env.BACKEND_HOST}/api/v1/facebook/callback`,
+      callbackURL:
+        process.env.NODE_ENV !== "production"
+          ? `${process.env.BACKEND_HOST}/api/v1/facebook/callback`
+          : `${process.env.BACKEND_HOST2}/api/v1//callback`,
       profileFields: ["id", "displayName", "photos", "email", "name"],
     },
     async function (accessToken, refeshToken, profile, cb) {

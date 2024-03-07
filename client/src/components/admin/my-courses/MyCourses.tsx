@@ -56,7 +56,10 @@ const MyCourse = () => {
       setRowData(
         courseData.map((item, index) => {
           return {
-            category: item.category,
+            category:
+              typeof item.category === "string"
+                ? item.category
+                : item.category.name,
             instructor: item.author.lastName + " " + item.author.firstName,
             price: item.price,
             students: item.sold,

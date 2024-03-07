@@ -76,31 +76,9 @@ const resetPassword = CatchAsyncError(
 
 const logoutUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    res.clearCookie("access_token", {
-      maxAge: 60 * 60 * 1000,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      expires: new Date(Date.now() + 60 * 60 * 1000),
-      domain:
-        process.env.NODE_ENV === "production"
-          ? process.env.BACKEND_DOMAIN
-          : "localhost",
-      path: "/",
-      sameSite: "none",
-    });
-    res.clearCookie("refesh_token"),
-      {
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-        domain:
-          process.env.NODE_ENV === "production"
-            ? process.env.BACKEND_DOMAIN
-            : "localhost",
-        path: "/",
-        sameSite: "none",
-      };
+    res.clearCookie("access_token");
+    res.clearCookie("refesh_token");
+
     const userId = req.me?._id;
     redis.del(userId);
     req.logout(function (err) {

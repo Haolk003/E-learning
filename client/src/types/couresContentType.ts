@@ -15,7 +15,7 @@ export type CourseType = {
     url: string;
   };
   title: string;
-  category: string;
+  category: string | CategoryType;
   subCategory: string;
   level: string;
   author: {

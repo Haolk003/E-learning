@@ -72,7 +72,7 @@ const ProgressCourse = () => {
 
   return (
     <>
-      {isSuccess && (
+      {isSuccess && processedData.length > 0 && (
         <div className="px-6 py-10 bg-mauve2 dark:bg-mauve12 text-mauve11 border-b dark:border-gray4 border-gray6">
           <h2 className="text-4xl  font-semibold dark:text-white  text-black mb-5">
             Let&apos;s start learning.

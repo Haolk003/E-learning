@@ -14,18 +14,6 @@ import {
 import userModel from "../models/user.model";
 
 import { redis } from "../utils/redis";
-
-type CreateCourseType = {
-  title: string;
-  price: number;
-  demoUrl: string;
-  thumbnail?: { public_id: string; url: string };
-  description: string;
-  level: string;
-  category: string;
-  courseData?: ICourseData[];
-};
-
 type CreateCourseStep1 = {
   title: string;
   price: number;
@@ -105,6 +93,7 @@ const editCourseStep1 = async (data: CreateCourseStep1, courseId: string) => {
   await updateCourseInRedis(courseId, data);
   return updateCourse;
 };
+
 type CreateCoursseStep2 = {
   prerequisites?: { title: string }[];
   benefits?: { title: string }[];

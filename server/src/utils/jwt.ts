@@ -6,30 +6,28 @@ import { CookieOptions, Response } from "express";
 export const accessTokenOptions: CookieOptions = {
   maxAge: 60 * 60 * 1000,
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: process.env.NODE_ENV === "production" ? true : false,
   expires: new Date(Date.now() + 60 * 60 * 1000),
   domain:
     process.env.NODE_ENV === "production"
       ? process.env.BACKEND_DOMAIN
       : "localhost",
-  path: "/",
-  sameSite: "none",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 };
 export const refeshTokenOptions: CookieOptions = {
   maxAge: 30 * 24 * 60 * 60 * 1000,
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: process.env.NODE_ENV === "production" ? true : false,
   expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   domain:
     process.env.NODE_ENV === "production"
       ? process.env.BACKEND_DOMAIN
       : "localhost",
-  path: "/",
-  sameSite: "none",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 };
 export const sendToken = async (user: IUser, res: Response) => {
-  const accessToken = user.signAccessToken();
-  const refeshToken = user.signRefeshToken();
+  const accessToken = await user.signAccessToken();
+  const refeshToken = await user.signRefeshToken();
 
   res.cookie("access_token", accessToken, accessTokenOptions);
   res.cookie("refesh_token", refeshToken, refeshTokenOptions);
