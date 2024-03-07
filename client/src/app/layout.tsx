@@ -38,7 +38,6 @@ export default function RootLayout({
       <body
         className={`${poppins.variable} ${josefind.variable} bg-white custom-scrollbar bg-no-repeat dark:bg-gradient-to-b  duration-300 dark:bg-iris1 min-h-[100vh] h-full`}
       >
-        {" "}
         <Providers>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <Custom>{children}</Custom>

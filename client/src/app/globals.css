@@ -28,7 +28,9 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
-
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiPaginationItem-icon.css-g2z002-MuiSvgIcon-root-MuiPaginationItem-icon {
+  color: rgb(72, 72, 72);
+}
 #modal-root {
   /* Adjust width and height as needed */
 }
@@ -262,6 +264,12 @@ body {
   cursor: none;
 }
 #payment-form label {
+  color: white !important;
+}
+.css-19micn4-MuiButtonBase-root-MuiPaginationItem-root {
+  color: rgb(72, 72, 72) !important;
+}
+.css-19micn4-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected {
   color: white !important;
 }
 input[type="number"]::-webkit-outer-spin-button,

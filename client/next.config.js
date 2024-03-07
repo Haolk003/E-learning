@@ -5,6 +5,7 @@ const nextConfig = {
       "res.cloudinary.com",
       "randomuser.me",
       "z-p3-scontent.fsgn5-11.fna.fbcdn.net",
+      "scontent.fhan3-5.fna.fbcdn.net",
     ],
   },
   experimental: {

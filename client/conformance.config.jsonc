@@ -1,3 +1,0 @@
-"SET_COOKIE_VALIDATION": {
-    "cookieAllowList": ["access_token","refesh_token"]
-  }
