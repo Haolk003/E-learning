@@ -27,7 +27,7 @@ const notifyApi = apiSlice.injectEndpoints({
 
           api.dispatch(getAllNotify({ notifies: result.data.data }));
         } catch (err: any) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),
@@ -50,7 +50,7 @@ const notifyApi = apiSlice.injectEndpoints({
 
           api.dispatch(deleteNotify(result.data.data));
         } catch (err: any) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),

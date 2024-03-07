@@ -18,7 +18,7 @@ const ToggleGroupEarningReport: React.FC<Props> = ({
         onValueChange={(event) => handleChange(event)}
         about=""
         type="single"
-        defaultValue="1month"
+        defaultValue="1M"
         className="flex items-center text-[13px]"
       >
         {data.map((item, index) => (

@@ -33,7 +33,7 @@ const cartApi = apiSlice.injectEndpoints({
             })
           );
         } catch (err: any) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),
@@ -59,7 +59,7 @@ const cartApi = apiSlice.injectEndpoints({
           const result = await api.queryFulfilled;
           api.dispatch(deleteItemCart(result.data.data));
         } catch (err: any) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),
@@ -82,7 +82,7 @@ const cartApi = apiSlice.injectEndpoints({
           const result = await api.queryFulfilled;
           api.dispatch(applyCoupon(result.data.data));
         } catch (err: any) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),
@@ -95,10 +95,10 @@ const cartApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, api) {
         try {
           const result = await api.queryFulfilled;
-          console.log(result);
+
           api.dispatch(getAllCart({ cart: result.data.data }));
         } catch (err: any) {
-          console.log(err.message);
+          console.error(err.message);
         }
       },
     }),
@@ -114,7 +114,7 @@ const cartApi = apiSlice.injectEndpoints({
           const result = await api.queryFulfilled;
           api.dispatch(deleteApplyCoupon());
         } catch (err: any) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),

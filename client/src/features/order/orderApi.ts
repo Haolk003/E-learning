@@ -9,13 +9,6 @@ const orderApi = apiSlice.injectEndpoints({
         body: { amount, currency },
         credentials: "include" as const,
       }),
-      async onQueryStarted(arg, api) {
-        try {
-          const result = await api.queryFulfilled;
-        } catch (err: any) {
-          console.log(err);
-        }
-      },
     }),
     createOrder: build.mutation({
       query: ({ courseId, payment_intent_id }) => ({

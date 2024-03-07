@@ -10,7 +10,7 @@ const Heading: FC<HeadProps> = ({ description, keyword, title }) => {
     <>
       <title>{title}</title>
       <meta name="viewport" content="width=device-width ,inital-scale=1" />
-      <meta name="descrption" content={description} />
+      <meta name="description" content={description} />
       <meta name="keywords" content={keyword} />
     </>
   );

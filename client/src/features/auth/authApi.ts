@@ -14,7 +14,7 @@ const authApi = apiSlice.injectEndpoints({
           const result = await api.queryFulfilled;
           api.dispatch(userLoggedIn({ user: result.data.user }));
         } catch (err: any) {
-          console.log(err.data.message);
+          console.error(err.data.message);
         }
       },
     }),
@@ -40,7 +40,7 @@ const authApi = apiSlice.injectEndpoints({
       async onQueryStarted(arg, api) {
         try {
           const result = await api.queryFulfilled;
-          console.log(result);
+
           api.dispatch(
             userRegister({
               token: result.data.data.token,
@@ -48,7 +48,7 @@ const authApi = apiSlice.injectEndpoints({
             })
           );
         } catch (err: any) {
-          console.log(err.message);
+          console.error(err);
         }
       },
     }),

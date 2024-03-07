@@ -7,6 +7,7 @@ type Props = {
   onChangePage: (page: number) => void;
   nextPage: () => void;
   prevPage: () => void;
+  pageSize: number;
 };
 const TableNavigation: FC<Props> = ({
   totalCount,
@@ -14,8 +15,9 @@ const TableNavigation: FC<Props> = ({
   onChangePage,
   page,
   prevPage,
+  pageSize,
 }) => {
-  const maxPage = Math.round(totalCount / 1);
+  const maxPage = Math.ceil(totalCount / pageSize);
   return (
     <div className="flex items-center justify-between px-4 py-5 border-t dark:border-white border-black">
       <div className="flex items-center gap-4">
@@ -48,7 +50,7 @@ const TableNavigation: FC<Props> = ({
               2
             </button>
           )}
-          {maxPage > 5 && (page < 2 || page >= maxPage - 1) && <span>...</span>}
+          {maxPage > 5 && (page < 3 || page >= maxPage - 1) && <span>...</span>}
           {maxPage > 5 && page > 2 && page < maxPage - 1 && (
             <div className="flex items-center gap-2">
               <span>...</span>
@@ -61,7 +63,7 @@ const TableNavigation: FC<Props> = ({
             </div>
           )}
 
-          {maxPage < 5 && maxPage > 2 && (
+          {maxPage === 3 && (
             <button
               className={`${
                 page === 3 && "rounded bg-violet9 w-[30px] h-[30px] text-white"
@@ -77,7 +79,7 @@ const TableNavigation: FC<Props> = ({
               className={`${
                 page === maxPage - 1 &&
                 "rounded bg-violet9 w-[30px] h-[30px] text-white"
-              } `}
+              }  w-[30px] h-[30px] flex items-center justify-center`}
               onClick={() => onChangePage(maxPage - 1)}
             >
               {maxPage - 1}
@@ -88,7 +90,7 @@ const TableNavigation: FC<Props> = ({
               className={`${
                 page === maxPage &&
                 "rounded bg-violet9 w-[30px] h-[30px] text-white"
-              } `}
+              } w-[30px] h-[30px] flex items-center justify-center`}
               onClick={() => onChangePage(maxPage)}
             >
               {maxPage}

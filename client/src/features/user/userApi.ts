@@ -15,7 +15,7 @@ const userApi = apiSlice.injectEndpoints({
 
           api.dispatch(updateProfile({ user: result.data }));
         } catch (err) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),
@@ -32,7 +32,7 @@ const userApi = apiSlice.injectEndpoints({
 
           api.dispatch(updateProfile({ user: result.data }));
         } catch (err) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),

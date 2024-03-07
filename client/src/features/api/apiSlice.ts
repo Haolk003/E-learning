@@ -20,7 +20,7 @@ const apiSlice = createApi({
 
           api.dispatch(userLoggedIn({ user: result.data.data }));
         } catch (err: any) {
-          console.log(err);
+          console.error(err);
         }
       },
     }),

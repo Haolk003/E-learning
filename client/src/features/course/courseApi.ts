@@ -66,12 +66,36 @@ export const courseApi = apiSlice.injectEndpoints({
       }),
     }),
     getAllCourse: build.query({
-      query: ({ sort, keyword, page, price, level, ratings }) => ({
+      query: ({
+        sort,
+        keyword,
+        page,
+        price,
+        level,
+        ratings,
+        category,
+        subCategory,
+        limit,
+      }: {
+        sort?: string;
+        keyword?: string;
+        page?: number;
+        price?: string;
+        level?: string[];
+        ratings?: string;
+        category?: string;
+        subCategory?: string;
+        limit?: number;
+      }) => ({
         url: `get-all-courses?sort=${sort}${
           ratings ? `&ratings[gte]=${ratings}` : ""
         }&keyword=${keyword}&page=${page}${
           price === "paid" ? "&price[gt]=0" : ""
-        }${price === "free" ? "&price=0" : ""}&level=${level ? level : ""}`,
+        }${price === "free" ? "&price=0" : ""}&level=${
+          level ? level : ""
+        }&category=${category ? category : ""}&subCategory=${
+          subCategory ? subCategory : ""
+        }&limit=${limit ? limit : 20}`,
         method: "GET",
 
         credentials: "include" as const,
@@ -148,9 +172,23 @@ export const courseApi = apiSlice.injectEndpoints({
       }),
     }),
     getCoursesCategoryPublic: build.query({
-      query: ({ categoryId, subCategoryId }) => ({
+      query: ({
+        categoryId,
+        subCategoryId,
+        page,
+        sort,
+        limit,
+      }: {
+        categoryId: string;
+        subCategoryId?: string;
+        sort?: string;
+        page?: number;
+        limit?: number;
+      }) => ({
         url: `/get-courses-category/${categoryId}${
           subCategoryId ? `/${subCategoryId}` : ""
+        }?sort=${sort ? sort : "-sold"}&page=${page ? page : 1}&limit=${
+          limit ? limit : 5
         }`,
         method: "GET",
         credentials: "include" as const,

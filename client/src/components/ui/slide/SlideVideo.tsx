@@ -16,7 +16,6 @@ const SlideVideo: FC<Props> = ({
   handleMouseUp,
   pointSaved,
 }) => {
-  console.log(pointSaved);
   return (
     <Slide.Root
       min={0}
