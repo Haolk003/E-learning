@@ -76,8 +76,24 @@ const resetPassword = CatchAsyncError(
 
 const logoutUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
-    res.clearCookie("access_token");
-    res.clearCookie("refesh_token");
+    res.clearCookie("access_token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      domain:
+        process.env.NODE_ENV === "production"
+          ? process.env.BACKEND_DOMAIN
+          : "localhost",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
+    res.clearCookie("refesh_token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production" ? true : false,
+      domain:
+        process.env.NODE_ENV === "production"
+          ? process.env.BACKEND_DOMAIN
+          : "localhost",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    });
 
     const userId = req.me?._id;
     redis.del(userId);
@@ -93,7 +109,13 @@ const googleCallback = CatchAsyncError(
     const user: any = req.user;
 
     await sendToken(user, res);
-    res.status(200).redirect(process.env.CLIENT_HOST as string);
+    res
+      .status(200)
+      .redirect(
+        process.env.NODE_ENV === "production"
+          ? (process.env.CLIENT_HOST2 as string)
+          : (process.env.CLIENT_HOST as string)
+      );
   }
 );
 
@@ -102,7 +124,13 @@ const facebookCallback = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const user: any = req.user;
     await sendToken(user, res);
-    res.status(200).redirect(process.env.CLIENT_HOST as string);
+    res
+      .status(200)
+      .redirect(
+        process.env.NODE_ENV === "production"
+          ? (process.env.CLIENT_HOST2 as string)
+          : (process.env.CLIENT_HOST as string)
+      );
   }
 );
 
