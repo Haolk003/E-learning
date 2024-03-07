@@ -1,6 +1,5 @@
 import React from "react";
 import * as Select from "@radix-ui/react-select";
-import { TbCookieMan } from "react-icons/tb";
 
 type Props = {
   value: string;

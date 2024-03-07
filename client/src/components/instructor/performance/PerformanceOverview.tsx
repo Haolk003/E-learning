@@ -55,7 +55,7 @@ const PerformanceOverview: React.FC<Props> = ({ slug }) => {
   };
 
   return (
-    <div className="px-10">
+    <div className="px-10 dark:text-white text-black">
       <h2 className="text-2xl font-semibold mb-4">Overview</h2>
       <p>Get top insights about your performance</p>
       <div className="dark:bg-gray2 bg-white rounded-lg mt-4 ">

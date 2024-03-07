@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const SidebarPerformance = () => {
   const pathName = usePathname();
   return (
-    <div className="h-screen fixed w-[250px] left-[18%] top-0 dark:bg-gray3 bg-gray8 px-5 py-10">
+    <div className="h-screen fixed w-[250px] left-[18%] top-0 bg-gray3 px-5 py-10 dark:text-white text-black">
       <ul className="flex flex-col gap-5">
         <li>
           <Link

@@ -16,7 +16,7 @@ const NotificationLayout = () => {
   };
 
   return (
-    <div>
+    <div className="text-black dark:text-white">
       <h2 className="text-xl ">Notifications</h2>
       <div className="flex flex-col gap-3 mt-5">
         {notifies &&
@@ -24,7 +24,7 @@ const NotificationLayout = () => {
             return (
               <div
                 key={item._id}
-                className="px-4 py-3 border-s-indigo-500 border-s-2 w-full min-h-[50px] rounded-md bg-gray1 flex items-center justify-between"
+                className="px-4 py-3 border-s-indigo-500 border-s-2 w-full min-h-[50px] rounded-md dark:bg-gray1 bg-gray12 flex items-center justify-between"
               >
                 <div className="flex gap-5">
                   <div className="w-[35px] h-[35px] overflow-hidden rounded-full">

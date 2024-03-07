@@ -17,7 +17,7 @@ const CourseTool: FC<Props> = ({
 }) => {
   const handleSearch = (searchTerm: string) => {
     setSearchTerm(searchTerm);
-    console.log(`Searching for: ${searchTerm}`);
+
     // Thực hiện tìm kiếm ở đây hoặc gọi một API tìm kiếm
   };
   return (

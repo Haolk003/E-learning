@@ -88,8 +88,12 @@ const MyLearningFilter: React.FC<Props> = ({
       pathname + "?" + UseUpdateQueryString(params, "progress", value)
     );
   };
+
+  const handleReset = () => {
+    router.push(pathname);
+  };
   return (
-    <div className="flex items-end justify-between ">
+    <div className="flex items-end justify-between dark:text-white text-black">
       <div className="flex gap-3 items-end ">
         <div className="flex flex-col gap-3 w-[180px]">
           <p>Sort by</p>
@@ -121,7 +125,10 @@ const MyLearningFilter: React.FC<Props> = ({
             value={progress}
           />
         </div>
-        <button className="font-semibold h-[40px] flex items-center justify-center">
+        <button
+          className="font-semibold h-[40px] flex items-center justify-center"
+          onClick={handleReset}
+        >
           Reset
         </button>
       </div>

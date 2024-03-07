@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { useTheme } from "next-themes";
 import {
@@ -9,7 +11,6 @@ import {
 } from "react-icons/fa";
 import { AiOutlineTool } from "react-icons/ai";
 import { SiSimpleanalytics } from "react-icons/si";
-import { GrDocumentPerformance } from "react-icons/gr";
 import {
   Menu,
   MenuItem,
@@ -40,12 +41,13 @@ const SideBarAdmin = () => {
       collapsed={collapsed}
       rootStyles={{
         [`.${sidebarClasses.container}`]: {
-          backgroundColor: theme === "dark" ? "rgb(25 25 25)" : "#2d2f31",
-          color: theme === "dark" ? "white" : "black",
+          backgroundColor:
+            theme === "dark" ? "rgb(25 25 25)" : " rgb(25 25 25)",
+          color: theme === "dark" ? "white" : "white",
         },
       }}
       transitionDuration={500}
-      className="bg-gray2  text-white "
+      className="dark:bg-gray2  text-white bg-gray5"
     >
       <div className="flex justify-center align-center p-4 mb-5">
         {/* You can add a logo or text here */}

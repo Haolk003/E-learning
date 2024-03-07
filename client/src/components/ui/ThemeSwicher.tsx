@@ -10,7 +10,7 @@ const ThemeSwicher = () => {
     <div className="flex items-center justify-between">
       {theme === "dark" ? (
         <button
-          className="dark:text-white text-black text-[25px]"
+          className="dark:text-white text-mave12 text-[25px]"
           onClick={() => setTheme("light")}
         >
           {" "}
@@ -18,7 +18,7 @@ const ThemeSwicher = () => {
         </button>
       ) : (
         <button
-          className="dark:text-white text-black text-[25px]"
+          className="dark:text-white text-mave12   text-[25px]"
           onClick={() => setTheme("dark")}
         >
           <BiMoon />

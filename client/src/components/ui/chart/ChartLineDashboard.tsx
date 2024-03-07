@@ -16,7 +16,7 @@ const ProductTrendsChart: FC<Props> = ({ data, period }) => {
   const [series, setSeries] = React.useState<any[]>([]);
   const [dataMax, setDataMax] = useState(0);
   const [studentMax, setStudentMax] = useState(0);
-  console.log(data);
+
   useEffect(() => {
     if (period === "1M") {
       const newMonths = data.map(
