@@ -54,16 +54,16 @@ const CourseListHeader: FC<Props> = ({
                     </Select.ItemText>
                   </Select.Item>
                   <Select.Item
-                    value="popular"
+                    value="-sold"
                     className=" data-[highlighted]:text-violet11 py-[10px] px-[10px] data-[highlighted]:outline-none "
                   >
                     <Select.ItemText>Popular</Select.ItemText>
                   </Select.Item>
                   <Select.SelectItem
-                    value="relevant"
+                    value="-ratings"
                     className=" data-[highlighted]:text-violet11 py-[10px] px-[10px] data-[highlighted]:outline-none "
                   >
-                    <Select.ItemText>Relevant</Select.ItemText>
+                    <Select.ItemText>Overrated</Select.ItemText>
                   </Select.SelectItem>
                 </Select.Group>
               </Select.Viewport>

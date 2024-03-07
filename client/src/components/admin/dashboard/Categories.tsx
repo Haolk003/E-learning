@@ -16,7 +16,6 @@ const Categories = () => {
       toast.error(errorMessage.message);
     }
   }, [error]);
-  console.log(data);
 
   useEffect(() => {
     if (data) {

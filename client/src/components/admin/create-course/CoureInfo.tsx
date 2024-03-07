@@ -42,7 +42,7 @@ import { CourseType } from "@/types/couresContentType";
 import SelectCategory from "@/components/ui/select/SelectIntructor";
 
 import { CategoryType } from "@/types/categoryType";
-import { Shippori_Antique_B1 } from "next/font/google";
+import Loader from "@/components/loader/Loader";
 
 const ENDPOINT = process.env.NEXT_PUBLIC_SOCKET_SERVER_URI || "";
 const socketId = socketIO(`${ENDPOINT}`, { transports: ["websocket"] });
@@ -93,7 +93,11 @@ const CoureInfo: FC<Props> = ({ id }) => {
     isSuccess: successGetCourse,
     isLoading: loadingGetCourse,
     data: course,
-  } = useGetCourseInstructorQuery(String(id), { skip: !id });
+    refetch,
+  } = useGetCourseInstructorQuery(String(id), {
+    skip: !id,
+    refetchOnMountOrArgChange: true,
+  });
   const [createCourse, { isLoading, error, isSuccess, data: courseData }] =
     useCreateCourseStep1Mutation();
   const [uploadVideo, { isSuccess: successUploadVideo }] =
@@ -168,7 +172,7 @@ const CoureInfo: FC<Props> = ({ id }) => {
   const handleCancelUpload = () => {
     setLoadingUploadVideo(false);
   };
-  //
+
   const onSubmit = async (data: courseInfoType) => {
     if (selectFile === "") {
       toast.error("Please select file for thumbnail");
@@ -191,6 +195,7 @@ const CoureInfo: FC<Props> = ({ id }) => {
 
   const handleChangeCategory = (value: string) => {
     setValue("category", value);
+
     setCategory(value);
   };
 
@@ -204,12 +209,21 @@ const CoureInfo: FC<Props> = ({ id }) => {
         setSubCategoryData(findParentCategory.subcategories);
         setSubCategory(course.data.subCategory);
       }
+    } else if (category !== "") {
+      const newCategories = categories.data as CategoryType[];
+      const findParentCategory = newCategories.find(
+        (item) => item._id === category
+      );
+      if (findParentCategory) {
+        setSubCategoryData(findParentCategory.subcategories);
+      }
     }
   }, [category]);
 
   useEffect(() => {
     if (course) {
       setSubCategory(course.data.subCategory);
+      setValue("subCategory", course.data.subCategory);
     }
   }, [subCategoryData]);
   const handelChangeLevel = (value: string) => {
@@ -234,6 +248,8 @@ const CoureInfo: FC<Props> = ({ id }) => {
       } else {
         router.push(`/instructor/create-course/step2/${courseData.data._id}`);
       }
+      setSubCategory("");
+      setCategory("");
     }
     if (error && "data" in error) {
       const errorData = error.data as any;
@@ -282,7 +298,7 @@ const CoureInfo: FC<Props> = ({ id }) => {
       reset(courseInfo);
       setLevel(courseInfo.level);
       setCategory(courseInfo.category);
-      setSubCategory(courseInfo.subCategory);
+
       setVideoResult(courseInfo.demoUrl);
       setSelectFile(courseInfo.thumbnail.url);
       editor?.commands.setContent(courseInfo.description);
@@ -500,6 +516,11 @@ const CoureInfo: FC<Props> = ({ id }) => {
           Save
         </button>
       </Form.Root>
+      {(isLoading || loadingGetCourse) && (
+        <div className="bg-blackA5 fixed top-0 left-0 h-screen w-full flex items-center justify-center">
+          <Loader />
+        </div>
+      )}
     </div>
   );
 };

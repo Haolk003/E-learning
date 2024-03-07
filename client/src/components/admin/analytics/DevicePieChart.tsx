@@ -13,7 +13,7 @@ const DevicePieChart = () => {
   ]);
   const [dataChart, setDataChart] = useState([]);
   const { data } = useCalculateDevideTypePercentTageQuery("");
-  console.log(data);
+
   const options: ApexOptions = {
     series: dataChart, // Phần trăm cho mỗi loại
     labels: lableChart,

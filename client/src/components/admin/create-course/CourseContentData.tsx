@@ -400,8 +400,8 @@ const CourseContentData: FC<Props> = ({ id }) => {
           Save
         </button>
       </Form.Root>
-      {isLoading && loadingGetCourse && (
-        <div className="fixed top-0 left-0 bg-blackA5 w-full h-full flex items-center justify-center">
+      {(isLoading || loadingGetCourse) && (
+        <div className="fixed top-0 left-0 bg-blackA5 w-full h-full flex items-center justify-center z-[100]">
           <Loader />
         </div>
       )}

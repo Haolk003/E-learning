@@ -11,7 +11,7 @@ const SessionBounceRateChart = () => {
   const { data } = useCalculateMonthBounceSessionQuery("1M");
   const [labelChart, setLabelChart] = useState([]);
   const [dataChart, setDataChart] = useState<any[]>([]);
-  console.log(data);
+
   const options: ApexOptions = {
     chart: {
       type: "bar",

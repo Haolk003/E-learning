@@ -1,12 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-
-import { FaRegEdit } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa";
 import { useGetAllCourseQuery } from "@/features/course/courseApi";
-import { CourseType } from "@/types/couresContentType";
-import { IoIosSearch } from "react-icons/io";
+
 import Loader from "@/components/loader/Loader";
 import CourseListHeader from "./course-list/CourseListHeader";
 import TableBody from "./course-list/TableBody";
@@ -17,7 +13,7 @@ const CourseList = () => {
   const [keyword, setKeyword] = useState("");
   const [loadingData, setLoadingData] = useState(false);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [countTotal, setCountTotal] = useState(0);
   const [sort, setSort] = useState("-createdAt");
 
@@ -25,6 +21,7 @@ const CourseList = () => {
     { page: page, limit: pageSize, sort: sort, keyword: keyword },
     { refetchOnMountOrArgChange: true }
   );
+
   const handleChangeInput = (value: string) => {
     setKeyword(value);
     setLoadingData(true);
@@ -63,7 +60,7 @@ const CourseList = () => {
             students: item.sold,
             updatedAt: item.updatedAt,
             title: item.title,
-            id: (page - 1) * index + 1,
+            id: (page - 1) * pageSize + index + 1,
             classes: 3,
             courseImg: item.thumbnail.url,
           };
@@ -71,7 +68,7 @@ const CourseList = () => {
       );
 
       setLoadingData(false);
-      setCountTotal(data.data.countQuery);
+      setCountTotal(data.data.totalCount);
     }
   }, [data]);
 
@@ -93,6 +90,7 @@ const CourseList = () => {
           nextPage={nextPage}
           prevPage={prevPage}
           onChangePage={handelChangePage}
+          pageSize={pageSize}
         />
       </div>
       {(loadingData || isLoading) && (

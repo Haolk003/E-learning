@@ -10,7 +10,7 @@ const SessionNewUser = () => {
   const { data } = useCalculateMonthNewUserSessionQuery("");
   const [labelChart, setLabelChart] = useState<any[]>([]);
   const [dataChart, setDatasChart] = useState<any[]>([]);
-  console.log(data);
+
   const options: ApexOptions = {
     chart: {
       id: "line-chart",
@@ -18,22 +18,7 @@ const SessionNewUser = () => {
         show: false,
       },
     },
-    // xaxis: {
-    //   categories: [
-    //     "Jan",
-    //     "Feb",
-    //     "Mar",
-    //     "Apr",
-    //     "May",
-    //     "Jun",
-    //     "Jul",
-    //     "Aug",
-    //     "Sep",
-    //     "Oct",
-    //     "Nov",
-    //     "Dec",
-    //   ],
-    // },
+
     labels: labelChart,
     colors: ["#8E54E9", "#4776E6", "#FFC200"], // Assuming these are the colors used
     tooltip: {

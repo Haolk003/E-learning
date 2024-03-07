@@ -17,7 +17,7 @@ const CourseInfoStep2 = ({ id }: { id: string }) => {
     isSuccess: isSuccessGetCourse,
     isLoading: loadingGetCourse,
     error: errorGetCourse,
-  } = useGetCourseInstructorQuery(id);
+  } = useGetCourseInstructorQuery(id, { refetchOnMountOrArgChange: true });
   const router = useRouter();
   const [updateCourse, { isLoading, error, isSuccess }] =
     useCreateCourseStep2Mutation();
@@ -61,7 +61,7 @@ const CourseInfoStep2 = ({ id }: { id: string }) => {
     });
   };
   const prevButton = () => {
-    router.push(`/admin/create-course/step1/${id}`);
+    router.push(`/instructor/create-course/step1/${id}`);
   };
   const handleSubmit = async () => {
     if (
@@ -192,8 +192,8 @@ const CourseInfoStep2 = ({ id }: { id: string }) => {
           Next
         </button>
       </div>
-      {isLoading && loadingGetCourse && (
-        <div className="fixed top-0 left-0 bg-blackA5 w-full h-full flex items-center justify-center">
+      {(isLoading || loadingGetCourse) && (
+        <div className="fixed top-0 left-0 bg-blackA5 w-full h-screen flex items-center justify-center">
           <Loader />
         </div>
       )}

@@ -18,6 +18,7 @@ import {
   useGetCourseInstructorQuery,
   usePublicCourseByIdMutation,
 } from "@/features/course/courseApi";
+import Loader from "@/components/loader/Loader";
 
 const CoursePreview = ({ id }: { id: string }) => {
   const router = useRouter();
@@ -43,6 +44,10 @@ const CoursePreview = ({ id }: { id: string }) => {
   };
   const handlePublicCourse = async () => {
     await publicCourse(id);
+  };
+
+  const handlePrev = async () => {
+    router.push(`/instructor/create-course/step3/${id}`);
   };
   useEffect(() => {
     if (data) {
@@ -178,6 +183,7 @@ const CoursePreview = ({ id }: { id: string }) => {
           <div className="flex items-center justify-between mt-4">
             <button
               type="submit"
+              onClick={handlePrev}
               className="w-[100px] h-[40px] rounded-md bg-blue10 mt-3"
             >
               Prev
@@ -197,6 +203,11 @@ const CoursePreview = ({ id }: { id: string }) => {
       >
         Save
       </button>
+      {(isLoading || loadingPublic) && (
+        <div className="fixed top-0 left-0 bg-blackA5 w-full h-screen flex items-center justify-center">
+          <Loader />
+        </div>
+      )}
     </div>
   );
 };

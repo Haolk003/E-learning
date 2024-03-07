@@ -14,7 +14,7 @@ type BrowserSession = {
 
 const TrafficSources: React.FC = () => {
   const { data } = useGenerateBrowserQuery("");
-  console.log(data);
+
   const browserSessions: BrowserSession[] = [
     {
       name: "Google",
