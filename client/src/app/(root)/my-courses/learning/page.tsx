@@ -1,11 +1,9 @@
 import MyLearningLayout from "@/components/my-courses/my-learning/MyLearningLayout";
 
-const page = () => {
+export default function Page() {
   return (
     <div>
       <MyLearningLayout />
     </div>
   );
-};
-
-export default page;
+}

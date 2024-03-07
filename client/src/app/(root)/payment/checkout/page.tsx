@@ -1,9 +1,12 @@
 import Checkout from "@/components/checkout/Checkout";
+import LoggedInOnly from "@/components/hoc/LoggedInOnly";
 
 export default function Page() {
   return (
     <div>
-      <Checkout />
+      <LoggedInOnly>
+        <Checkout />
+      </LoggedInOnly>
     </div>
   );
 }

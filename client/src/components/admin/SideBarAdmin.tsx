@@ -275,8 +275,8 @@ const SideBarAdmin = () => {
           </MenuItem>
 
           <MenuItem
-            active={pathName === "/admin/live-courses"}
-            component={<Link href="/admin/live-courses" />}
+            active={pathName === "/admin/live-course"}
+            component={<Link href="/admin/live-course" />}
             rootStyles={{
               ["." + menuClasses.button]: {
                 "&:hover": {

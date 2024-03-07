@@ -4,7 +4,7 @@ import { IoEyeOutline } from "react-icons/io5";
 
 const Hero = () => {
   return (
-    <div className="w-full relative bg-[url('../../public/assets/banner.jpg')] bg-cover h-[600px] bg-center before:bg-[rgba(132,90,223,0.6)] before:w-full before:h-full before:absolute before:content-['']  ">
+    <div className="w-full relative bg-[url('../../public/assets/banner.jpg')] bg-cover h-[600px] bg-center dark:efore:bg-[rgba(132,90,223,0.6)] before:bg-[rgba(132,90,223,0.9)]  before:w-full before:h-full before:absolute before:content-['']  ">
       <div className="flex items-center justify-between absolute top-[50%] h-full w-full z-20 left-0 -translate-y-1/2 px-20">
         <div className="w-[50%]">
           <h2 className="text-[45px] w-[80%] font-[700] tracking-wide  leading-[60px] text-white mb-4  ">
