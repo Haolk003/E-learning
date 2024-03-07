@@ -16,7 +16,7 @@ const CourseCardIntructor: React.FC<Props> = ({
   title,
 }) => {
   return (
-    <div className="border border-gray10 shadow-sm shadow-gray10 flex items-center  h-[150px] ">
+    <div className="border border-gray10 shadow-sm shadow-gray10 flex items-center  h-[150px] dark:text-white text-black">
       <Image src={image} alt="" width={150} height={150} className="" />
       <div className="flex items-center justify-between w-full h-full relative px-5 group">
         <div className="flex flex-col justify-between py-3 h-full">

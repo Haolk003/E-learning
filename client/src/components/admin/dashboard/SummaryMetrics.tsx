@@ -18,7 +18,6 @@ import { analyticsAll } from "@/types/analytics";
 const SummaryMetrics = () => {
   const { data, isLoading, isSuccess, error } = useGenerateAllQuery("");
   const [generateData, setGenerateData] = useState<analyticsAll | null>(null);
-  console.log(data);
 
   useEffect(() => {
     if (data) {

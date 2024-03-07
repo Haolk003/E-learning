@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ToggleGroupEarningReport from "@/components/ui/toggleGroup/ToggleGroupEarningReport";
 import ProductTrendsChart from "@/components/ui/chart/ChartLineDashboard";
 
@@ -31,8 +31,10 @@ const EarningReport = () => {
   const handleChangePeriod = (value: string) => {
     setPeriodEarning(value);
   };
-  const { data } = useGenerateAnalyticEarningQuery(periodEarning);
-  console.log(data);
+  const { data } = useGenerateAnalyticEarningQuery(periodEarning, {
+    refetchOnMountOrArgChange: true,
+  });
+
   return (
     <div className="bg-gray2 rounded-lg mt-4 ">
       <div className="py-3 px-4 flex items-center justify-between">

@@ -10,10 +10,8 @@ import {
 import VideoSnapshot from "video-snapshot";
 import Link from "next/link";
 
-type Props = {};
-
-const ProgressCourse: React.FC<Props> = () => {
-  const { data } = useGetProgressCoursesUserQuery("", {
+const ProgressCourse = () => {
+  const { data, isSuccess } = useGetProgressCoursesUserQuery("", {
     refetchOnMountOrArgChange: false,
   });
 
@@ -46,9 +44,7 @@ const ProgressCourse: React.FC<Props> = () => {
 
             return {
               takeSnapshot,
-              duration: findDuration
-                ? findDuration?.duration
-                : item.courseId.courseData[0].lectures[0].duration,
+              duration: item.courseId.courseData[0].lectures[0].duration,
               lengthWatched: checkLengthWatched
                 ? checkLengthWatched.lengthWatched
                 : 0,
@@ -59,6 +55,7 @@ const ProgressCourse: React.FC<Props> = () => {
               lectureId: item.lastWatchedLecture
                 ? item.lastWatchedLecture.lectureId
                 : item.courseId.courseData[0].lectures[0]._id,
+              title: item.courseId.title,
             };
           }
         );
@@ -74,27 +71,31 @@ const ProgressCourse: React.FC<Props> = () => {
   const [processedData, setProcessedData] = useState<any[]>([]);
 
   return (
-    <div className="px-6 py-10">
-      <h2 className="text-4xl  font-semibold dark:text-white text-black mb-5">
-        Let&apos;s start learning.
-      </h2>
-      <div className="grid grid-cols-3 gap-5 w-full">
-        {processedData.map((item, index) => (
-          <Link
-            href={`/course-access/${item.courseId}/lecture/${item.lectureId}`}
-            key={index}
-          >
-            <ProgressCard
-              duration={item.duration}
-              lengthWatched={item.lengthWatched}
-              lectureTitle={item.lectureTitle}
-              thumbnail={item.takeSnapshot}
-              title={item.title}
-            />
-          </Link>
-        ))}
-      </div>
-    </div>
+    <>
+      {isSuccess && (
+        <div className="px-6 py-10 bg-mauve2 dark:bg-mauve12 text-mauve11 border-b dark:border-gray4 border-gray6">
+          <h2 className="text-4xl  font-semibold dark:text-white  text-black mb-5">
+            Let&apos;s start learning.
+          </h2>
+          <div className="grid grid-cols-3 gap-5 w-full">
+            {processedData.map((item, index) => (
+              <Link
+                href={`/course-access/${item.courseId}/lecture/${item.lectureId}`}
+                key={index}
+              >
+                <ProgressCard
+                  duration={item.duration}
+                  lengthWatched={item.lengthWatched}
+                  lectureTitle={item.lectureTitle}
+                  thumbnail={item.takeSnapshot}
+                  title={item.title}
+                />
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

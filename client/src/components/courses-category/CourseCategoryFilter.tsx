@@ -1,23 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { IoFilterOutline } from "react-icons/io5";
 import { IoChevronDownOutline } from "react-icons/io5";
 import * as Select from "@radix-ui/react-select";
 
 import { useGetAllCourseQuery } from "@/features/course/courseApi";
-import CourseSearchFilter from "./CoursesSearchFilter";
-import CourseSearchList from "./CoursesSearchList";
+import CourseSearchFilter from "../courses-search/CoursesSearchFilter";
+import CourseSearchList from "../courses-search/CoursesSearchList";
 import { Pagination } from "@mui/material";
+import { CourseType } from "@/types/couresContentType";
+import { useEditReviewMutation } from "@/features/review/reviewApi";
 
-const CoursesSearchLayout = () => {
+type Props = {
+  categoryId: string;
+  subCategoryId?: string;
+};
+const CourseCategoryFilter: React.FC<Props> = ({
+  categoryId,
+  subCategoryId,
+}) => {
   const searchParams = useSearchParams();
   const [sort, setSort] = useState("-sold");
+  const [courseData, setCourseData] = useState<CourseType[]>([]);
   const [page, setPage] = useState(1);
-  const keyword = searchParams.get("q") as string;
 
-  const level = searchParams.getAll("level")
+  const level = searchParams.get("level")
     ? (searchParams.getAll("level") as string[])
     : undefined;
   const ratings = searchParams.get("ratings")
@@ -30,12 +39,14 @@ const CoursesSearchLayout = () => {
 
   const { data, error, isLoading } = useGetAllCourseQuery(
     {
-      keyword: keyword,
+      category: categoryId || undefined,
       sort,
       page,
       level,
       ratings,
       price,
+      subCategory: subCategoryId || undefined,
+      keyword: "",
     },
     { refetchOnMountOrArgChange: true }
   );
@@ -50,12 +61,14 @@ const CoursesSearchLayout = () => {
     setPage(page);
   };
 
+  useEffect(() => {
+    if (data) {
+      setCourseData(data.data.courses);
+    }
+  }, [data]);
   return (
-    <div className="flex gap-5 mt-5 dark:text-white text-black">
+    <div className="flex gap-5 mt-5">
       <div className="w-[400px]">
-        <h2 className="font-semibold text-2xl mb-5">
-          1000 results for &quot;{searchParams.get("q")}&quot;
-        </h2>
         <div className="flex items-center gap-3 w-[400px] justify-between">
           <div className="flex items-center justify-center gap-2 border h-[60px] w-[150px] dark:border-gray8 border-gray3">
             <IoFilterOutline />
@@ -93,7 +106,7 @@ const CoursesSearchLayout = () => {
         </div>
       </div>
       <div className="w-[calc(100%-400px)]">
-        {data && <CourseSearchList courses={data.data.courses} />}
+        {data && <CourseSearchList courses={courseData} />}
         {data && data.data.totalCount > 20 && (
           <div className="mt-3 text-white ">
             <Pagination
@@ -134,4 +147,4 @@ const SelectItem = ({
     </Select.Item>
   );
 };
-export default CoursesSearchLayout;
+export default CourseCategoryFilter;

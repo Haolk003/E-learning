@@ -48,17 +48,14 @@ const CourseCategoryNavbar: React.FC<Props> = ({ categoryId }) => {
     [containmentRef]
   );
 
-  useEffect(() => {
-    console.log(dataElementHidden);
-  }, [dataElementHidden]);
   return (
-    <div className="fixed  z-[90] overflow-hidden top-[80px] left-0 w-full h-[50px]  dark:bg-blackA9 px-10 flex items-center justify-between">
+    <div className="fixed  z-[90] overflow-hidden top-[80px] left-0 w-full h-[50px] shadow-sm bg-white shadow-black dark:bg-blackA9 px-10 flex items-center justify-between ">
       <div
         className="w-[90%]  flex  flex-wrap  items-center gap-6 h-full"
         ref={containmentRef}
       >
         {data && data.data.length > 0 && (
-          <div className="flex items-center justify-between gap-5 ">
+          <div className="flex items-center justify-between gap-5 text-black dark:text-white ">
             <Link
               href={`/courses/${data.data[0].parent_id._id}`}
               className="font-semibold text-[17px]"
@@ -83,7 +80,7 @@ const CourseCategoryNavbar: React.FC<Props> = ({ categoryId }) => {
               >
                 <Link
                   href={`/courses/${category.parent_id._id}/${category._id}`}
-                  className="text-gray10 text-[16px] cursor-pointer hover:text-violet9"
+                  className="dark:text-gray10 text-gray7 text-[16px] cursor-pointer hover:text-violet9"
                 >
                   {category.name}
                 </Link>

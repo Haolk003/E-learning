@@ -2,11 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 
-import { FaRegEdit } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa";
 import { useGetMyCourseByIntructorQuery } from "@/features/course/courseApi";
 import { CourseType } from "@/types/couresContentType";
-import { IoIosSearch } from "react-icons/io";
+
 import Loader from "@/components/loader/Loader";
 import CourseListHeader from "../courses/course-list/CourseListHeader";
 import TableBody from "./TableBody";
@@ -17,7 +15,7 @@ const MyCourse = () => {
   const [keyword, setKeyword] = useState("");
   const [loadingData, setLoadingData] = useState(false);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [countTotal, setCountTotal] = useState(0);
   const [sort, setSort] = useState("-createdAt");
 
@@ -91,6 +89,7 @@ const MyCourse = () => {
           <TableBody data={rowData} />
         </div>
         <TableNavigation
+          pageSize={pageSize}
           page={page}
           totalCount={countTotal}
           nextPage={nextPage}

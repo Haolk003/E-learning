@@ -61,7 +61,6 @@ const VerifyAccount: FC<Props> = ({ setRoute }) => {
     }
   };
   const handleSubmit = async () => {
-    console.log(token);
     const fomattedVerifyNumber = Object.values(verifyNumber).reduce(
       (total, value) => {
         return total + value;

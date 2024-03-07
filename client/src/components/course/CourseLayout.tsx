@@ -28,26 +28,31 @@ import CustomModal from "../ui/CustomModal";
 
 import { CourseType } from "@/types/couresContentType";
 
+import { reviewContentPublic } from "@/types/reviewType";
+
+import { useGetReviewByCoureIdQuery } from "@/features/review/reviewApi";
+
 const CourseLayout = ({ id }: { id: string }) => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
+  const { data: reviews } = useGetReviewByCoureIdQuery(id, {
+    skip: !id,
+    refetchOnMountOrArgChange: true,
+  });
 
   const [createPaymentIntent, { data: paymentIntent }] =
     useCreatePaymentIntentMutation();
 
   const { data: isPurchased, refetch } = useCheckPurchaseCourseQuery(id);
-  const { data, isLoading, isSuccess, error } = useGetCourseByIdPublicQuery(
-    id,
-    {
-      skip: !id,
-      refetchOnMountOrArgChange: true,
-    }
-  );
+  const { data, isLoading } = useGetCourseByIdPublicQuery(id, {
+    skip: !id,
+    refetchOnMountOrArgChange: true,
+  });
 
   const [isCollapsed, setIsCollapsed] = useState<boolean[]>([]);
   const [openCheckout, setOpenCheckout] = useState(false);
   const [courseData, setCourseData] = useState<CourseType | null>(null);
-
+  const [reviewsData, setReviewsData] = useState<reviewContentPublic[]>([]);
   const changeIsCollapsed = (index: number) => {
     const newIsCollapse = [...isCollapsed];
     newIsCollapse[index] = !isCollapsed[index];
@@ -78,6 +83,12 @@ const CourseLayout = ({ id }: { id: string }) => {
       setCourseData(data.data);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (reviews) {
+      setReviewsData(reviews.data);
+    }
+  }, [reviews]);
   return (
     <>
       <div className="w-[90%] mx-auto">
@@ -187,9 +198,9 @@ const CourseLayout = ({ id }: { id: string }) => {
                 <p className="text-2xl">{courseData.reviews.length} Reviews</p>
               </div>
               <div className="mb-5">
-                {courseData.reviews &&
-                  courseData.reviews.length > 0 &&
-                  courseData.reviews.map((review, reviewIndex) => (
+                {reviewsData &&
+                  reviewsData.length > 0 &&
+                  reviewsData.slice(0, 9).map((review, reviewIndex) => (
                     <div className="flex gap-3 mt-5" key={review._id}>
                       <Image
                         src={

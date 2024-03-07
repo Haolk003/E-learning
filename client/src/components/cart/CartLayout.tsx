@@ -72,7 +72,7 @@ const CartLayout = () => {
     }
   }, [errorApplyCoupon, errorDeleteCouponInCart]);
   return (
-    <div className="w-[90%] mx-auto flex  gap-8">
+    <div className="w-[90%] mx-auto flex  gap-8 dark:text-white text-black">
       <div className="w-[70%]">
         <h2 className="text-2xl font-bold mb-7">Shopping Cart</h2>
 
@@ -118,7 +118,7 @@ const CartLayout = () => {
             })}
         </div>
       </div>
-      <div className="bg-[rgb(26,28,30)] w-[30%]  py-5 mt-10">
+      <div className="dark:bg-[rgb(26,28,30)] bg-white shadow-slate-600 border-slate-600 border rounded-md shadow-sm  w-[30%]  py-5 mt-10">
         {cart && cart.applyCoupon && (
           <div className="border-dotted border-gray8 border mb-3 mx-5 rounded-md px-3 p-1 text-gray8">
             <div className="text-[14px] flex items-center justify-between">
@@ -150,7 +150,7 @@ const CartLayout = () => {
               className="w-[80%] h-full px-4 outline-none bg-transparent "
             />
             <button
-              className="w-[20%] bg-violet10 h-full "
+              className="w-[20%] bg-violet10 h-full text-white "
               onClick={handleApplyCoupon}
             >
               Apply
@@ -206,7 +206,7 @@ const CartLayout = () => {
         <div className="pt-4 px-5">
           <Link
             href="/payment/checkout"
-            className="w-full flex items-center justify-center h-[40px] bg-cyan-700 rounded-md"
+            className="w-full flex items-center justify-center h-[40px] bg-cyan-700 rounded-md text-white"
           >
             Proceed To Checkout
           </Link>

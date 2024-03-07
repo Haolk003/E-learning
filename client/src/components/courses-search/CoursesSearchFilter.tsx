@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-import { FaCircle } from "react-icons/fa6";
 import ColllapseFilter from "../ui/ColllapseFilter";
-import Rating from "../ui/Rating";
+
 import RadioGroupFilterRating from "../ui/radio-group/RadioGroupFilterRating";
-import * as ToggleGroup from "@radix-ui/react-toggle-group";
+
 import CheckboxFilterCourses from "../ui/checkbox/CheckboxFilterCourses";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 
@@ -40,11 +39,28 @@ const CourseSearchFilter = () => {
     },
     [searchParams]
   );
-  const updateQueryString = useCallback(
+  const updateQueryStringValue = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
       if (value) {
         if (!params.has(name, value)) {
+          params.append(name, value.toString());
+        } else {
+          params.set(name, value.toString());
+        }
+      } else {
+        params.delete(name);
+      }
+
+      return params.toString();
+    },
+    [searchParams]
+  );
+  const updateQueryString = useCallback(
+    (name: string, value: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      if (value) {
+        if (!params.has(name)) {
           params.append(name, value.toString());
         } else {
           params.set(name, value.toString());
@@ -87,17 +103,13 @@ const CourseSearchFilter = () => {
       return newFilters;
     });
     if (!filtersLevel[filterName]) {
-      const updatedQueryString = updateQueryString("level", filterName);
+      const updatedQueryString = updateQueryStringValue("level", filterName);
       router.push(pathname + "?" + updatedQueryString);
     } else {
       const updatedQueryString = deleteQueryString("level", filterName);
       router.push(pathname + "?" + updatedQueryString);
     }
   };
-
-  useEffect(() => {
-    console.log(filtersLevel);
-  }, [filtersLevel]);
 
   return (
     <div>

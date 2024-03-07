@@ -72,12 +72,12 @@ const CheckoutLayout: React.FC<Props> = ({ cart, clientSecretStripe }) => {
     }
   }, [error, isSuccess]);
   return (
-    <div className="h-screen">
+    <div className="h-screen text-black dark:text-white">
       <div className="flex ">
         <div className="w-[50%] mt-[100px] px-20">
           <h2 className="text-4xl mb-10 font-semibold">Checkout</h2>
 
-          <div className="border border-gray8 p-5 shadow-sm shadow-black flex items-center justify-center bg-gray5">
+          <div className="border border-gray8 p-5 shadow-sm shadow-black flex items-center justify-center bg-gray12 rounded-md dark:bg-gray5">
             {clientSecretStripe && (
               <form onSubmit={handleSubmit} className="w-[500px] text-white">
                 <PaymentElement id="payment-element" />
@@ -111,7 +111,7 @@ const CheckoutLayout: React.FC<Props> = ({ cart, clientSecretStripe }) => {
               })}
           </ul>
         </div>
-        <div className="w-[50%] dark:bg-gray5 bg-gray9 min-h-screen pt-[150px] px-20">
+        <div className="w-[50%] dark:bg-gray5 bg-gray9 text-white min-h-screen pt-[150px] px-20">
           <h2 className="text-2xl font-semibold mb-4">Summary</h2>
           <div className="flex items-center justify-between w-[300px]">
             <p>Original Price:</p>
@@ -124,7 +124,7 @@ const CheckoutLayout: React.FC<Props> = ({ cart, clientSecretStripe }) => {
                       cart.applyCoupon.discount
                     ).toFixed(2)
                   : cart.totalPrice.toFixed(2)
-                : 0}
+                : 0.0}
             </p>
           </div>
           <div className="flex items-center justify-between w-[300px] mt-4">
@@ -136,14 +136,14 @@ const CheckoutLayout: React.FC<Props> = ({ cart, clientSecretStripe }) => {
                     -cart.totalPrice +
                     (cart.totalPrice * 100) / cart.applyCoupon.discount
                   ).toFixed(2)
-                : 0}
+                : 0.0}
             </p>
           </div>
 
           <div className="flex items-center justify-between w-[300px] mt-4 border-gray10 border-t">
             <p className="text-[18px]">Total:</p>
             <p className="font-semibold text-2xl text-green-green10 py-3">
-              $ {cart ? cart.totalPrice : 0}
+              $ {cart ? cart.totalPrice.toFixed(2) : 0}
             </p>
           </div>
           <button

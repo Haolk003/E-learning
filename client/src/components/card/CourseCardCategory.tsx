@@ -6,8 +6,10 @@ import dayjs from "dayjs";
 import * as HoverCard from "@radix-ui/react-hover-card";
 import dompurify from "dompurify";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
-import { FaHeart } from "react-icons/fa";
 import { CiHeart } from "react-icons/ci";
+import { useAddToCartMutation } from "@/features/cart/cartApi";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { openLogin } from "@/features/layout/layoutSlice";
 type Props = {
   title: string;
   _id: string;
@@ -36,6 +38,17 @@ const CourseCardCategory: FC<Props> = ({
   level,
   totalVideoLength,
 }) => {
+  const [addCart] = useAddToCartMutation();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+
+  const handleAddCart = async () => {
+    if (!user) {
+      dispatch(openLogin(""));
+    } else {
+      await addCart({ courseId: _id, price: price });
+    }
+  };
   return (
     <HoverCard.Root>
       <HoverCard.Trigger asChild>
@@ -68,7 +81,7 @@ const CourseCardCategory: FC<Props> = ({
         <HoverCard.Content
           side="right"
           align="center"
-          className="min-h-[200px] w-[400px] px-5 py-4 data-[side=right]:animate-slideLeftAndFade data-[state=open]:transition-all dark:bg-gray4 bg-white rounded-md"
+          className="min-h-[200px] w-[400px] dark:text-white text-black shadow-sm shadow-black px-5 py-4 data-[side=right]:animate-slideLeftAndFade data-[state=open]:transition-all dark:bg-gray4 bg-white rounded-md"
         >
           <div className="">
             <h2 className="text-[16px] font-semibold leading-6">{title}</h2>
@@ -97,7 +110,10 @@ const CourseCardCategory: FC<Props> = ({
               ))}
             </ul>
             <div className="flex items-center gap-4 mt-5">
-              <button className="bg-violet11 text-white w-[250px] h-[45px]">
+              <button
+                className="bg-violet11 text-white w-[250px] h-[45px]"
+                onClick={handleAddCart}
+              >
                 Add to cart
               </button>
               <button className="rounded-full w-[50px] h-[50px] border border-gray9 flex items-center justify-center">
@@ -106,7 +122,7 @@ const CourseCardCategory: FC<Props> = ({
             </div>
           </div>
 
-          <HoverCard.Arrow className="dark:fill-gray4 fill-white text-xl" />
+          <HoverCard.Arrow className="dark:fill-gray4 fill-gray10  text-xl" />
         </HoverCard.Content>
       </HoverCard.Portal>
     </HoverCard.Root>

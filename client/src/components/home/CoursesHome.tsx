@@ -10,15 +10,25 @@ import {
 } from "@/features/course/courseApi";
 import { CourseType } from "@/types/couresContentType";
 import { useAppSelector } from "@/store/hook";
+import LoadingCourseCardHome from "../ui/loading-skeletion/LoadingCourseCardHome";
 const CoursesHome = () => {
   const user = useAppSelector((state) => state.auth.user);
 
-  const { data: coursesOverrated, refetch: refetchCourseOverrated } =
-    useGetOverratedCoursesHomeQuery("");
-  const { data: coursePopular, refetch: refetchCoursePopular } =
-    useGetPopularCoursesHomeQuery("");
-  const { data: courseNew, refetch: refetchCourseNew } =
-    useGetNewCoursesHomeQuery("");
+  const {
+    data: coursesOverrated,
+    refetch: refetchCourseOverrated,
+    isLoading: isLoadingCourseOverrated,
+  } = useGetOverratedCoursesHomeQuery("");
+  const {
+    data: coursePopular,
+    refetch: refetchCoursePopular,
+    isLoading: isLoadingPopular,
+  } = useGetPopularCoursesHomeQuery("");
+  const {
+    data: courseNew,
+    refetch: refetchCourseNew,
+    isLoading: isLoadingNew,
+  } = useGetNewCoursesHomeQuery("");
 
   const [courseDataOverrated, setCourseDataOverrated] = useState<CourseType[]>(
     []
@@ -48,23 +58,23 @@ const CoursesHome = () => {
     refetchCourseNew();
     refetchCourseOverrated();
     refetchCoursePopular();
-    console.log("refetch");
   }, [user]);
   return (
     <div>
       {/* new courses */}
-      <div className="bg-gray4 w-full py-10 px-10">
+      <div className="dark:bg-gray4 bg-mauve2 w-full py-10 px-10">
         <div className="flex flex-col items-center ">
-          <span className="uppercase text-cyan-300 relative text-center text-[13px] before:content-[' '] before:absolute before:right-0  before:-top-0 before:to-cyan-300/50 before:bg-gradient-to-l before:from-cyan-300/10  before:w-[50px] before:h-[3px] before:rounded-2xl tracking-wide ">
+          <span className="uppercase dark:text-cyan-300 text-cyan-900 font-semibold relative text-center text-[15px] before:content-[' '] before:absolute before:right-0  before:-top-0 dark:before:to-cyan-300/50 before:bg-gradient-to-l before:from-cyan-800/10  before:w-[50px] before:h-[3px] before:to-cyan-800/50 dark:before:bg-gradient-to-l dark:before:from-cyan-300/10 before:rounded-2xl tracking-wide ">
             NEW COURSES
           </span>
-          <p className="text-white text-[17px]">
+          <p className="dark:text-white text-mave11  text-[17px]">
             Unlock Your Protential with Comprehensive Project-Based Courses for
             Career Growth
           </p>
         </div>
         <div className="grid grid-cols-4 gap-3 w-[90%] mx-auto mt-4">
-          {courseDataNew &&
+          {!isLoadingNew &&
+            courseDataNew &&
             courseDataNew.map((item: CourseType, index: number) => {
               const lectureLenght = item.courseData.reduce((total, lecure) => {
                 return total + lecure.lectures.length;
@@ -88,22 +98,28 @@ const CoursesHome = () => {
                 />
               );
             })}
+
+          {isLoadingNew && <LoadingCourseCardHome />}
+          {isLoadingNew && <LoadingCourseCardHome />}
+          {isLoadingNew && <LoadingCourseCardHome />}
+          {isLoadingNew && <LoadingCourseCardHome />}
         </div>
       </div>
       {/* popular courses */}
-      <div className="bg-gray4 w-full py-10 px-10">
+      <div className="dark:bg-gray4 bg-mauve2 w-full py-10 px-10">
         <div className="flex flex-col items-center ">
-          <span className="uppercase text-cyan-300 relative text-center text-[13px] before:content-[' '] before:absolute before:right-0  before:-top-0 before:to-cyan-300/50 before:bg-gradient-to-l before:from-cyan-300/10  before:w-[50px] before:h-[3px] before:rounded-2xl tracking-wide ">
+          <span className="uppercase dark:text-cyan-300 text-cyan-900 font-semibold relative text-center text-[15px] before:content-[' '] before:absolute before:right-0  before:-top-0 dark:before:to-cyan-300/50 before:bg-gradient-to-l before:from-cyan-800/10  before:w-[50px] before:h-[3px] before:to-cyan-800/50 dark:before:bg-gradient-to-l dark:before:from-cyan-300/10 before:rounded-2xl tracking-wide ">
             Popular COURSES
           </span>
-          <p className="text-white text-[17px]">
+          <p className="dark:text-white text-mave11  text-[17px]">
             Unlock Your Protential with Comprehensive Project-Based Courses for
             Career Growth
           </p>
         </div>
         <div className="grid grid-cols-4 gap-3 w-[90%] mx-auto mt-4">
-          {courseDataPopular &&
-            courseDataPopular.map((item: CourseType, index: number) => {
+          {!isLoadingPopular &&
+            courseDataPopular &&
+            courseDataPopular.map((item: CourseType) => {
               const lectureLenght = item.courseData.reduce((total, lecure) => {
                 return total + lecure.lectures.length;
               }, 0);
@@ -126,21 +142,26 @@ const CoursesHome = () => {
                 />
               );
             })}
+          {isLoadingPopular && <LoadingCourseCardHome />}
+          {isLoadingPopular && <LoadingCourseCardHome />}
+          {isLoadingPopular && <LoadingCourseCardHome />}
+          {isLoadingPopular && <LoadingCourseCardHome />}
         </div>
       </div>
       {/* overrated courses */}
-      <div className="bg-gray4 w-full py-10 px-10">
+      <div className="dark:bg-gray4 bg-mauve2 w-full py-10 px-10">
         <div className="flex flex-col items-center ">
-          <span className="uppercase text-cyan-300 relative text-center text-[13px] before:content-[' '] before:absolute before:right-0  before:-top-0 before:to-cyan-300/50 before:bg-gradient-to-l before:from-cyan-300/10  before:w-[50px] before:h-[3px] before:rounded-2xl tracking-wide ">
+          <span className="uppercase dark:text-cyan-300 text-cyan-900 font-semibold relative text-center text-[15px] before:content-[' '] before:absolute before:right-0  before:-top-0 dark:before:to-cyan-300/50 before:bg-gradient-to-l before:from-cyan-800/10  before:w-[50px] before:h-[3px] before:to-cyan-800/50 dark:before:bg-gradient-to-l dark:before:from-cyan-300/10 before:rounded-2xl tracking-wide ">
             OVERRATED COURSES
           </span>
-          <p className="text-white text-[17px]">
+          <p className="dark:text-white text-mave11 text-[17px]">
             Unlock Your Protential with Comprehensive Project-Based Courses for
             Career Growth
           </p>
         </div>
         <div className="grid grid-cols-4 gap-3 w-[90%] mx-auto mt-4">
-          {courseDataOverrated &&
+          {!isLoadingCourseOverrated &&
+            courseDataOverrated &&
             courseDataOverrated.map((item: CourseType, index: number) => {
               const lectureLenght = item.courseData.reduce((total, lecure) => {
                 return total + lecure.lectures.length;
@@ -164,6 +185,11 @@ const CoursesHome = () => {
                 />
               );
             })}
+
+          {isLoadingCourseOverrated && <LoadingCourseCardHome />}
+          {isLoadingCourseOverrated && <LoadingCourseCardHome />}
+          {isLoadingCourseOverrated && <LoadingCourseCardHome />}
+          {isLoadingCourseOverrated && <LoadingCourseCardHome />}
         </div>
       </div>
     </div>

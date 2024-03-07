@@ -29,12 +29,12 @@ const ProgressCard: React.FC<Props> = ({
           <FaPlayCircle fill="#fff" className="text-2xl" />
         </div>
       </div>
-      <div className="px-4 py-2 flex flex-col justify-between h-full w-full overflow-hidden relative">
+      <div className="px-4 py-1 flex flex-col justify-between h-full w-full overflow-hidden relative">
         <div className="">
           <p className="text-gray7 text-[13px] whitespace-nowrap overflow-ellipsis overflow-hidden">
             {title}
           </p>
-          <h4 className="text-[13px] text-blackA1 dark:text-gray9  font-semibold leading-5 ">
+          <h4 className="text-[13px] text-black dark:text-gray9  font-semibold leading-4">
             {lectureTitle}
           </h4>
         </div>

@@ -23,7 +23,10 @@ const CourseCardMyLearing: React.FC<Props> = ({
   title,
 }) => {
   return (
-    <Link href={`/course-access/${_id}`} className="w-full">
+    <Link
+      href={`/course-access/${_id}`}
+      className="w-full dark:text-white text-black"
+    >
       <div className="w-full ">
         <Image
           src={thumbnail}

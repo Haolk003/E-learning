@@ -6,6 +6,9 @@ import { CiHeart } from "react-icons/ci";
 import { IoCheckmarkDoneOutline } from "react-icons/io5";
 import dayjs from "dayjs";
 import dompurify from "dompurify";
+import { useAddToCartMutation } from "@/features/cart/cartApi";
+import { useAppDispatch, useAppSelector } from "@/store/hook";
+import { openLogin } from "@/features/layout/layoutSlice";
 type Props = {
   thumnail: string;
   title: string;
@@ -38,6 +41,17 @@ const CourseSearchCard: React.FC<Props> = ({
   totalVideoLength,
   updatedAt,
 }) => {
+  const [addCart] = useAddToCartMutation();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+
+  const handleAddCart = async () => {
+    if (!user) {
+      dispatch(openLogin(""));
+    } else {
+      await addCart({ courseId: _id, price: price });
+    }
+  };
   return (
     <HoverCard.Root>
       <HoverCard.Trigger asChild>
@@ -73,12 +87,7 @@ const CourseSearchCard: React.FC<Props> = ({
             </div>
           </div>
           <div className="flex flex-col">
-            <p className="font-semibold text-[16px]">
-              ${estimatePrice.toFixed(2)}
-            </p>
-            <p className="line-through text-gray8 font-thin text-[14px]">
-              ${price.toFixed(2)}
-            </p>
+            <p className="font-semibold text-[16px]">${price.toFixed(2)}</p>
           </div>
         </div>
       </HoverCard.Trigger>
@@ -86,7 +95,7 @@ const CourseSearchCard: React.FC<Props> = ({
         <HoverCard.Content
           side="bottom"
           align="center"
-          className="min-h-[200px] w-[400px] px-5 py-4 data-[side=right]:animate-slideLeftAndFade data-[state=open]:transition-all dark:bg-gray4 bg-white rounded-md"
+          className="min-h-[200px] dark:text-white text-black shadow-sm shadow-black w-[400px] px-5 py-4 data-[side=right]:animate-slideLeftAndFade data-[state=open]:transition-all dark:bg-gray4 bg-white rounded-md"
         >
           <div className="">
             <h2 className="text-[16px] font-semibold leading-6">
@@ -102,7 +111,10 @@ const CourseSearchCard: React.FC<Props> = ({
               ))}
             </ul>
             <div className="flex items-center gap-4 mt-5">
-              <button className="bg-violet11 text-white w-[250px] h-[45px]">
+              <button
+                className="bg-violet11 text-white w-[250px] h-[45px]"
+                onClick={handleAddCart}
+              >
                 Add to cart
               </button>
               <button className="rounded-full w-[50px] h-[50px] border border-gray9 flex items-center justify-center">
@@ -111,7 +123,7 @@ const CourseSearchCard: React.FC<Props> = ({
             </div>
           </div>
 
-          <HoverCard.Arrow className="dark:fill-gray4 fill-white text-xl" />
+          <HoverCard.Arrow className="dark:fill-gray4 fill-gray12 text-xl" />
         </HoverCard.Content>
       </HoverCard.Portal>
     </HoverCard.Root>
