@@ -76,16 +76,6 @@ export const extractUserId = CatchAsyncError(
       if (!decodeToken) {
         return next();
       }
-      accessToken = jwt.sign(
-        { id: decodeToken.id, role: decodeToken.role },
-        process.env.ACCESS_TOKEN as string
-      );
-      const newRefeshToken = jwt.sign(
-        { id: decodeToken.id, role: decodeToken.role },
-        process.env.REFESH_TOKEN as string
-      );
-      res.cookie("access_token", accessToken, accessTokenOptions);
-      res.cookie("refesh_token", newRefeshToken, refeshTokenOptions);
     }
     const decodeToken = jwt.verify(
       accessToken,
@@ -106,7 +96,7 @@ export const extractUserId = CatchAsyncError(
       if (findUser.isBanned) {
         return next();
       }
-      redis.set(decodeToken.id, JSON.stringify(findUser), "EX", 604800);
+
       req.me = findUser;
     } else {
       req.me = JSON.parse(findRedis as string);

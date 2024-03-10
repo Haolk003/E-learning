@@ -13,6 +13,7 @@ export const accessTokenOptions: CookieOptions = {
       ? process.env.BACKEND_DOMAIN
       : "localhost",
   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  path: "/",
 };
 export const refeshTokenOptions: CookieOptions = {
   maxAge: 30 * 24 * 60 * 60 * 1000,
@@ -24,6 +25,7 @@ export const refeshTokenOptions: CookieOptions = {
       ? process.env.BACKEND_DOMAIN
       : "localhost",
   sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  path: "/",
 };
 export const sendToken = async (user: IUser, res: Response) => {
   const accessToken = await user.signAccessToken();

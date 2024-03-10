@@ -293,12 +293,13 @@ const CoureInfo: FC<Props> = ({ id }) => {
 
   useEffect(() => {
     if (course) {
-      const courseInfo = course.data as CourseType;
+      const courseInfo = course.data;
 
       reset(courseInfo);
-      setLevel(courseInfo.level);
+
       setCategory(courseInfo.category);
 
+      setLevel(courseInfo.level);
       setVideoResult(courseInfo.demoUrl);
       setSelectFile(courseInfo.thumbnail.url);
       editor?.commands.setContent(courseInfo.description);
