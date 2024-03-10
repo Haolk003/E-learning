@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { CatchAsyncError } from "../middlewares/catchAsyncError";
 import userService from "../services/user.service";
+import { resolveSoa } from "dns";
 
 export const updateAvatarUser = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -117,12 +118,47 @@ export const getUserProfileInstructor = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const response = await userService.getUserProfileIntructor(id);
+    res.status(200).json({
+      success: true,
+      data: response,
+      message: "Get Profile Intructor successfully",
+    });
+  }
+);
+
+export const getAllStudentsByAdmin = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const query = req.query;
+    const response = await userService.getAllStudentsByAdmin(query);
+    res.status(200).json({
+      success: true,
+      data: response,
+      message: "Get Al Students Successfully",
+    });
+  }
+);
+
+export const getAllInstructor = CatchAsyncError(
+  async (req: Request, res: Response) => {
+    const query = req.query;
+    const response = await userService.getAllIntructor(query);
+    res.status(200).json({
+      status: 200,
+      data: response,
+      message: "Get All Instructor Successfully",
+    });
+  }
+);
+
+export const getTopInstructor = CatchAsyncError(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const response = await userService.getTopInstructor();
     res
       .status(200)
       .json({
         success: true,
         data: response,
-        message: "Get Profile Intructor successfully",
+        message: "Get Top Instructor Successfully",
       });
   }
 );

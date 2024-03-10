@@ -205,11 +205,15 @@ const getAllStudentsByAdmin = async (query: QueryGetAllStudent) => {
   const limit = query.pageNumber ? query.pageNumber : 10;
   const skip = query.page ? (query.page - 1) * limit : 0;
   const students = await userModel
-    .find({ myLearning: { $gt: 0 } })
-    .sort("-updatedAt")
+    .find({
+      $expr: {
+        $gt: [{ $size: "$myLearning" }, 0],
+      },
+    })
+    .sort("-lastJoinedAt")
     .skip(skip)
     .limit(limit)
-    .select("firstName lastName email myLearning").exec;
+    .select("firstName lastName email myLearning createdAt updatedAt");
 
   return students;
 };
@@ -217,15 +221,75 @@ const getAllStudentsByAdmin = async (query: QueryGetAllStudent) => {
 const getAllIntructor = async (query: QueryGetAllStudent) => {
   const limit = query.pageNumber ? query.pageNumber : 10;
   const skip = query.page ? (query.page - 1) * limit : 0;
+  const sort = query.sort ? query.sort : "";
   const students = await userModel
     .find({ role: "instructor" })
-    .sort("-")
+    .sort("-createdAt")
     .skip(skip)
     .limit(limit)
-    .select("firstName lastName email myLearning").exec;
+    .select("firstName lastName email avatar");
 
   return students;
 };
+
+const getTopInstructor = async () => {
+  const users = orderModel.aggregate([
+    // Bước đầu tiên, "giải nén" mảng products
+    { $unwind: "$products" },
+
+    // Kết nối đến collection courses
+    {
+      $lookup: {
+        from: "courses", // Thay đổi tên collection của bạn ở đây
+        localField: "products",
+        foreignField: "_id",
+        as: "courseDetails",
+      },
+    },
+
+    // Do $lookup có thể trả về một mảng, nên cần "giải nén" kết quả để xử lý dễ dàng
+    { $unwind: "$courseDetails" },
+
+    // Tiếp theo, kết nối đến collection instructors
+    {
+      $lookup: {
+        from: "users", // Thay đổi tên collection của bạn ở đây
+        localField: "courseDetails.author", // Giả sử mỗi khóa học có trường này
+        foreignField: "_id",
+        as: "instructorDetails",
+      },
+    },
+    { $unwind: "$instructorDetails" },
+
+    // Nhóm theo giảng viên, tính toán tổng doanh thu và số lượng bán
+    {
+      $group: {
+        _id: "$instructorDetails._id",
+        totalSales: { $sum: "$payment_info.amount" },
+        courses: { $addToSet: "$courseDetails._id" },
+        firstName: { $first: "$instructorDetails.firstName" },
+        lastName: { $first: "$instructorDetails.lastName" },
+        avatar: { $first: "$instructorDetails.avatar" },
+        timeBeginInstructors: {
+          $first: "$instructorDetails.timeBeginInstructors",
+        },
+        email: {
+          $first: "$instructorDetails.email",
+        },
+        count: { $sum: 1 },
+      },
+    },
+
+    // Sắp xếp kết quả dựa trên tổng doanh thu hoặc số lượng bán
+    { $sort: { totalSales: -1 } },
+
+    // Giới hạn số lượng kết quả trả về
+    { $limit: 10 },
+  ]);
+
+  return users;
+};
+
 const userService = {
   updateProfileUser,
   getAllUser,
@@ -238,6 +302,9 @@ const userService = {
   convertUserToIntructor,
   becomeIntructor,
   getUserProfileIntructor,
+  getAllIntructor,
+  getAllStudentsByAdmin,
+  getTopInstructor,
 };
 
 export default userService;

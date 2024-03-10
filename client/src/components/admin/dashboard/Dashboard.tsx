@@ -5,9 +5,12 @@ import React, { useEffect } from "react";
 import Categories from "./Categories";
 import SummaryMetrics from "./SummaryMetrics";
 import EarningReport from "./EarningReport";
+import TopInstructor from "./TopInstructor";
 import { useCreateInteractCourseMutation } from "@/features/interact/InteractApi";
+
 import MyCourse from "../my-courses/MyCourses";
 import CourseList from "../courses/CourseList";
+import NewStudents from "./NewStudents";
 
 const Dashboard = () => {
   const [createInteractCourse, { data, isLoading }] =
@@ -35,6 +38,15 @@ const Dashboard = () => {
 
       <div className="mt-5">
         <MyCourse />
+      </div>
+      <div className="mt-5 flex gap-5">
+        <div className="w-[60%]">
+          {" "}
+          <TopInstructor />
+        </div>
+        <div className="w-[40%]">
+          <NewStudents />
+        </div>
       </div>
       {/* <ProductTrendsChart /> */}
     </div>

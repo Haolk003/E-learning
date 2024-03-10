@@ -58,6 +58,20 @@ const userApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getTopInstructor: build.query({
+      query: () => ({
+        url: "/get-top-instructor",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    getAllNewStudent: build.query({
+      query: () => ({
+        url: "/get-all-students",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -67,4 +81,6 @@ export const {
   useUpdatePasswordMutation,
   useBecomeInstructorMutation,
   useGetProfileInstructorQuery,
+  useGetAllNewStudentQuery,
+  useGetTopInstructorQuery,
 } = userApi;

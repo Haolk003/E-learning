@@ -38,7 +38,13 @@ const newOrder = async (
   if (!findCourse) {
     throw new ErrorHandle(400, "Course not found");
   }
+  const findUser = await userModel.findById(userId);
+  if (!findUser) {
+    throw new ErrorHandle(400, "User not found");
+  }
 
+  findUser.myLearning.push(findCourse._id);
+  findUser.lastJoinedAt = new Date();
   const newOrder = await orderModel.create({
     products: [courseId],
     userId: userId,
@@ -55,6 +61,7 @@ const newOrder = async (
     receiver: findCourse.author,
   });
   await findCourse.save();
+  await findUser.save();
   await UserCourseProgressModel.create({
     userId,
     courseId,
@@ -65,6 +72,9 @@ const newOrder = async (
 const newOrderCart = async (stripePaymentInfoId: string, userId: string) => {
   const findCart = await cartModel.findOne({ userId });
   const findUser = await userModel.findById(userId);
+  if (!findUser) {
+    throw new ErrorHandle(400, "User not found");
+  }
   if (!findCart || findCart.items.length === 0) {
     throw new ErrorHandle(
       400,
@@ -96,7 +106,8 @@ const newOrderCart = async (stripePaymentInfoId: string, userId: string) => {
           sender: userId,
           receiver: findCourse.author,
         });
-        findUser?.myLearning.push(findCourse._id);
+        findUser.myLearning.push(findCourse._id);
+        findUser.lastJoinedAt = new Date();
       }
 
       await UserCourseProgressModel.create({

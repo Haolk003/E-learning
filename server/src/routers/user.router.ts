@@ -12,8 +12,12 @@ import {
   convertUserToIntructor,
   becomeIntructor,
   getUserProfileInstructor,
+  getAllInstructor,
+  getAllStudentsByAdmin,
+  getTopInstructor,
 } from "../controllers/user.controller";
 import { ImgResize, uploadPhoto } from "../middlewares/uploadImage";
+import { runInThisContext } from "vm";
 
 const router = express.Router();
 
@@ -44,4 +48,25 @@ router.put("/update-password", protect, updatePassword);
 router.put("/become-instructor", protect, becomeIntructor);
 
 router.get("/get-profile-instructor/:id", getUserProfileInstructor);
+
+router.get(
+  "/get-all-instructor",
+  protect,
+  authorizeRoles("admin"),
+  getAllInstructor
+);
+
+router.get(
+  "/get-all-students",
+  protect,
+  authorizeRoles("admin"),
+  getAllStudentsByAdmin
+);
+
+router.get(
+  "/get-top-instructor",
+  protect,
+  authorizeRoles("admin"),
+  getTopInstructor
+);
 export default router;
