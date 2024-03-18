@@ -27,9 +27,9 @@ const CourseAccessReview: FC<Props> = ({ courseId, courseData }) => {
   return (
     <>
       {data && reviews && (
-        <div className="w-[80%] mx-auto py-5">
+        <div className="md:w-[80%] w-[90%] mx-auto py-5">
           <h2 className="text-2xl">Student feedback</h2>
-          <div className="flex items-center gap-4 mt-8 ">
+          <div className="flex md:flex-row flex-col md:items-center items-start gap-4 mt-8 ">
             <div className="flex flex-col items-center gap-1">
               <h2 className="text-5xl text-[#f6b100]">
                 {courseData.ratings.toFixed(2)}
@@ -39,7 +39,7 @@ const CourseAccessReview: FC<Props> = ({ courseId, courseData }) => {
             </div>
             <div className="w-[80%] flex flex-col gap-3">
               <div className="flex items-center gap-4 w-full">
-                <div className="w-[80%]">
+                <div className="md:w-[80%] w-[60%]">
                   <ProgressPrecentRating
                     progress={data.data ? data.data["5 stars"] : 0}
                   />
@@ -50,7 +50,7 @@ const CourseAccessReview: FC<Props> = ({ courseId, courseData }) => {
                 </div>
               </div>
               <div className="flex items-center gap-4 w-full">
-                <div className="w-[80%]">
+                <div className="md:w-[80%] w-[60%]">
                   <ProgressPrecentRating
                     progress={data.data ? data.data["4 stars"] : 0}
                   />
@@ -61,7 +61,7 @@ const CourseAccessReview: FC<Props> = ({ courseId, courseData }) => {
                 </div>
               </div>
               <div className="flex items-center gap-4 w-full">
-                <div className="w-[80%]">
+                <div className="md:w-[80%] w-[60%]">
                   <ProgressPrecentRating
                     progress={data.data ? data.data["3 stars"] : 0}
                   />
@@ -72,7 +72,7 @@ const CourseAccessReview: FC<Props> = ({ courseId, courseData }) => {
                 </div>
               </div>
               <div className="flex items-center gap-4 w-full">
-                <div className="w-[80%]">
+                <div className="md:w-[80%] w-[60%]">
                   <ProgressPrecentRating
                     progress={data.data ? data.data["2 stars"] : 0}
                   />
@@ -83,7 +83,7 @@ const CourseAccessReview: FC<Props> = ({ courseId, courseData }) => {
                 </div>
               </div>
               <div className="flex items-center gap-4 w-full">
-                <div className="w-[80%]">
+                <div className="md:w-[80%] w-[60%]">
                   <ProgressPrecentRating
                     progress={data.data ? data.data["1 stars"] : 0}
                   />

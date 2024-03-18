@@ -69,7 +69,7 @@ const PlayerControls: React.FC<Props> = ({
   return (
     <div className="player-controls duration-300">
       <div className="flex  items-center justify-between mt-2">
-        <div className="flex items-center gap-[10px]">
+        <div className="flex items-center md:gap-[10px] gap-1">
           <TooltipDemo content={playing ? "Pause" : "Play"} side="top">
             <button onClick={handlePlay} className="text-3xl">
               {playing ? <MdOutlinePause /> : <MdPlayArrow />}
@@ -186,11 +186,13 @@ const PlayerControls: React.FC<Props> = ({
               <ConvertDuratonVideo duration={duration} />
             </p>
           </div>
-          <TooltipDemo content="Add a note" side="top">
-            <button className="text-3xl ml-2">
-              <MdOutlineEditNote />
-            </button>
-          </TooltipDemo>
+          <div className="md:block hidden">
+            <TooltipDemo content="Add a note" side="top">
+              <button className="text-3xl ml-2">
+                <MdOutlineEditNote />
+              </button>
+            </TooltipDemo>
+          </div>
         </div>
         <div className="flex items-center gap-4">
           <div className="">

@@ -72,7 +72,7 @@ const CoursesHome = () => {
             Career Growth
           </p>
         </div>
-        <div className="grid grid-cols-4 gap-3 w-[90%] mx-auto mt-4">
+        <div className="md:grid md:grid-cols-4 flex gap-3 overflow-auto  md:w-[90%] w-full mx-auto mt-4">
           {!isLoadingNew &&
             courseDataNew &&
             courseDataNew.map((item: CourseType, index: number) => {
@@ -116,7 +116,7 @@ const CoursesHome = () => {
             Career Growth
           </p>
         </div>
-        <div className="grid grid-cols-4 gap-3 w-[90%] mx-auto mt-4">
+        <div className="md:grid md:grid-cols-4 flex gap-3 overflow-auto  md:w-[90%] w-full mx-auto mt-4">
           {!isLoadingPopular &&
             courseDataPopular &&
             courseDataPopular.map((item: CourseType) => {
@@ -159,7 +159,7 @@ const CoursesHome = () => {
             Career Growth
           </p>
         </div>
-        <div className="grid grid-cols-4 gap-3 w-[90%] mx-auto mt-4">
+        <div className="md:grid md:grid-cols-4 flex gap-3 overflow-auto  md:w-[90%] w-full mx-auto mt-4">
           {!isLoadingCourseOverrated &&
             courseDataOverrated &&
             courseDataOverrated.map((item: CourseType, index: number) => {

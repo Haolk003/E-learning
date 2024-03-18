@@ -1,4 +1,10 @@
-import React, { useCallback, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import ColllapseFilter from "../ui/ColllapseFilter";
@@ -7,8 +13,24 @@ import RadioGroupFilterRating from "../ui/radio-group/RadioGroupFilterRating";
 
 import CheckboxFilterCourses from "../ui/checkbox/CheckboxFilterCourses";
 import * as RadioGroup from "@radix-ui/react-radio-group";
+import { PropsOf } from "@emotion/react";
 
-const CourseSearchFilter = () => {
+type Props = {
+  ratingsValue: string;
+  setRatingsValue: Dispatch<SetStateAction<string>>;
+  priceValue: string;
+  setPriceValue: Dispatch<SetStateAction<string>>;
+  filtersLevel: any;
+  setFilterLevel: Dispatch<SetStateAction<any>>;
+};
+const CourseSearchFilter: React.FC<Props> = ({
+  filtersLevel,
+  priceValue,
+  ratingsValue,
+  setFilterLevel,
+  setPriceValue,
+  setRatingsValue,
+}) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -16,29 +38,7 @@ const CourseSearchFilter = () => {
   const [isCollappedRating, setIsCollappedRating] = useState(true);
   const [isCollappedLevel, setIsCollappedLevel] = useState(true);
   const [isCollapedPrice, setIsCollapedPrice] = useState(false);
-  const [priceValue, setPriceValue] = useState(searchParams.get("price") || "");
 
-  const [ratingsValue, setRatingsValue] = useState(
-    searchParams.get("ratings") || ""
-  );
-  const [filtersLevel, setFiltersLevel] = useState<any>({
-    all: levelQuery.find((item) => item === "all") ? true : false,
-    beginner: levelQuery.find((item) => item === "beginner") ? true : false,
-    intermediate: levelQuery.find((item) => item === "intermediate")
-      ? true
-      : false,
-    expert: levelQuery.find((item) => item === "expert") ? true : false,
-  });
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.append(name, value);
-
-      return params.toString();
-    },
-    [searchParams]
-  );
   const updateQueryStringValue = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
@@ -92,7 +92,14 @@ const CourseSearchFilter = () => {
   };
 
   const handleCheckboxLevelfilter = (filterName: string) => {
-    setFiltersLevel((prevFilters: any) => {
+    if (!filtersLevel[filterName]) {
+      const updatedQueryString = updateQueryStringValue("level", filterName);
+      router.push(pathname + "?" + updatedQueryString);
+    } else {
+      const updatedQueryString = deleteQueryString("level", filterName);
+      router.push(pathname + "?" + updatedQueryString);
+    }
+    setFilterLevel((prevFilters: any) => {
       const newFilters = {
         ...prevFilters,
         [filterName]: !prevFilters[filterName],
@@ -102,17 +109,10 @@ const CourseSearchFilter = () => {
 
       return newFilters;
     });
-    if (!filtersLevel[filterName]) {
-      const updatedQueryString = updateQueryStringValue("level", filterName);
-      router.push(pathname + "?" + updatedQueryString);
-    } else {
-      const updatedQueryString = deleteQueryString("level", filterName);
-      router.push(pathname + "?" + updatedQueryString);
-    }
   };
 
   return (
-    <div>
+    <div className="">
       <ColllapseFilter
         isOpenCollapse={isCollappedRating}
         setIsOpenCollapse={setIsCollappedRating}

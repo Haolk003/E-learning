@@ -412,11 +412,14 @@ const CustomVideoPlayer: React.FC<Props> = ({
   }, [notes, duration]);
 
   return (
-    <div ref={containerRef} className="bg-blackA6 min-w-[70%] h-auto relative">
+    <div
+      ref={containerRef}
+      className="bg-blackA6 md:min-w-[70%] w-full h-auto relative"
+    >
       <div
         className={`relative ${
-          isFullScreen ? "" : "w-[80%] mx-auto"
-        }    mx-auto`}
+          isFullScreen ? "" : "md:w-[80%] mx-auto w-full"
+        } mx-auto`}
       >
         <div
           className={`${
