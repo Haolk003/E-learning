@@ -11,7 +11,7 @@ import {
 } from "react-icons/fa";
 const Fotter = () => {
   return (
-    <div className="dark:bg-gray1 dark:text-white text-black ">
+    <div className="dark:bg-gray1 dark:text-white text-black md:block hidden">
       <div className="px-10 flex justify-between py-8">
         <div className="w-[25%]">
           <div className="flex items-center gap-2">

@@ -42,6 +42,7 @@ import useSocket from "@/hooks/useSocket";
 import { addNotify } from "@/features/notification/notifySlice";
 
 import ToastNotify from "./ui/toast/ToastNotify";
+import HeaderMobile from "./HeaderMobile";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -134,13 +135,13 @@ const Header = () => {
     }
   }, [isSuccessLogout]);
   return (
-    <div className="w-screen relative text-black dark:text-white z-50">
+    <div className="w-full relative text-black dark:text-white  z-[80]">
       <div
-        className={`fixed top-0 left-0  ${
+        className={`hidden md:block fixed top-0 left-0 ${
           active
-            ? "bg-opacity-80 text-black dark:text-white bg-gradient-to-b  from-gray12 to-white dark:from-gray-900 dark:to-black"
+            ? "text-black dark:text-white w-full bg-gradient-to-b from-gray12 to-white dark:from-gray-900 dark:to-black"
             : "w-full border-b dark:border-[#ffffff1c]  z-[80] dark:shadow-xl"
-        }  w-[100vw] h-[80px]`}
+        }  md:w-[100vw] h-[80px]`}
       >
         <div className="w-[90%] mx-auto h-full flex items-center justify-between">
           <div className="flex items-center gap-10">
@@ -475,6 +476,14 @@ const Header = () => {
           </div>
         </div>
       </div>
+      {categories && (
+        <HeaderMobile
+          handleLogout={handleLogout}
+          active={active}
+          categories={categories.data}
+        />
+      )}
+
       {route === "sign-in" && (
         <CustomModal
           component={
