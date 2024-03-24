@@ -67,8 +67,8 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
           totalProgressComplete={totalProgressCompleted}
         />
       )}
-      <div className=" flex">
-        <div className="w-[calc(100%-350px)] overflow-hidden">
+      <div className="md:flex">
+        <div className="md:w-[calc(100%-350px)]  w-full overflow-hidden">
           {progress && notes && data && (
             <CourseSuccessPlayer
               reload={reload}
@@ -81,6 +81,7 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
               notes={notes.data}
             />
           )}
+
           {progress && data && (
             <CourseAccessToolbar courseId={id} lectureId={lectureId} />
           )}
@@ -100,18 +101,30 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
               lectureId={lectureId}
             />
           )}
+          <div className="md:hidden block">
+            {data && searchParams.get("option") === "course-content" && (
+              <CoureAccessLectureList
+                lectureId={lectureId}
+                progressData={progress.data}
+                courseId={id}
+                courseContentData={data.data.courseData}
+              />
+            )}
+          </div>
           {data && searchParams.get("option") === "review" && (
             <CourseAccessReview courseId={id} courseData={data.data} />
           )}
         </div>
-        {data && progress && (
-          <CoureAccessLectureList
-            lectureId={lectureId}
-            progressData={progress.data}
-            courseId={id}
-            courseContentData={data.data.courseData}
-          />
-        )}
+        <div className="md:block hidden">
+          {data && progress && (
+            <CoureAccessLectureList
+              lectureId={lectureId}
+              progressData={progress.data}
+              courseId={id}
+              courseContentData={data.data.courseData}
+            />
+          )}
+        </div>
 
         {isLoading && (
           <div className="bg-blackA7 absolute w-full h-full flex items-center justify-center left-0 top-0">

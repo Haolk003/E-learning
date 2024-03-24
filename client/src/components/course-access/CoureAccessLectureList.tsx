@@ -94,12 +94,12 @@ const CoureAccessLectureList: FC<Props> = ({
   }, []);
   return (
     <div
-      className={`fixed w-[350px] right-0 top-[80px] h-screen z-20 bg-slate-700`}
+      className={`md:fixed block md:w-[350px] w-full right-0 top-[80px] md:h-screen z-20 md:bg-slate-700 bg-transparent`}
       style={{ top: active ? "0" : "80px" }}
     >
-      <div className="py-4 px-4 flex items-center justify-between  ">
+      <div className="py-4 px-4 md:flex hidden  items-center justify-between  ">
         <h3>Course content</h3>
-        <button>
+        <button className="">
           <IoMdClose />
         </button>
       </div>
@@ -108,7 +108,7 @@ const CoureAccessLectureList: FC<Props> = ({
           courseContentData.map((item, index) => {
             return (
               <Collapsible.Root
-                className="w-full py-4   border-t border-white "
+                className="w-full py-4 md:px-0 px-2 md:border-t md:border-white "
                 open={isCollapped[index]}
                 onOpenChange={(open: boolean) => handleChangeOpen(open, index)}
                 key={item._id}

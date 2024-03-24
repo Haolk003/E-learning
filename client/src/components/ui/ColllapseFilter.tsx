@@ -19,7 +19,7 @@ const ColllapseFilter: React.FC<Props> = ({
     <div>
       <Collapsible.Root open={isOpenCollapse} onOpenChange={setIsOpenCollapse}>
         <Collapsible.Trigger
-          className="border-t dark:border-gray8 border-gray4 py-2 px-1"
+          className="border-t dark:border-gray8 border-gray4 md:py-2 md:px-1 py-4 px-4"
           asChild
         >
           <div className="flex items-center justify-between ">
@@ -32,7 +32,9 @@ const ColllapseFilter: React.FC<Props> = ({
             </button>
           </div>
         </Collapsible.Trigger>
-        <Collapsible.Content>{children}</Collapsible.Content>
+        <Collapsible.Content className="md:p-0 px-4 py-4">
+          {children}
+        </Collapsible.Content>
       </Collapsible.Root>
     </div>
   );

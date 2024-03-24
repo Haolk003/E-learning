@@ -126,10 +126,10 @@ const CourseAccessNote: React.FC<Props> = ({
     }
   }, [isSuccessDelete, errorDelete]);
   return (
-    <div className="w-[700px] mx-auto mt-4 py-10">
+    <div className="md:w-[700px] w-[90%] mx-auto mt-4 py-10">
       {!isOpenCreateNote && (
         <div
-          className="border dark:border-white border-black cursor-pointer hover:opacity-50 w-full px-4 py-3 flex items-center justify-between"
+          className="border  dark:border-white border-black cursor-pointer hover:opacity-50 w-full px-4 py-3 flex items-center justify-between"
           onClick={() => setIsOpenCreateNote(true)}
         >
           <p className="flex items-center gap-2">
@@ -141,11 +141,11 @@ const CourseAccessNote: React.FC<Props> = ({
       )}
       {isOpenCreateNote && (
         <div>
-          <div className="flex gap-3 justify-between w-full">
-            <div className="dark:bg-white  bg-black h-[30px] rounded-full px-4 py-1 dark:text-black text-white">
+          <div className="flex md:flex-row flex-col gap-3 justify-between w-full">
+            <div className="dark:bg-white w-[70px] flex items-center justify-center bg-black h-[30px] rounded-full  py-1 dark:text-black text-white">
               {ConvertDuratonVideo({ duration: played })}
             </div>
-            <div className="w-[600px]">
+            <div className="md:w-[600px]">
               <Editor editor={editor} />
             </div>
           </div>

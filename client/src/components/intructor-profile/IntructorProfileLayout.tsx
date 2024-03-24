@@ -119,8 +119,8 @@ const IntructorProfileLayout: React.FC<Props> = ({ id }) => {
                           </p>
                           <Rating ratings={item.ratings} />
                         </div>
-                        <div className="flex items-center gap-1 text-gray9 text-[12px]">
-                          <p>{totalHours} total hours</p>
+                        <div className="flex items-center gap-1 text-gray9 text-[12px] w-full">
+                          <p>{totalHours.toFixed(2)} total hours</p>
                           <span>·</span>
                           <p>{totalLecture} lectures</p>
                           <span>·</span>
@@ -144,7 +144,9 @@ const IntructorProfileLayout: React.FC<Props> = ({ id }) => {
             <div className="w-[200px] h-[200px] overflow-hidden">
               {" "}
               <Image
-                src={userData.avatar.url}
+                src={
+                  userData.avatar ? userData.avatar.url : `/assets/avatar.jpg`
+                }
                 alt=""
                 width={200}
                 height={200}

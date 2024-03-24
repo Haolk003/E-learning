@@ -32,57 +32,61 @@ const CourseAccessHeader: React.FC<Props> = ({
     <div className="w-screen relative dark:text-white text-black z-50">
       <div className="dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black">
         <div className="w-[90%] mx-auto h-full flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center md:gap-3 gap-1">
             <Link href="/" className="flex items-center ">
               <Image src="/assets/logo2.png" alt="" width={80} height={80} />
-              <h2 className=" text-2xl font-semibold ">Elearning</h2>
+              <h2 className="md:block hidden text-2xl font-semibold ">
+                Elearning
+              </h2>
             </Link>
             <div className="w-[1px] h-[30px] bg-gray8 "></div>
             <h2 className="text-[14px] dark:text-white text-black md:max-w-[500px] overflow-hidden whitespace-nowrap overflow-ellipsis ">
               {courseTitle}
             </h2>
           </div>
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-6 ">
             {data && !data.data && (
               <div
                 className="flex items-center gap-2"
                 onClick={() => setIsOpenCreateRating(true)}
               >
-                <IoStar />
-                <p>Leave a rating</p>
+                <IoStar className="md:block hidden" />
+                <p className="text-[13px]">Leave a rating</p>
               </div>
             )}
             <Popover.Root>
               <Popover.Trigger asChild>
                 <div className="flex items-center gap-2 cursor-pointer">
-                  <div className="relative">
-                    <CircularProgress
-                      variant="determinate"
-                      value={100}
-                      sx={{
-                        color: (theme) => theme.palette.grey[800],
-                      }}
-                      thickness={3}
-                    />
-                    <CircularProgress
-                      variant="determinate"
-                      value={(totalProgressComplete / totalLecture) * 100}
-                      sx={{
-                        color: (theme) =>
-                          theme.palette.mode === "light"
-                            ? "#1a90ff"
-                            : "#308fe8",
-                        animationDuration: "550ms",
-                        position: "absolute",
-                        left: 0,
-                        [`& .${circularProgressClasses.circle}`]: {
-                          strokeLinecap: "round",
-                        },
-                      }}
-                      thickness={3}
-                    />
+                  <div className="flex md:flex-row flex-col-reverse items-center">
+                    <div className="relative">
+                      <CircularProgress
+                        variant="determinate"
+                        value={100}
+                        sx={{
+                          color: (theme) => theme.palette.grey[800],
+                        }}
+                        thickness={3}
+                      />
+                      <CircularProgress
+                        variant="determinate"
+                        value={(totalProgressComplete / totalLecture) * 100}
+                        sx={{
+                          color: (theme) =>
+                            theme.palette.mode === "light"
+                              ? "#1a90ff"
+                              : "#308fe8",
+                          animationDuration: "550ms",
+                          position: "absolute",
+                          left: 0,
+                          [`& .${circularProgressClasses.circle}`]: {
+                            strokeLinecap: "round",
+                          },
+                        }}
+                        thickness={3}
+                      />
+                    </div>
+                    <p className="md:block hidden">Your progress</p>
                   </div>
-                  <p>Your progress</p>
                   <IoChevronDownOutline />
                 </div>
               </Popover.Trigger>

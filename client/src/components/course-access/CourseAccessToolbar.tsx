@@ -27,11 +27,22 @@ const CourseAccessToolbar: FC<Props> = ({ courseId, lectureId }) => {
     );
   };
   return (
-    <div className="w-full px-6">
-      <div className="flex items-center  px-4 h-[40px] mt-5 ">
+    <div className="w-full px-6 overflow-auto">
+      <div className="flex items-center px-4 h-[40px] mt-5 overflow-auto w-full">
+        <p
+          onClick={() => handleSelectOption("course-content")}
+          className={` cursor-pointer md:min-w-[150px] md:hidden block min-w-[120px] flex-1  h-full  text-center border-b-[2px] ${
+            searchParams.get("option") === "course-content" ||
+            !searchParams.get("option")
+              ? "border-black"
+              : "border-gray6"
+          }`}
+        >
+          Course Content
+        </p>
         <p
           onClick={() => handleSelectOption("overview")}
-          className={` cursor-pointer  h-full px-5 border-b-[2px] ${
+          className={` cursor-pointer min-w-[120px] text-center  h-full  border-b-[2px] ${
             searchParams.get("option") === "overview" ||
             !searchParams.get("option")
               ? "border-black"
@@ -42,7 +53,7 @@ const CourseAccessToolbar: FC<Props> = ({ courseId, lectureId }) => {
         </p>
         <p
           onClick={() => handleSelectOption("note")}
-          className={`  cursor-pointer px-6 h-full border-b-[2px] ${
+          className={`  cursor-pointer min-w-[120px] text-center px-6 h-full border-b-[2px] ${
             searchParams.get("option") === "note"
               ? "border-black  "
               : "border-gray6"
@@ -52,7 +63,7 @@ const CourseAccessToolbar: FC<Props> = ({ courseId, lectureId }) => {
         </p>
         <p
           onClick={() => handleSelectOption("review")}
-          className={` h-full px-5 cursor-pointer border-b-[2px] ${
+          className={` h-full text-center min-w-[120px] cursor-pointer border-b-[2px] ${
             searchParams.get("option") === "review"
               ? "border-black border-b-[2px]"
               : "border-gray6"

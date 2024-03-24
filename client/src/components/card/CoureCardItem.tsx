@@ -56,7 +56,7 @@ const CoureCardItem: FC<Props> = ({
   return (
     <HoverCard.Root>
       <HoverCard.Trigger asChild>
-        <div className="w-full  px-3 py-4 dark:bg-blackA9 bg-mauve3 text-black  dark:text-white rounded-lg border border-gray4">
+        <div className="md:w-full min-w-[250px]  px-3 py-4 dark:bg-blackA9 bg-mauve3 text-black  dark:text-white rounded-lg border border-gray4">
           <div className="relative w-full min-h-[200px]">
             <Image
               src={image}
@@ -70,9 +70,9 @@ const CoureCardItem: FC<Props> = ({
               {title}
             </h3>
           </Link>
-          <div className="flex items-center justify-between">
+          <div className="flex md:flex-row flex-col md:items-center md:justify-between">
             <Rating ratings={star} />
-            <p className="text-sm">{sold} Students</p>
+            <p className="text-sm md:mt-0 mt-2">{sold} Students</p>
           </div>
           <div className="flex items-center justify-between mt-1">
             <div className="flex items-center gap-3">

@@ -93,13 +93,13 @@ const CourseLayout = ({ id }: { id: string }) => {
     <>
       <div className="w-[90%] mx-auto">
         {courseData && (
-          <div className="flex  gap-10">
-            <div className="w-[65%]">
+          <div className="md:flex-row flex-col-reverse flex gap-10">
+            <div className="md:w-[65%] w-full">
               <h2 className="text-2xl">{courseData.title}</h2>
               <div className="flex items-center gap-3">
                 <p>Create By:</p>
                 <Link
-                  href={`/user/${courseData.author}`}
+                  href={`/user/${courseData.author._id}`}
                   className="text-blue9 underline text-[13px]"
                 >
                   {courseData.author.lastName} {courseData.author.firstName}
@@ -239,7 +239,7 @@ const CourseLayout = ({ id }: { id: string }) => {
               </div>
             </div>
 
-            <div className="w-[35%]">
+            <div className="md:w-[35%] w-full">
               <CoursePlayer videoUrl={courseData.demoUrl.url} />
               <div className="flex gap-2 dark:text-white text-black text-3xl mt-3">
                 {courseData.sale.discount > 0 && (

@@ -9,6 +9,7 @@ import dompurify from "dompurify";
 import { useAddToCartMutation } from "@/features/cart/cartApi";
 import { useAppDispatch, useAppSelector } from "@/store/hook";
 import { openLogin } from "@/features/layout/layoutSlice";
+import Link from "next/link";
 type Props = {
   thumnail: string;
   title: string;
@@ -55,14 +56,17 @@ const CourseSearchCard: React.FC<Props> = ({
   return (
     <HoverCard.Root>
       <HoverCard.Trigger asChild>
-        <div className="flex gap-3 justify-between border-b border-gray8 dark:border-gray6 pb-4">
-          <div className="w-[25%] ">
+        <Link
+          href={`/course/${_id}`}
+          className="flex gap-3 justify-between border-b border-gray8 dark:border-gray6 pb-4"
+        >
+          <div className="w-[250px] h-[150px] overflow-hidden ">
             <Image
               src={thumnail}
               alt=""
-              width={300}
-              height={250}
-              className="object-cover w-full h-[140px] "
+              width={250}
+              height={150}
+              className="object-cover w-[250px] h-[150px] "
             />
           </div>
           <div className="flex flex-col gap-1 w-[70%]">
@@ -89,13 +93,13 @@ const CourseSearchCard: React.FC<Props> = ({
           <div className="flex flex-col">
             <p className="font-semibold text-[16px]">${price.toFixed(2)}</p>
           </div>
-        </div>
+        </Link>
       </HoverCard.Trigger>
       <HoverCard.Portal>
         <HoverCard.Content
           side="bottom"
           align="center"
-          className="min-h-[200px] dark:text-white text-black shadow-sm shadow-black w-[400px] px-5 py-4 data-[side=right]:animate-slideLeftAndFade data-[state=open]:transition-all dark:bg-gray4 bg-white rounded-md"
+          className="min-h-[200px] md:block hidden dark:text-white text-black shadow-sm shadow-black w-[400px] px-5 py-4 data-[side=right]:animate-slideLeftAndFade data-[state=open]:transition-all dark:bg-gray4 bg-white rounded-md"
         >
           <div className="">
             <h2 className="text-[16px] font-semibold leading-6">
