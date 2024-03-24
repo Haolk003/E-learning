@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/store/hook";
 import Link from "next/link";
 import { BiUserCircle } from "react-icons/bi";
@@ -13,7 +13,7 @@ import {
   useGetAllNotifyUserQuery,
   useDeleteNotifyMutation,
 } from "@/features/notification/notifyApi";
-
+import throttle from "lodash/throttle";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import * as HoverCard from "@radix-ui/react-hover-card";
@@ -45,6 +45,7 @@ import ToastNotify from "./ui/toast/ToastNotify";
 import HeaderMobile from "./HeaderMobile";
 
 const Header = () => {
+  const scrollRef = useRef<EventListener | null>(null);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -72,9 +73,8 @@ const Header = () => {
   const openModal = () => {
     dispatch(openLogin(""));
   };
-
-  useEffect(() => {
-    const handelScroll = () => {
+  const handelScroll = useCallback(
+    throttle(() => {
       if (typeof window !== "undefined") {
         if (window.scrollY > 80) {
           setActive(true);
@@ -82,13 +82,19 @@ const Header = () => {
           setActive(false);
         }
       }
-    };
-    window.addEventListener("scroll", handelScroll);
+    }, 100),
+    []
+  );
+
+  useEffect(() => {
+    const scrollHandler = handelScroll;
+
+    window.addEventListener("scroll", scrollHandler);
 
     return () => {
-      window.removeEventListener("scroll", handelScroll);
+      window.removeEventListener("scroll", scrollHandler);
     };
-  }, []);
+  }, [handelScroll]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -129,11 +135,16 @@ const Header = () => {
   const handleLogout = async () => {
     await logout("");
   };
+
   useEffect(() => {
     if (isSuccessLogout) {
       window.location.reload();
     }
   }, [isSuccessLogout]);
+
+  useEffect(() => {
+    console.log(active);
+  }, [active]);
   return (
     <div className="w-full relative text-black dark:text-white  z-[80]">
       <div

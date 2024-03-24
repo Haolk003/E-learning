@@ -63,7 +63,7 @@ const CourseCategoryLayout: React.FC<Props> = ({
   return (
     <div className="text-black dark:text-white">
       {data && data.data.courses.length > 0 && (
-        <h2 className="text-[35px] font-bold mb-7 mt-5">
+        <h2 className="text-[35px] font-bold mb-7 md:mt-5 -mt-24">
           {subCategoryId
             ? data.data.courses[0].subCategory.name
             : data.data.courses[0].category.name}{" "}
@@ -94,7 +94,7 @@ const CourseCategoryLayout: React.FC<Props> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-5  gap-5 mt-5 relative">
+      <div className="md:grid grid-cols-5 flex overflow-x-auto  gap-5 mt-5 relative">
         {courseData &&
           courseData.length > 0 &&
           courseData
