@@ -247,7 +247,9 @@ const Header = () => {
                     : "/instructor/courses"
                 }`}
               >
-                {user?.role === "user" ? "Become instructor" : "Instructor"}
+                {user.role === "user" || !user.role
+                  ? "Become instructor"
+                  : "Instructor"}
               </Link>
             )}
 

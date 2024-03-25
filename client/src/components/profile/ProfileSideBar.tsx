@@ -40,7 +40,7 @@ const ProfileSideBar: FC<Props> = ({ active, setActive }) => {
     }
   }, [isSuccess]);
   return (
-    <div className="dark:bg-iris3 bg-mauve6 overflow-hidden pageContent w-[210px] lg:w-[300px] min-h-[500px]  dark:text-white text-black border dark:border-iris2 border-mauve10">
+    <div className="dark:bg-iris3 bg-mauve6 overflow-hidden pageContent md:block hidden w-[210px] lg:w-[300px] min-h-[500px]  dark:text-white text-black border dark:border-iris2 border-mauve10">
       <div className="flex flex-col w-full">
         <div
           className={`${

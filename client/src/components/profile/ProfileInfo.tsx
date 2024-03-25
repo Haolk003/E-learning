@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, Component, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as Form from "@radix-ui/react-form";
 import StarterKit from "@tiptap/starter-kit";
@@ -30,6 +30,7 @@ type ProfileUpdateType = {
 
 const ProfileInfo = () => {
   const user = useAppSelector((state) => state.auth.user);
+  console.log(user);
   const {
     register,
     handleSubmit,
@@ -39,7 +40,7 @@ const ProfileInfo = () => {
       firstName: user?.firstName,
       lastName: user?.lastName,
       bio: user?.bio || "",
-      headline: user?.headline || "",
+      headline: user?.headline ? user.headline : "",
       linkedin: user?.linkedin || "",
       facebookLink: user?.facebookLink || "",
       twitterLink: user?.twitterLink || "",
@@ -81,7 +82,7 @@ const ProfileInfo = () => {
         <h2 className="text-3xl font-semibold">Public profile</h2>
         <p className="text-md">Add informaion about yourself</p>
       </div>
-      <div className="w-[80%] mx-auto py-4">
+      <div className="md:w-[80%] w-[95%] mx-auto py-4">
         <Form.Root onSubmit={handleSubmit(onSubmit)}>
           <h4 className="text-md font-[500]">Basics:</h4>
           {/* first name */}
@@ -123,13 +124,15 @@ const ProfileInfo = () => {
                   className="input-profile"
                   {...register("headline")}
                   placeholder="Head line"
-                  // maxLength={60}
                 />
                 <span className="absolute right-2 top-[50%] -translate-y-1/2 !font-[300] text-gray6 ">
                   {counterHeadline}
                 </span>
               </div>
             </Form.Control>
+            <span className="text-[12px] font-thin text-red-600 absolute -bottom-5 left-0">
+              {errors.headline?.message}
+            </span>
             <Form.Message className="text-[12px] font-thin text-gray6">
               Add a professional headline like,Instructor at Elearning or
               Architect.
@@ -153,21 +156,27 @@ const ProfileInfo = () => {
                 {...register("website")}
               />
             </Form.Control>
+            <span className="text-[12px] font-thin text-red-600 absolute -bottom-5 left-0">
+              {errors.website?.message}
+            </span>
           </Form.Field>
 
           <Form.Field name="linkedin" className="mt-5">
             <Form.Control asChild>
               <div className="border border-black dark:border-white w-full h-12 flex">
-                <div className="h-full border-r bg-blue3 dark:bg-blackA2 dark:text-white text-black border-black dark:border-white w-[40%] flex items-center justify-center">
+                <div className="h-full border-r bg-blue3 dark:bg-blackA2 dark:text-white text-black border-black dark:border-white md:w-[40%] w-[60%] flex items-center justify-center">
                   http://www.linkedin.com/
                 </div>
                 <input
-                  className="w-[60%] h-full px-4 border-none outline-none bg-transparent tracking-wide "
+                  className="md:w-[60%] w-[40%] h-full px-4 border-none outline-none bg-transparent tracking-wide "
                   placeholder="LinkedIn Profile"
                   {...register("linkedin")}
                 />
               </div>
             </Form.Control>
+            <span className="text-[12px] font-thin text-red-600 absolute -bottom-5 left-0">
+              {errors.linkedin?.message}
+            </span>
             <Form.Message className="text-[12px] font-thin text-gray6">
               Input your LinkedIn resource id(e.g.in/johnsmith).
             </Form.Message>
@@ -176,11 +185,11 @@ const ProfileInfo = () => {
           <Form.Field name="facebookLink" className="mt-5">
             <Form.Control asChild>
               <div className="border border-black dark:border-white w-full h-12 flex">
-                <div className="h-full border-r bg-blue3 dark:bg-blackA2 dark:text-white border-black dark:border-white w-[40%] flex items-center justify-center">
+                <div className="h-full md:w-[40%]  border-r bg-blue3 dark:bg-blackA2 dark:text-white border-black dark:border-white w-[60%] flex items-center justify-center">
                   http://www.facebook.com/
                 </div>
                 <input
-                  className="w-[60%] h-full px-4 border-none outline-none bg-transparent tracking-wide "
+                  className="md:w-[60%] w-[40%] h-full px-4 border-none outline-none bg-transparent tracking-wide "
                   placeholder="Facebook Profile"
                   {...register("facebookLink")}
                 />
@@ -194,11 +203,11 @@ const ProfileInfo = () => {
           <Form.Field name="twitterLink" className="mt-5">
             <Form.Control asChild>
               <div className="border border-black dark:border-white w-full h-12 flex">
-                <div className="h-full border-r bg-blue3 dark:bg-blackA2 dark:text-white border-black dark:border-white w-[40%] flex items-center justify-center">
+                <div className="h-full border-r bg-blue3 dark:bg-blackA2 dark:text-white border-black dark:border-white w-[60%] flex items-center justify-center md:w-[40%] ">
                   http://www.twitter.com/
                 </div>
                 <input
-                  className="w-[60%] h-full px-4 border-none outline-none bg-transparent tracking-wide "
+                  className="w-[40%] md:w-[60%] h-full px-4 border-none outline-none bg-transparent tracking-wide "
                   placeholder="Twitter Profile"
                   {...register("twitterLink")}
                 />
@@ -212,11 +221,11 @@ const ProfileInfo = () => {
           <Form.Field name="youtubeLink" className="mt-5">
             <Form.Control asChild>
               <div className="border border-black dark:border-white w-full h-12 flex">
-                <div className="h-full border-r bg-blue3 dark:bg-blackA2 dark:text-white border-black dark:border-white w-[40%] flex items-center justify-center">
+                <div className="h-full border-r bg-blue3 dark:bg-blackA2 dark:text-white border-black dark:border-white md:w-[40%] w-[60%] flex items-center justify-center">
                   http:/www.youtube.com/
                 </div>
                 <input
-                  className="w-[60%] h-full px-4 border-none outline-none bg-transparent tracking-wide "
+                  className="md:w-[60%] w-[40%] h-full px-4 border-none outline-none bg-transparent tracking-wide "
                   placeholder="Youtube Profile"
                   {...register("youtubeLink")}
                 />

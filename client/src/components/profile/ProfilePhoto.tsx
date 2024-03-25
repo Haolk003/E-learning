@@ -81,7 +81,7 @@ const ProfilePhoto = () => {
           Add a nice photo of yourself for your profile.
         </p>
       </div>
-      <div className="w-[60%] mx-auto py-4">
+      <div className="md:w-[60%] w-[95%] mx-auto py-4">
         <h5 className="font-[500] text-[17px]">Image preview</h5>
         <div className="border border-black overflow-hidden relative dark:border-white w-full h-[300px] flex items-center justify-center mt-3">
           {selectedFile && isCrop ? (
