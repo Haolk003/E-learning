@@ -49,7 +49,7 @@ const CourseCategoryNavbar: React.FC<Props> = ({ categoryId }) => {
   );
 
   return (
-    <div className="fixed  z-[90] overflow-hidden top-[80px] left-0 w-full h-[50px] shadow-sm bg-white shadow-black dark:bg-blackA9 px-10 flex items-center justify-between ">
+    <div className="md:mt-[80px] mt-[60px]  z-[90] overflow-hidden  left-0 w-full h-[50px] shadow-sm bg-white shadow-black dark:bg-blackA9 px-10 flex items-center justify-between ">
       <div
         className="w-[90%]  flex  flex-wrap  items-center gap-6 h-full"
         ref={containmentRef}

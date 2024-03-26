@@ -45,10 +45,10 @@ const ChangePassword = () => {
   }, [isSuccess, error]);
   return (
     <div className="w-full relative">
-      <div className="flex items-center flex-col py-4 gap-4 border-b border-mauve10 dark:border-gray7 ">
-        <h2 className="text-3xl font-semibold">Change Password</h2>
+      <div className="flex items-center flex-col py-4 gap-4 md:border-b border-mauve10 dark:border-gray7 ">
+        <h2 className="text-3xl font-semibold mt-5">Change Password</h2>
       </div>
-      <div className="w-[70%] mx-auto h-full flex items-center  ">
+      <div className="md:w-[70%] w-[95%] mx-auto h-full flex items-center  ">
         <div className="w-full">
           <Form.Root onSubmit={handleSubmit(onSubmit)}>
             <Form.Field name="old-password" className="relative">

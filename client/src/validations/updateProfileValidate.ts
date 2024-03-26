@@ -3,13 +3,13 @@ import * as Yup from "yup";
 export const updateProfileSchema = Yup.object({
   firstName: Yup.string().required("First Name is required"),
   lastName: Yup.string().required("Last Name is required"),
-  headline: Yup.string().max(60),
-  bio: Yup.string(),
-  linkedin: Yup.string(),
-  facebookLink: Yup.string(),
-  youtubeLink: Yup.string(),
-  twitterLink: Yup.string(),
-  websiteLink: Yup.string(),
+  // headline: Yup.string(),
+  // bio: Yup.string(),
+  // linkedin: Yup.string(),
+  // facebookLink: Yup.string(),
+  // youtubeLink: Yup.string(),
+  // twitterLink: Yup.string(),
+  // websiteLink: Yup.string(),
 });
 
 export const ChangePasswordShema = Yup.object({
