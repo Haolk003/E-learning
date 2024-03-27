@@ -20,6 +20,7 @@ import CourseAccessReview from "./CourseAccessReview";
 import CourseAccessHeader from "./CourseAccessHeader";
 import { ProgressDataLectureType } from "@/types/progressLectureUserType";
 import { CourseContentType } from "@/types/couresContentType";
+
 import ReactPlayer from "react-player";
 
 type Props = {
@@ -58,7 +59,7 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
     : 0;
   const triggerReload = () => setReload((prev) => !prev);
   return (
-    <div>
+    <div className="">
       {data && (
         <CourseAccessHeader
           courseId={id}
@@ -67,7 +68,7 @@ const CourseAccessLayout: FC<Props> = ({ id, lectureId }) => {
           totalProgressComplete={totalProgressCompleted}
         />
       )}
-      <div className="md:flex">
+      <div className="md:flex pt-[80px]">
         <div className="md:w-[calc(100%-350px)]  w-full overflow-hidden">
           {progress && notes && data && (
             <CourseSuccessPlayer

@@ -94,7 +94,7 @@ const CoureAccessLectureList: FC<Props> = ({
   }, []);
   return (
     <div
-      className={`md:fixed block md:w-[350px] w-full right-0 top-[80px] md:h-screen z-20 md:bg-slate-700 bg-transparent`}
+      className={`md:fixed block md:w-[25%] w-full right-0 top-[80px] md:h-screen z-20 md:bg-slate-700 bg-transparent`}
       style={{ top: active ? "0" : "80px" }}
     >
       <div className="py-4 px-4 md:flex hidden  items-center justify-between  ">

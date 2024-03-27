@@ -22,130 +22,128 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // const scrollRef = useRef<EventListener | null>(null);
-  // const clickRef = useRef<EventListener | null>(null);
-  // const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  // const [request, setRequest] = useState(false);
+  const clickRef = useRef<EventListener | null>(null);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [request, setRequest] = useState(false);
 
-  // const [createInteract, { data }] = useCreateInteractCourseMutation();
+  const [createInteract, { data }] = useCreateInteractCourseMutation();
 
-  // const [updateInteractPageView, { error }] = useUpdatePageViewMutation();
+  const [updateInteractPageView, { error }] = useUpdatePageViewMutation();
 
-  // const [updateEndTime] = useUpdateInteractEndTimeMutation();
+  const [updateEndTime] = useUpdateInteractEndTimeMutation();
 
-  // const [updateTimeSpent] = useUpdateTimeSpentMutation();
-  // const [updateInteractionPageView] = useUpdateInteractionPageViewMutation();
+  const [updateTimeSpent] = useUpdateTimeSpentMutation();
+  const [updateInteractionPageView] = useUpdateInteractionPageViewMutation();
 
-  // const pathname = usePathname();
+  const pathname = usePathname();
 
-  // const handleUpdateTimeSpent = async () => {
-  //   const sessionInteract = sessionStorage.getItem("session-interact");
-  //   if (sessionInteract) {
-  //     await updateTimeSpent({
-  //       id: JSON.parse(sessionInteract).id,
-  //       timeSpent: 20,
-  //     });
-  //   }
-  // };
+  const handleUpdateTimeSpent = async () => {
+    const sessionInteract = sessionStorage.getItem("session-interact");
+    if (sessionInteract) {
+      await updateTimeSpent({
+        id: JSON.parse(sessionInteract).id,
+        timeSpent: 20,
+      });
+    }
+  };
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     handleUpdateTimeSpent();
-  //   }, 40000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleUpdateTimeSpent();
+    }, 40000);
 
-  //   return () => clearInterval(interval);
-  // }, []);
+    return () => clearInterval(interval);
+  }, []);
 
-  // const handleInteractType = async (type: string) => {
-  //   const sessionInteract = sessionStorage.getItem("session-interact");
+  const handleInteractType = async (type: string) => {
+    const sessionInteract = sessionStorage.getItem("session-interact");
 
-  //   if (sessionInteract) {
-  //     await updateInteractionPageView({
-  //       id: JSON.parse(sessionInteract).id,
-  //       interation: type,
-  //     });
-  //   }
-  // };
-  // const handleScroll = useCallback(() => {
-  //   if (debounceTimeoutRef.current) {
-  //     clearTimeout(debounceTimeoutRef.current);
-  //   }
+    if (sessionInteract) {
+      await updateInteractionPageView({
+        id: JSON.parse(sessionInteract).id,
+        interation: type,
+      });
+    }
+  };
+  const handleScroll = useCallback(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
 
-  //   debounceTimeoutRef.current = setTimeout(() => {
-  //     handleInteractType("scroll");
-  //   }, 3000);
-  // }, []);
+    debounceTimeoutRef.current = setTimeout(() => {
+      handleInteractType("scroll");
+    }, 3000);
+  }, []);
 
-  // const handleClick = useCallback(() => {
-  //   if (debounceTimeoutRef.current) {
-  //     clearTimeout(debounceTimeoutRef.current);
-  //   }
-  //   debounceTimeoutRef.current = setTimeout(() => {
-  //     handleInteractType("click");
-  //   }, 5000);
-  // }, []);
-  // useEffect(() => {
-  //   scrollRef.current = handleScroll;
-  //   clickRef.current = handleClick;
+  const handleClick = useCallback(() => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+    debounceTimeoutRef.current = setTimeout(() => {
+      handleInteractType("click");
+    }, 5000);
+  }, []);
+  useEffect(() => {
+    clickRef.current = handleClick;
 
-  //   window.addEventListener("scroll", scrollRef.current);
-  //   window.addEventListener("click", clickRef.current);
+    document.body.addEventListener("click", clickRef.current);
 
-  //   return () => {
-  //     window.removeEventListener("scroll", scrollRef.current as EventListener);
-  //     window.removeEventListener("click", clickRef.current as EventListener);
+    return () => {
+      document.body.removeEventListener(
+        "click",
+        clickRef.current as EventListener
+      );
 
-  //     if (debounceTimeoutRef.current) {
-  //       clearTimeout(debounceTimeoutRef.current);
-  //     }
-  //   };
-  // }, [handleScroll, handleClick]);
-  // useEffect(() => {
-  //   if (request) {
-  //     const sessionInteract = sessionStorage.getItem("session-interact");
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
-  //     if (!sessionInteract) {
-  //       createInteract(pathname);
-  //     } else {
-  //       updateInteractPageView({
-  //         id: JSON.parse(sessionInteract).id,
-  //         url: pathname,
-  //       });
-  //     }
-  //   }
-  //   setRequest(true);
-  // }, [pathname, request]);
+  useEffect(() => {
+    if (request) {
+      const sessionInteract = sessionStorage.getItem("session-interact");
 
-  // useEffect(() => {
-  //   if (data) {
-  //     sessionStorage.setItem(
-  //       "session-interact",
-  //       JSON.stringify({ id: data.data._id })
-  //     );
-  //   }
-  // }, [data]);
+      if (!sessionInteract) {
+        createInteract(pathname);
+      } else {
+        updateInteractPageView({
+          id: JSON.parse(sessionInteract).id,
+          url: pathname,
+        });
+      }
+    }
+    setRequest(true);
+  }, [pathname, request]);
 
-  // useEffect(() => {
-  //   const handleBeforeUnload = async () => {
-  //     const sessionInteract = sessionStorage.getItem("session-interact");
+  useEffect(() => {
+    if (data) {
+      sessionStorage.setItem(
+        "session-interact",
+        JSON.stringify({ id: data.data._id })
+      );
+    }
+  }, [data]);
 
-  //     if (sessionInteract) {
-  //       await updateEndTime(JSON.parse(sessionInteract).id);
-  //     }
-  //   };
-  //   window.addEventListener("beforeunload", handleBeforeUnload);
+  useEffect(() => {
+    const handleBeforeUnload = async () => {
+      const sessionInteract = sessionStorage.getItem("session-interact");
 
-  //   // Hủy đăng ký sự kiện khi component unmount
-  //   return () => {
-  //     window.removeEventListener("beforeunload", handleBeforeUnload);
-  //   };
-  // }, []);
+      if (sessionInteract) {
+        await updateEndTime(JSON.parse(sessionInteract).id);
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    // Hủy đăng ký sự kiện khi component unmount
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
 
   return (
     <>
-      <div className="w-screen h-screen overflow-x-hidden overflow-y-auto">
-        {children}
-      </div>
+      <div className="">{children}</div>
     </>
   );
 }

@@ -56,14 +56,14 @@ app.use(
   })
 );
 
-const limiter = rateLimit({
-  windowMs: 60 * 60 * 1000,
-  max: 1000,
-  standardHeaders: "draft-7",
-  legacyHeaders: false,
-});
+// const limiter = rateLimit({
+//   windowMs: 60 * 60 * 1000,
+//   max: 1000,
+//   standardHeaders: "draft-7",
+//   legacyHeaders: false,
+// });
 
-app.use(limiter);
+// app.use(limiter);
 // app.use(upload.single("myFile"));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -89,8 +89,8 @@ app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(err);
 });
 app.use(ErrorMiddleWare);
-server.listen(process.env.SERVER_HOST, () => {
-  console.log(`Server is listening with port ${process.env.SERVER_HOST}`);
+server.listen(process.env.PORT || 8000, () => {
+  console.log(`Server is listening with port ${process.env.PORT || 8000}`);
   mongoConnect();
 });
 

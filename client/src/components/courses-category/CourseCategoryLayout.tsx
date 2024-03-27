@@ -7,6 +7,7 @@ import { CourseType } from "@/types/couresContentType";
 import Loader from "../loader/Loader";
 import { MdOutlineNavigateNext, MdOutlineNavigateBefore } from "react-icons/md";
 import CourseCategoryFilter from "./CourseCategoryFilter";
+import { useAppSelector } from "@/store/hook";
 type Props = {
   categoryId: string;
   subCategoryId?: string;
@@ -15,6 +16,8 @@ const CourseCategoryLayout: React.FC<Props> = ({
   categoryId,
   subCategoryId,
 }) => {
+  const categories = useAppSelector((state) => state.category.categories);
+
   const [sort, setSort] = useState("-sold");
   const [courseData, setCourseData] = useState<CourseType[]>([]);
   const [page, setPage] = useState(1);
@@ -60,6 +63,7 @@ const CourseCategoryLayout: React.FC<Props> = ({
     setCourseData([]);
     setSort(sort);
   };
+
   return (
     <div className="text-black dark:text-white">
       {data && data.data.courses.length > 0 && (
@@ -145,9 +149,13 @@ const CourseCategoryLayout: React.FC<Props> = ({
         <div className="mt-10">
           <h2 className="text-[35px] font-bold mb-7 mt-5 ">
             All{" "}
-            {subCategoryId
-              ? data.data.courses[0].subCategory.name
-              : data.data.courses[0].category.name}{" "}
+            {subCategoryId && categories
+              ? categories
+                  .find((category) => category._id === categoryId)
+                  ?.subcategories.find((item) => item._id === subCategoryId)
+                  ?.name || ""
+              : categories.find((category) => category._id === categoryId)
+                  ?.name}{" "}
             Courses
           </h2>
           <CourseCategoryFilter
@@ -155,6 +163,11 @@ const CourseCategoryLayout: React.FC<Props> = ({
             subCategoryId={subCategoryId}
           />
         </div>
+      )}
+      {courseData && courseData.length === 0 && (
+        <p className="font-semibold text-2xl mt-10">
+          None of the course were found{" "}
+        </p>
       )}
 
       {isLoading && (

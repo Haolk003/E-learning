@@ -6,6 +6,7 @@ import authSlice from "@/features/auth/authSlice";
 import layoutSlice from "@/features/layout/layoutSlice";
 import cartSlice from "@/features/cart/cartSlice";
 import notifySlice from "@/features/notification/notifySlice";
+import categorySlice from "@/features/category/categorySlice";
 const store = configureStore({
   reducer: {
     [apiSlice.reducerPath]: apiSlice.reducer,
@@ -13,6 +14,7 @@ const store = configureStore({
     layout: layoutSlice,
     cart: cartSlice,
     notify: notifySlice,
+    category: categorySlice,
   },
   devTools: false,
   middleware: (getDefaultMiddleware) => {

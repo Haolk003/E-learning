@@ -37,6 +37,7 @@ export const deleteVideo = async (public_id: string) => {
     throw new ErrorHandle(400, "Delete File Failure");
   }
 };
+
 export const uploadVideo = async (path: string, id: string) => {
   const file = fs.createReadStream(path);
   const io = getSocketInstance();

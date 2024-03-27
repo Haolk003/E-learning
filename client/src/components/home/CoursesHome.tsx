@@ -11,6 +11,7 @@ import {
 import { CourseType } from "@/types/couresContentType";
 import { useAppSelector } from "@/store/hook";
 import LoadingCourseCardHome from "../ui/loading-skeletion/LoadingCourseCardHome";
+
 const CoursesHome = () => {
   const user = useAppSelector((state) => state.auth.user);
 

@@ -13,6 +13,7 @@ import {
 } from "@/features/review/reviewApi";
 
 import _ from "lodash";
+import Link from "next/link";
 const MyLearningLayout = () => {
   const searchParams = useSearchParams();
   const { data } = useGetProgressCoursesUserQuery("");
@@ -34,6 +35,7 @@ const MyLearningLayout = () => {
   useEffect(() => {
     if (data) {
       const sort = searchParams.get("sort") || "-updatedAt";
+      const search = searchParams.get("q") || "";
       const category = (
         searchParams.get("category") && searchParams.get("category") !== "all"
           ? searchParams.get("category")
@@ -50,7 +52,8 @@ const MyLearningLayout = () => {
       const filteredArr = data.data.filter((item: progressCourseMylearning) => {
         return (
           item.courseId.category._id.includes(category) &&
-          item.courseId.author._id.includes(instructor)
+          item.courseId.author._id.includes(instructor) &&
+          item.courseId.title.toLowerCase().includes(search.toLowerCase())
         );
       }) as progressCourseMylearning[];
 
@@ -146,13 +149,13 @@ const MyLearningLayout = () => {
   }, [data, searchParams]);
 
   return (
-    <div className="w-[70%] mx-auto">
+    <div className="md:w-[70%] w-full mx-auto">
       <MyLearningFilter
         categoriesData={categoriesData}
         instructorData={instructorData}
       />
 
-      <div className="grid grid-cols-4 gap-5 mt-4">
+      <div className="md:grid md:grid-cols-4 gap-5 mt-4 md:px-0 px-3 ">
         {progressData.length > 0 &&
           progressData.map((item: progressCourseMylearning, index: number) => {
             const totalLecture = item.courseId.courseData.reduce(
@@ -174,26 +177,48 @@ const MyLearningLayout = () => {
             const percentCompleted = Math.round(
               (totalProgressCompleted / totalLecture) * 100
             );
-            const checkReview = reviews.data.find(
-              (review: any) => review.courseId === item.courseId._id
-            );
+            const checkReview = reviews
+              ? reviews.data.find(
+                  (review: any) => review.courseId === item.courseId._id
+                )
+              : null;
 
             return (
-              <CourseCardMyLearing
-                _id=""
-                author={
-                  item.courseId.author.lastName + item.courseId.author.firstName
-                }
-                isRating={checkReview ? true : false}
-                ratings={checkReview ? checkReview.rating : 0}
-                percentCompleted={percentCompleted}
-                thumbnail={item.courseId.thumbnail.url}
-                title={item.courseId.title}
-                key={item._id}
-              />
+              <Link
+                href={`/course-access/${item.courseId._id}/lecture/${
+                  item?.lastWatchedLecture
+                    ? item.lastWatchedLecture.lectureId
+                    : item.courseId.courseData[0].lectures[0]._id
+                }`}
+              >
+                <CourseCardMyLearing
+                  _id={item.courseId._id}
+                  author={
+                    item.courseId.author.lastName +
+                    item.courseId.author.firstName
+                  }
+                  isRating={checkReview ? true : false}
+                  ratings={checkReview ? checkReview.rating : 0}
+                  percentCompleted={percentCompleted}
+                  thumbnail={item.courseId.thumbnail.url}
+                  title={item.courseId.title}
+                  key={item._id}
+                />
+              </Link>
             );
           })}
       </div>
+      {progressData.length === 0 &&
+        (!searchParams.get("q") ? (
+          <p className="font-semibold text-2xl mt-4">
+            You haven&apos;t registered for any of our courses
+          </p>
+        ) : (
+          <p className="text-2xl font-semibold mt-4">
+            Sorry, we could'nt find any result for &quot;{searchParams.get("q")}
+            &quot;
+          </p>
+        ))}
     </div>
   );
 };

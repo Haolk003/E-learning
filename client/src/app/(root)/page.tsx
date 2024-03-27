@@ -9,7 +9,7 @@ import Fotter from "@/components/Fotter";
 import Footer2 from "@/components/Footer2";
 const page = () => {
   return (
-    <div className="h-[200vh] w-full  scroll-auto text-3xl text-black">
+    <div className=" w-full  text-3xl text-black">
       <Header />
       <Heading
         title="Elearning"

@@ -1,5 +1,5 @@
 import apiSlice from "../api/apiSlice";
-
+import { getAllCategory } from "./categorySlice";
 export const categoryApi = apiSlice.injectEndpoints({
   endpoints: (build) => ({
     getAllCategory: build.query({
@@ -8,6 +8,10 @@ export const categoryApi = apiSlice.injectEndpoints({
         method: "GET",
         credentials: "include" as const,
       }),
+      async onQueryStarted(arg, api) {
+        const result = await api.queryFulfilled;
+        api.dispatch(getAllCategory({ categories: result.data.data }));
+      },
     }),
     getCategoryById: build.query({
       query: (id) => ({

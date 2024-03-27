@@ -3,6 +3,7 @@ import Heading from "@/utils/Heading";
 import Header from "@/components/Header";
 import CoursesSearchLayout from "@/components/courses-search/CoursesSearchLayout";
 import CourseCategoryLayout from "@/components/courses-category/CourseCategoryLayout";
+import Footer2 from "@/components/Footer2";
 
 const page = ({
   params,
@@ -14,12 +15,13 @@ const page = ({
       <div className="relative ">
         <Heading description="" title="Profile" keyword="" />
         <Header />
-        <div className="py-[100px] w-[90%] mx-auto">
+        <div className=" w-[90%] mx-auto">
           <CourseCategoryLayout
             categoryId={params.category}
             subCategoryId={params.subCategory}
           />
         </div>
+        <Footer2 />
       </div>
     </>
   );

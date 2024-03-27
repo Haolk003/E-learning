@@ -94,7 +94,13 @@ const googleCallback = CatchAsyncError(
     const user: any = req.user;
 
     await sendToken(user, res);
-    res.status(200).redirect(process.env.CLIENT_HOST as string);
+    res
+      .status(200)
+      .redirect(
+        process.env.NODE_ENV === "production"
+          ? (process.env.CLIENT_HOST2 as string)
+          : (process.env.CLIENT_HOST as string)
+      );
   }
 );
 
@@ -103,7 +109,13 @@ const facebookCallback = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     const user: any = req.user;
     await sendToken(user, res);
-    res.status(200).redirect(process.env.CLIENT_HOST as string);
+    res
+      .status(200)
+      .redirect(
+        process.env.NODE_ENV === "production"
+          ? (process.env.CLIENT_HOST2 as string)
+          : (process.env.CLIENT_HOST as string)
+      );
   }
 );
 

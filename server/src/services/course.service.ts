@@ -42,6 +42,7 @@ async function updateCourseInRedis(courseId: string, updatedData: any) {
       const courseIndex = courses.findIndex(
         (course: any) => course.id === courseId
       );
+
       if (courseIndex !== -1) {
         // Cập nhật dữ liệu cho khóa học này
         courses[courseIndex] = { ...courses[courseIndex], ...updatedData };
@@ -87,7 +88,7 @@ const editCourseStep1 = async (data: CreateCourseStep1, courseId: string) => {
   );
   const findRedis = await redis.get(courseId);
   if (findRedis) {
-    redis.hset(courseId, data);
+    await redis.hset(courseId, data);
   }
 
   await updateCourseInRedis(courseId, data);
@@ -121,7 +122,7 @@ const createEditCourseStep2 = async (
 
   const findRedis = await redis.get(courseId);
   if (findRedis) {
-    redis.hset(courseId, data);
+    await redis.hset(courseId, data);
     await updateCourseInRedis(courseId, data);
   }
   return updateCourse;
@@ -143,7 +144,7 @@ const createEditCourseStep3 = async (data: ICourseData[], courseId: string) => {
   );
   const findRedis = await redis.get(courseId);
   if (findRedis) {
-    redis.hset(courseId, { courseData: newData, progress: 100 });
+    await redis.hset(courseId, { courseData: newData, progress: 100 });
     await updateCourseInRedis(courseId, data);
   }
   return updateCourse;
@@ -221,7 +222,7 @@ const findCourseByIdPublic = async (courseId: string) => {
       throw new ErrorHandle(400, "Course not found");
     }
 
-    redis.set(courseId, JSON.stringify(course), "EX", 604800);
+    await redis.set(courseId, JSON.stringify(course), "EX", 604800);
     return course;
   }
 

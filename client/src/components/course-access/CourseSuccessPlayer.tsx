@@ -26,7 +26,6 @@ import SlideVideo from "../ui/slide/SlideVideo";
 import { CourseContentType } from "@/types/couresContentType";
 import { NoteCourseType } from "@/types/noteCouresType";
 import FullScreenPortal from "@/utils/FullScreen";
-
 type Props = {
   lectureId: string;
   courseId: string;
@@ -57,11 +56,13 @@ const CustomVideoPlayer: React.FC<Props> = ({
     lectureIndex: number;
   } | null>(null);
   const [nextLectureTitle, setNextLectureTitlte] = useState("");
+  const [isAutoPlay, setIsAutoPlay] = useState(true);
   const [prevLectureTitle, setPrevLectureTitle] = useState("");
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [isExpandedView, setIsExpandedView] = useState(false);
   const [isOpenSetting, setIsOpenSetting] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
 
   const [volume, setVolume] = useState(1);
   const [showAnimation, setShowAnimation] = useState(false);
@@ -77,6 +78,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
   const [videoTitle, setVideoTitle] = useState("");
   const [ready, setReady] = useState(false);
   const [pointSaved, setPointSaved] = useState<number[]>([]);
+  const [isCancelNextVideo, setIsCancelNextVideo] = useState(false);
 
   const { handleProgress, loaded } = useVideoProgress({
     courseId,
@@ -175,6 +177,10 @@ const CustomVideoPlayer: React.FC<Props> = ({
 
   // Handles the end of the video playback
   const handleEnded = () => {
+    console.log("end");
+    setPlaying(false);
+    setIsEnd(true);
+
     // Code to play the next video in the playlist
   };
 
@@ -214,6 +220,10 @@ const CustomVideoPlayer: React.FC<Props> = ({
     []
   );
 
+  const refeshLecture = () => {
+    setIsEnd(false);
+    setIsCancelNextVideo(true);
+  };
   // Handles volume change
   const handleChangeVolume = (value: number) => {
     setVolume(value / 100);
@@ -247,7 +257,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
         router.push(
           `/course-access/${courseId}/lecture/${
             lectureData[sectionIndex].lectures[lectureIndex + 1]._id
-          }`
+          }?option=${searchParams.get("option") || "overview"}&start=0`
         );
       } else if (
         videoSelectedIndex.lectureIndex ===
@@ -257,7 +267,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
         router.push(
           `/course-access/${courseId}/lecture/${
             lectureData[sectionIndex + 1].lectures[0]._id
-          }`
+          }?option=${searchParams.get("option") || "overview"}&start=0`
         );
       }
     }
@@ -271,7 +281,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
         router.push(
           `/course-access/${courseId}/lecture/${
             lectureData[sectionIndex].lectures[lectureIndex - 1]._id
-          }`
+          }?option=${searchParams.get("option") || "overview"}&start=0`
         );
       } else if (
         videoSelectedIndex.lectureIndex === 0 &&
@@ -282,10 +292,21 @@ const CustomVideoPlayer: React.FC<Props> = ({
             lectureData[sectionIndex - 1].lectures[
               lectureData[sectionIndex - 1].lectures.length - 1
             ]._id
-          }`
+          }?option=${searchParams.get("option") || "overview"}&start=0`
         );
       }
     }
+  };
+  const variants = {
+    hidden: { pathLength: 0, opacity: 0 },
+    visible: {
+      pathLength: 1,
+      opacity: 1,
+      transition: {
+        pathLength: { type: "spring", duration: 2, bounce: 0 },
+        opacity: { duration: 0.01 },
+      },
+    },
   };
 
   // Loading and error handling effects
@@ -316,6 +337,37 @@ const CustomVideoPlayer: React.FC<Props> = ({
     // Set loading to true when videoUrl changes
     setError(false); // Reset error state
   }, [lectureId]);
+
+  useEffect(() => {
+    if (isEnd && isAutoPlay && !isCancelNextVideo) {
+      const timeout = setTimeout(() => {
+        if (videoSelectedIndex) {
+          const { lectureIndex, sectionIndex } = videoSelectedIndex;
+          if (
+            videoSelectedIndex.lectureIndex !==
+            lectureData[sectionIndex].lectures.length - 1
+          ) {
+            router.push(
+              `/course-access/${courseId}/lecture/${
+                lectureData[sectionIndex].lectures[lectureIndex + 1]._id
+              }?option=${searchParams.get("option") || "overview"}&start=0`
+            );
+          } else if (
+            videoSelectedIndex.lectureIndex ===
+              lectureData[sectionIndex].lectures.length - 1 &&
+            sectionIndex < lectureData.length - 1
+          ) {
+            router.push(
+              `/course-access/${courseId}/lecture/${
+                lectureData[sectionIndex + 1].lectures[0]._id
+              }?option=${searchParams.get("option") || "overview"}&start=0`
+            );
+          }
+        }
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isEnd]);
 
   useEffect(() => {
     if (videoSelectedIndex) {
@@ -411,10 +463,52 @@ const CustomVideoPlayer: React.FC<Props> = ({
     }
   }, [notes, duration]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: any) => {
+      // Phím dừng (Space bar)
+      console.log(event.code);
+      if (event.code === "Space") {
+        event.preventDefault();
+        setPlaying((prevPlaying) => !prevPlaying);
+      }
+      // Phím tăng tốc (ArrowRight)
+      else if (event.code === "ArrowRight") {
+        const currentTime = playerRef.current?.getCurrentTime();
+        const duration = playerRef.current?.getDuration();
+        if (currentTime !== undefined && duration) {
+          const newTime = currentTime + 5;
+          setPlayed(newTime);
+          playerRef.current?.seekTo(newTime);
+        }
+
+        // Xử lý tăng tốc video ở đây
+      }
+      // Phím giảm tốc (ArrowLeft)
+      else if (event.code === "ArrowLeft") {
+        const currentTime = playerRef.current?.getCurrentTime();
+        const duration = playerRef.current?.getDuration();
+
+        if (currentTime !== undefined && duration) {
+          const newTime = currentTime - 5;
+          playerRef.current?.seekTo(newTime);
+          setPlayed(newTime);
+        }
+        // Xử lý giảm tốc video ở đây
+      } else if (event.code === "KeyM") {
+        setVolume(0);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
   return (
     <div
       ref={containerRef}
-      className="bg-blackA6 md:min-w-[70%] w-full h-auto relative"
+      className="bg-blackA6 md:min-w-[70%] w-full relative"
     >
       <div
         className={`relative ${
@@ -438,7 +532,6 @@ const CustomVideoPlayer: React.FC<Props> = ({
               onProgress={handleProgress}
               onDuration={handleDuration}
               onEnded={handleEnded}
-              loop
               width="100%"
               height="100%"
               onReady={handleReady}
@@ -490,29 +583,6 @@ const CustomVideoPlayer: React.FC<Props> = ({
             value={played / duration}
             pointSaved={pointSaved}
           />
-          {/* {isFullScreen && (
-            <FullScreenPortal>
-              <PlayerControls
-                duration={duration}
-                handleIsOpenVolume={handleIsOpenVolume}
-                handelOpenVolumeChange={handelOpenVolumeChange}
-                handleBackwind={handleBackwind}
-                handleChangeOpenSetting={handleChangeOpenSetting}
-                handleChangeVolume={handleChangeVolume}
-                handleForward={handleForward}
-                handlePlay={handlePlay}
-                handleSeekChange={handleSeekChange}
-                isFullScreen={isFullScreen}
-                playbackRate={playbackRate}
-                played={played}
-                playing={playing}
-                setPlayBackRate={setPlayBackRate}
-                toggleExpandedView={toggleExpandedView}
-                toggleFullScreen={toggleFullScreen}
-                volume={volume}
-              />
-            </FullScreenPortal>
-          )} */}
 
           <PlayerControls
             duration={duration}
@@ -582,7 +652,7 @@ const CustomVideoPlayer: React.FC<Props> = ({
       {nextLectureTitle !== "" && (
         <motion.div
           className={`absolute  z-40 
-             top-[50%] -translate-y-1/2 right-0 flex items-center justify-center border border-white h-[50px] w-[40px] text-white text-2xl  ${
+             top-[50%] -translate-y-1/2 right-2 flex items-center justify-center border border-white h-[50px] w-[40px] text-white text-2xl  ${
                isHovering || isOpenSetting || isOpenVolumeCard
                  ? "block"
                  : "hidden"
@@ -608,6 +678,49 @@ const CustomVideoPlayer: React.FC<Props> = ({
         </motion.div>
       )}
       {isFullScreen && <div id="modal-root"></div>}
+      {isEnd && videoSelectedIndex && (
+        <div className="absolute top-0 left-0 w-full h-full bg-blackA10 flex items-center justify-center flex-col z-[100]">
+          <p className="text-gray10 text-[18px]">Up Next</p>
+          <h3 className="text-xl mt-3 font-semibold whitespace-wrap  overflow-ellipsis overflow-hidden line-clamp-1 md:w-[600px]">
+            {videoSelectedIndex.lectureIndex !==
+            lectureData[videoSelectedIndex.sectionIndex].lectures.length - 1
+              ? lectureData[videoSelectedIndex.sectionIndex].lectures[
+                  videoSelectedIndex.lectureIndex
+                ].title
+              : lectureData[videoSelectedIndex.sectionIndex + 1].lectures[0]
+                  .title}
+          </h3>
+
+          <button
+            className="relative rounded-full w-[70px] h-[70px] flex items-center justify-center border-gray7 border-4 mt-4 text-2xl"
+            onClick={handleNextLecture}
+          >
+            <MdPlayArrow />
+            <motion.svg
+              width="70" // Điều chỉnh kích thước của SVG để khớp với kích thước của button
+              height="70" // Điều chỉnh kích thước của SVG để khớp với kích thước của button
+              viewBox="0 0 100 100"
+              initial="hidden"
+              animate="visible"
+              fill="none"
+              className="absolute top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2" // Đảm bảo SVG nằm đúng vị trí trên button
+            >
+              <motion.circle
+                cx="50" // Điều chỉnh để giữa SVG
+                cy="50" // Điều chỉnh để giữa SVG
+                r="47" // Điều chỉnh bán kính để vừa vặn trong button
+                stroke="#fff"
+                strokeWidth="7" // Điều chỉnh độ dày của viền nếu cần
+                variants={variants}
+              />
+            </motion.svg>
+          </button>
+
+          <button className="mt-3" onClick={() => refeshLecture()}>
+            Cancel
+          </button>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,51 +1,46 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useAppSelector, useAppDispatch } from "@/store/hook";
 import Link from "next/link";
-import { BiUserCircle } from "react-icons/bi";
-import { IoIosSearch } from "react-icons/io";
-import { FaAngleRight } from "react-icons/fa";
+import { useAppSelector, useAppDispatch } from "@/store/hook";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useLogoutUserMutation } from "@/features/auth/authApi";
+import useSocket from "@/hooks/useSocket";
 
-import {
-  useGetAllNotifyUserQuery,
-  useDeleteNotifyMutation,
-} from "@/features/notification/notifyApi";
 import throttle from "lodash/throttle";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import * as HoverCard from "@radix-ui/react-hover-card";
 
-import CustomModal from "./ui/CustomModal";
-import Register from "./auth/Register";
-import Login from "./auth/Login";
-
-import VerifyAccount from "./auth/VerifyAccount";
-import ThemeSwicher from "./ui/ThemeSwicher";
-
-import { openLogin, closeLogin } from "@/features/layout/layoutSlice";
-
-import { useGetAllCategoryQuery } from "@/features/category/categoryApi";
-
-import { CategoryType } from "@/types/categoryType";
-
+import { BiUserCircle } from "react-icons/bi";
+import { IoIosSearch } from "react-icons/io";
+import { FaAngleRight } from "react-icons/fa";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { FiShoppingCart } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
 import { IoIosLogOut } from "react-icons/io";
 
-import { useGetCartQuery } from "@/features/cart/cartApi";
-import { cartItemType } from "@/types/cartType";
-import useSocket from "@/hooks/useSocket";
+import { useLogoutUserMutation } from "@/features/auth/authApi";
+import {
+  useGetAllNotifyUserQuery,
+  useDeleteNotifyMutation,
+} from "@/features/notification/notifyApi";
+import { useGetAllCategoryQuery } from "@/features/category/categoryApi";
 import { addNotify } from "@/features/notification/notifySlice";
+import { openLogin, closeLogin } from "@/features/layout/layoutSlice";
 
+import CustomModal from "./ui/CustomModal";
+import Register from "./auth/Register";
+import Login from "./auth/Login";
+import VerifyAccount from "./auth/VerifyAccount";
+import ThemeSwicher from "./ui/ThemeSwicher";
 import ToastNotify from "./ui/toast/ToastNotify";
 import HeaderMobile from "./HeaderMobile";
 
+import { CategoryType } from "@/types/categoryType";
+import { useGetCartQuery } from "@/features/cart/cartApi";
+import { cartItemType } from "@/types/cartType";
+
 const Header = () => {
-  const scrollRef = useRef<EventListener | null>(null);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -73,28 +68,18 @@ const Header = () => {
   const openModal = () => {
     dispatch(openLogin(""));
   };
-  const handelScroll = useCallback(
-    throttle(() => {
-      if (typeof window !== "undefined") {
-        if (window.scrollY > 80) {
-          setActive(true);
-        } else {
-          setActive(false);
-        }
-      }
-    }, 100),
-    []
-  );
+  const handelScroll = useCallback(() => {
+    if (window.scrollY > 80) {
+      setActive(true);
+    } else {
+      setActive(false);
+    }
+  }, []);
 
   useEffect(() => {
-    const scrollHandler = handelScroll;
-
-    window.addEventListener("scroll", scrollHandler);
-
-    return () => {
-      window.removeEventListener("scroll", scrollHandler);
-    };
-  }, [handelScroll]);
+    window.addEventListener("scroll", handelScroll);
+    return () => window.removeEventListener("scroll", handelScroll);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -142,16 +127,13 @@ const Header = () => {
     }
   }, [isSuccessLogout]);
 
-  useEffect(() => {
-    console.log(active);
-  }, [active]);
   return (
-    <div className="w-full relative text-black dark:text-white  z-[80]">
+    <div className="w-screen relative text-black dark:text-white  z-[80]">
       <div
         className={`hidden md:block fixed top-0 left-0 ${
           active
             ? "text-black dark:text-white w-full bg-gradient-to-b from-gray12 to-white dark:from-gray-900 dark:to-black"
-            : "w-full border-b dark:border-[#ffffff1c]  z-[80] dark:shadow-xl"
+            : "w-full border-b dark:border-[#ffffff1c] dark:shadow-xl"
         }  md:w-[100vw] h-[80px]`}
       >
         <div className="w-[90%] mx-auto h-full flex items-center justify-between">
@@ -489,14 +471,15 @@ const Header = () => {
           </div>
         </div>
       </div>
-      {categories && (
-        <HeaderMobile
-          handleLogout={handleLogout}
-          active={active}
-          categories={categories.data}
-        />
-      )}
-
+      <div className="md:hidden block">
+        {categories && (
+          <HeaderMobile
+            handleLogout={handleLogout}
+            active={active}
+            categories={categories.data}
+          />
+        )}
+      </div>
       {route === "sign-in" && (
         <CustomModal
           component={

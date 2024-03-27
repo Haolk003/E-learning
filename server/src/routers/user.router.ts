@@ -25,7 +25,7 @@ router.put(
   "/update-avatar-profile",
   protect,
   uploadPhoto.single("myFile"),
-  ImgResize,
+
   updateAvatarUser
 );
 
