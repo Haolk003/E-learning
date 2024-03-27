@@ -48,12 +48,12 @@ const IntructorProfileLayout: React.FC<Props> = ({ id }) => {
   return (
     <div>
       {userData && data && (
-        <div className="flex gap-10">
-          <div className="w-[80%]">
+        <div className="flex md:flex-row flex-col-reverse gap-10">
+          <div className="md:w-[80%] w-full px-3">
             <h4 className="text-xl font-semibold text-gray11 mb-2">
               Instructor
             </h4>
-            <h2 className="text-4xl font-bold mb-2">
+            <h2 className="md:text-4xl text-2xl font-bold mb-2">
               {userData.lastName} {userData.firstName}
             </h2>
             <p className="font-semibold text-xl mt-2">{userData.headline}</p>
@@ -81,7 +81,7 @@ const IntructorProfileLayout: React.FC<Props> = ({ id }) => {
             <h2 className="text-[18px] font-semibold my-4">
               My Courses ({courseData.length})
             </h2>
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 grid-cols-1 gap-8">
               {courseData &&
                 courseData.map((item, index) => {
                   const totalHours = item.courseData.reduce((total, item2) => {
@@ -105,7 +105,7 @@ const IntructorProfileLayout: React.FC<Props> = ({ id }) => {
                           alt=""
                           width={300}
                           height={250}
-                          className="object-cover w-full h-[200px] "
+                          className="object-cover w-full h-[200px]  "
                         />
                       </div>
                       <div className="flex flex-col gap-1 w-[70%]">
@@ -140,9 +140,8 @@ const IntructorProfileLayout: React.FC<Props> = ({ id }) => {
                 })}
             </div>
           </div>
-          <div className="w-[20%] flex flex-col gap-5">
-            <div className="w-[200px] h-[200px] overflow-hidden">
-              {" "}
+          <div className="md:w-[20%] flex flex-col md:gap-5 px-5">
+            <div className="md:w-[200px] md:h-[200px] w-[100px] h-[100px] overflow-hidden flex items-center justify-center">
               <Image
                 src={
                   userData.avatar ? userData.avatar.url : `/assets/avatar.jpg`
@@ -150,14 +149,14 @@ const IntructorProfileLayout: React.FC<Props> = ({ id }) => {
                 alt=""
                 width={200}
                 height={200}
-                className="w-[200px] h-[200px] rounded-full object-cover overflow-hidden"
+                className="md:w-[200px] md:h-[200px] w-[100px] h-[100px] rounded-full object-cover overflow-hidden"
               />
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 md:mt-0 mt-4">
               {userData.website && (
                 <Link
                   href={userData.website}
-                  className="flex w-[200px] h-[50px] justify-center font-semibold items-center gap-2 dark:border-gray8 border-[2px]"
+                  className="flex md:w-[200px] w-full h-[50px] justify-center font-semibold items-center gap-2 dark:border-gray8 border-[2px]"
                 >
                   <CiLink size={30} />
                   <p className="text-[16px]">Website</p>
@@ -166,7 +165,7 @@ const IntructorProfileLayout: React.FC<Props> = ({ id }) => {
               {userData.twitterLink && (
                 <Link
                   href={userData.twitterLink}
-                  className="flex w-[200px] h-[50px] justify-center font-semibold items-center gap-2 dark:border-gray8 border-[2px]"
+                  className="flex md:w-[200px] w-full h-[50px] justify-center font-semibold items-center gap-2 dark:border-gray8 border-[2px]"
                 >
                   <CiTwitter size={30} />
                   <p className="text-[16px]">Twitter</p>
@@ -175,7 +174,7 @@ const IntructorProfileLayout: React.FC<Props> = ({ id }) => {
               {userData.youtubeLink && (
                 <Link
                   href={userData.youtubeLink}
-                  className="flex w-[200px] h-[50px] justify-center font-semibold items-center gap-2 dark:border-gray8 border-[2px]"
+                  className="flex md:w-[200px] w-full h-[50px] justify-center font-semibold items-center gap-2 dark:border-gray8 border-[2px]"
                 >
                   <CiYoutube size={30} />
                   <p className="text-[16px]">Youtube</p>
@@ -184,7 +183,7 @@ const IntructorProfileLayout: React.FC<Props> = ({ id }) => {
               {userData.facebookLink && (
                 <Link
                   href={userData.facebookLink}
-                  className="flex w-[200px] h-[50px] justify-center font-semibold items-center gap-2 dark:border-gray8 border-[2px]"
+                  className="flex md:w-[200px] w-full h-[50px] justify-center font-semibold items-center gap-2 dark:border-gray8 border-[2px]"
                 >
                   <CiFacebook size={30} />
                   <p className="text-[16px]">Facebook</p>

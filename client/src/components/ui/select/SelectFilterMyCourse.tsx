@@ -13,7 +13,7 @@ type Props = {
 const SelectFilterMyCourses: FC<Props> = ({ data, handleChange, value }) => {
   return (
     <SelectPrimitive.Root value={value} onValueChange={handleChange}>
-      <SelectPrimitive.Trigger className="inline-flex items-center w-full justify-center rounded px-[15px]  text-[13px] leading-none h-[40px] gap-[5px] bg-transparent  border dark:border-white   outline-none">
+      <SelectPrimitive.Trigger className="inline-flex  items-center w-full justify-center rounded md:px-[15px]  text-[13px] leading-none h-[40px] gap-[5px] bg-transparent  border dark:border-white   outline-none">
         <SelectPrimitive.Value
           placeholder="Choose an option"
           aria-label="Category"
@@ -26,9 +26,9 @@ const SelectFilterMyCourses: FC<Props> = ({ data, handleChange, value }) => {
           side="bottom"
           align="start"
           position="popper"
-          className="min-w-[200px] w-full  dark:bg-gray3 bg-white flex items-center rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]"
+          className="md:min-w-[200px] z-[200] md:w-full w-screen  dark:bg-gray3 bg-white flex items-center rounded-md shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)]"
         >
-          <SelectPrimitive.Viewport className="py-3 flex flex-col  ">
+          <SelectPrimitive.Viewport className="py-3 flex flex-col z-[200]  ">
             {data.map((item, index) => (
               <SelectPrimitive.Item
                 value={item.value}

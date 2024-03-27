@@ -23,10 +23,7 @@ const CourseCardMyLearing: React.FC<Props> = ({
   title,
 }) => {
   return (
-    <Link
-      href={`/course-access/${_id}`}
-      className="w-full dark:text-white text-black"
-    >
+    <div className="w-full dark:text-white text-black">
       <div className="w-full ">
         <Image
           src={thumbnail}
@@ -64,7 +61,7 @@ const CourseCardMyLearing: React.FC<Props> = ({
           )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

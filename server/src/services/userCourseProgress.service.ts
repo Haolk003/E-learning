@@ -98,19 +98,21 @@ const getProgressLectureUserByCourseId = async ({
 const getProgessByUserId = async (userId: string) => {
   const userProgress = await UserCourseProgressModel.find({
     userId: userId,
-  }).populate({
-    path: "courseId",
-    select: "title courseData author thumbnail category",
-    populate: [
-      {
-        path: "author",
-        select: "firstName lastName email",
-      },
-      {
-        path: "category",
-      },
-    ],
-  });
+  })
+    .populate({
+      path: "courseId",
+      select: "title courseData author thumbnail category",
+      populate: [
+        {
+          path: "author",
+          select: "firstName lastName email",
+        },
+        {
+          path: "category",
+        },
+      ],
+    })
+    .sort("-updatedAt");
 
   return userProgress;
 };

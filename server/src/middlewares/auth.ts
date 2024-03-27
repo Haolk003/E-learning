@@ -5,7 +5,7 @@ import userModel from "../models/user.model";
 import { accessTokenOptions, refeshTokenOptions } from "../utils/jwt";
 import reviewModel from "../models/review.model";
 import { CatchAsyncError } from "./catchAsyncError";
-import { redis } from "../utils/redis";
+
 export const protect = CatchAsyncError(
   async (req: Request, res: Response, next: NextFunction) => {
     let accessToken = req.cookies.access_token as string;
@@ -41,22 +41,18 @@ export const protect = CatchAsyncError(
       throw new ErrorHandle(400, "Token is not valid");
     }
 
-    const findRedis = await redis.get(decodeToken.id);
-    if (!findRedis) {
-      const findUser = await userModel
-        .findById(decodeToken.id)
-        .select("-password");
-      if (!findUser) {
-        throw new ErrorHandle(400, "user not found");
-      }
-      if (findUser.isBanned) {
-        throw new ErrorHandle(400, "user is banned");
-      }
-      redis.set(decodeToken.id, JSON.stringify(findUser), "EX", 604800);
-      req.me = findUser;
-    } else {
-      req.me = JSON.parse(findRedis as string);
+    const findUser = await userModel
+      .findById(decodeToken.id)
+      .select("-password");
+    if (!findUser) {
+      throw new ErrorHandle(400, "user not found");
     }
+    if (findUser.isBanned) {
+      throw new ErrorHandle(400, "user is banned");
+    }
+
+    req.me = findUser;
+
     next();
   }
 );
@@ -85,22 +81,18 @@ export const extractUserId = CatchAsyncError(
       return next();
     }
 
-    const findRedis = await redis.get(decodeToken.id);
-    if (!findRedis) {
-      const findUser = await userModel
-        .findById(decodeToken.id)
-        .select("-password");
-      if (!findUser) {
-        return next();
-      }
-      if (findUser.isBanned) {
-        return next();
-      }
-
-      req.me = findUser;
-    } else {
-      req.me = JSON.parse(findRedis as string);
+    const findUser = await userModel
+      .findById(decodeToken.id)
+      .select("-password");
+    if (!findUser) {
+      return next();
     }
+    if (findUser.isBanned) {
+      return next();
+    }
+
+    req.me = findUser;
+
     next();
   }
 );

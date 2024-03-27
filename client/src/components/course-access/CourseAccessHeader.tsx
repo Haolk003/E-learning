@@ -29,7 +29,7 @@ const CourseAccessHeader: React.FC<Props> = ({
 
   const [isOpenCreateRating, setIsOpenCreateRating] = useState(false);
   return (
-    <div className="w-screen relative dark:text-white text-black z-50">
+    <div className="w-screen fixed top-0 left-0 dark:text-white text-black z-50">
       <div className="dark:bg-opacity-50 dark:bg-gradient-to-b dark:from-gray-900 dark:to-black">
         <div className="w-[90%] mx-auto h-full flex items-center justify-between">
           <div className="flex items-center md:gap-3 gap-1">

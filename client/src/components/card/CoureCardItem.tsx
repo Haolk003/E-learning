@@ -4,8 +4,6 @@ import Rating from "../ui/Rating";
 import { IoCheckmarkDoneOutline, IoListOutline } from "react-icons/io5";
 import Link from "next/link";
 import * as HoverCard from "@radix-ui/react-hover-card";
-import { CiHeart } from "react-icons/ci";
-import { FiShoppingCart } from "react-icons/fi";
 import dayjs from "dayjs";
 import dompurify from "dompurify";
 
@@ -92,7 +90,7 @@ const CoureCardItem: FC<Props> = ({
         <HoverCard.Content
           side="right"
           align="center"
-          className="min-h-[200px] w-[350px] px-5 py-4 data-[side=right]:animate-slideLeftAndFade data-[state=open]:transition-all dark:bg-gray3 bg-mauve7 shadow-sm shadow-mauve7 dark:text-mauve2 text-mauve12 rounded-md"
+          className="min-h-[200px] hidden md:block w-[350px] px-5 py-4 data-[side=right]:animate-slideLeftAndFade data-[state=open]:transition-all dark:bg-gray3 bg-mauve7 shadow-sm shadow-mauve7 dark:text-mauve2 text-mauve12 rounded-md"
         >
           <div className="">
             <h2 className="text-[16px] font-semibold leading-6">{title}</h2>

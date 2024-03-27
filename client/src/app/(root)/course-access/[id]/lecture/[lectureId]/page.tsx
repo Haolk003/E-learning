@@ -5,7 +5,6 @@ const page = ({ params }: { params: { id: string; lectureId: string } }) => {
   return (
     <div>
       <LoggedInOnly>
-        {" "}
         <CourseAccessLayout id={params.id} lectureId={params.lectureId} />
       </LoggedInOnly>
     </div>

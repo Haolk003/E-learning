@@ -5,7 +5,6 @@ import reviewModel from "../models/review.model";
 import userModel from "../models/user.model";
 import { uploadFile, deleteImage } from "../utils/cloudinary";
 import ErrorHandle from "../utils/errorHandle";
-import { redis } from "../utils/redis";
 
 const getAllUser = async () => {
   const user = await userModel.find().select("-password");
@@ -58,8 +57,6 @@ const uploadAvatarUser = async (id: string, file: any) => {
   findUser.avatar = { public_id: result.public_id, url: result.url };
   await findUser.save();
 
-  redis.set(findUser._id, JSON.stringify(findUser), "EX", 604800);
-
   return findUser;
 };
 
@@ -72,7 +69,6 @@ const blockUser = async (id: string) => {
   if (!blockUser) {
     throw new ErrorHandle(400, "User not found");
   }
-  redis.set(id, JSON.stringify(blockUser), "EX", 604800);
   return;
 };
 
@@ -85,7 +81,7 @@ const unBlockUser = async (id: string) => {
   if (!blockUser) {
     throw new ErrorHandle(400, "User not found");
   }
-  redis.set(id, JSON.stringify(unBlockUser), "EX", 604800);
+
   return;
 };
 
@@ -94,7 +90,7 @@ const removeUser = async (id: string) => {
   if (!removeUser) {
     throw new ErrorHandle(400, "User not found");
   }
-  redis.del(id);
+
   return;
 };
 
@@ -168,7 +164,7 @@ const updatePassword = async (
     throw new ErrorHandle(400, "New Password not found");
   }
   await findUser.save();
-  redis.set(findUser._id, JSON.stringify(findUser), "EX", 604800);
+
   return;
 };
 
@@ -181,7 +177,7 @@ const convertUserToIntructor = async (userId: string) => {
   if (!updateUser) {
     throw new ErrorHandle(400, "Update User Failure");
   }
-  redis.set(updateUser._id, JSON.stringify(updateUser), "EX", 604800);
+
   return updateUser;
 };
 
@@ -192,7 +188,7 @@ const becomeIntructor = async (userId: string) => {
   if (!updateUser) {
     throw new ErrorHandle(400, "Update User Failure");
   }
-  redis.set(updateUser._id, JSON.stringify(updateUser), "EX", 604800);
+
   return updateUser;
 };
 

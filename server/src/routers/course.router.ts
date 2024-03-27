@@ -48,10 +48,10 @@ router.put(
 
 router.post(
   "/upload-image-course",
-  // protect,
+  protect,
   // authorizeRoles("admin"),
   uploadPhoto.single("myFile"),
-  ImgResize,
+  // ImgResize,
   uploadImageCourse
 );
 router.get(

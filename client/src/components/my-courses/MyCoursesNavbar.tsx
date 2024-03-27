@@ -1,21 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
+
 import Link from "next/link";
 const MyCouresNavbar = () => {
   const pathname = usePathname();
+
   return (
-    <div className="relative top-[80px] left-0 w-full h-[150px] bg-gray1 px-[200px] pt-10 flex flex-col justify-between">
-      <h2 className="text-3xl font-bold">My learning</h2>
-      <div className="flex items-center gap-3">
+    <div className="relative md:top-[80px] top-[60px] left-0 w-full md:h-[150px] h-[100px] bg-gray1 md:px-[200px] px-4  md:pt-10 pt-3 flex flex-col justify-between overflow-auto">
+      <h2 className="md:text-3xl text-2xl font-bold">My learning</h2>
+      <div className="flex items-center md:gap-3 gap-1">
         <Link
           href="/my-courses/learning"
           className={`${
             pathname === "/my-courses/learning"
-              ? "border-b-[4px] border-white"
+              ? "md:border-b-[4px] border-b-[2px] border-white"
               : "text-gray8"
-          } cursor-pointer text-[16px] font-semibold px-2 `}
+          } cursor-pointer md:text-[16px] text-[14px] font-semibold px-2 whitespace-nowrap`}
         >
           All courses
         </Link>
@@ -23,9 +25,9 @@ const MyCouresNavbar = () => {
           href="/my-courses/list"
           className={`${
             pathname === "/my-courses/list"
-              ? "border-b-[4px] border-white"
+              ? "md:border-b-[4px] border-b-[2px] border-white"
               : "text-gray8"
-          } cursor-pointer text-[16px] font-semibold px-2`}
+          } cursor-pointer md:text-[16px] text-[14px] font-semibold px-2 whitespace-nowrap`}
         >
           My Lists
         </Link>
@@ -33,9 +35,9 @@ const MyCouresNavbar = () => {
           href="/my-courses/wishlist"
           className={`${
             pathname === "/my-courses/wishlist"
-              ? "border-b-[4px] border-white"
+              ? "md:border-b-[4px] border-b-[2px] border-white"
               : "text-gray8"
-          } cursor-pointer text-[16px] font-semibold px-2 `}
+          } cursor-pointer md:text-[16px] text-[14px] font-semibold px-2 `}
         >
           Wishlist
         </Link>
@@ -43,9 +45,9 @@ const MyCouresNavbar = () => {
           href="/my-courses/tools"
           className={`${
             pathname === "/my-courses/tools"
-              ? "border-b-[4px] border-white"
+              ? "md:border-b-[4px] border-b-[2px] border-white"
               : "text-gray8"
-          } cursor-pointer text-[16px] px-2 font-semibold `}
+          } cursor-pointer md:text-[16px] text-[14px] px-2 font-semibold `}
         >
           Tools
         </Link>

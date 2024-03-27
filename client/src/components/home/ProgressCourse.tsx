@@ -9,12 +9,13 @@ import {
 } from "@/types/progressLectureUserType";
 import VideoSnapshot from "video-snapshot";
 import Link from "next/link";
-
+import { GrPrevious, GrNext } from "react-icons/gr";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 const ProgressCourse = () => {
   const { data, isSuccess } = useGetProgressCoursesUserQuery("", {
     refetchOnMountOrArgChange: false,
   });
-
+  const [page, setPage] = useState(1);
   useEffect(() => {
     async function fetchData() {
       if (data && data.data.length > 0) {
@@ -77,8 +78,8 @@ const ProgressCourse = () => {
           <h2 className="text-4xl  font-semibold dark:text-white  text-black mb-5">
             Let&apos;s start learning.
           </h2>
-          <div className="grid grid-cols-3 gap-5 w-full">
-            {processedData.map((item, index) => (
+          <div className="grid grid-cols-3 gap-5 w-full relative">
+            {processedData.slice(page - 1, page - 1 + 3).map((item, index) => (
               <Link
                 href={`/course-access/${item.courseId}/lecture/${item.lectureId}`}
                 key={index}
@@ -92,6 +93,22 @@ const ProgressCourse = () => {
                 />
               </Link>
             ))}
+            {processedData.length > page * 3 && (
+              <button
+                className="absolute -right-4 w-[50px] h-[50px] rounded-full bg-gray2 text-white top-[50%] -translate-y-[50%] flex items-center justify-center shadow-sm shadow-black"
+                onClick={() => setPage(page + 1)}
+              >
+                <FaChevronRight />
+              </button>
+            )}
+            {page > 1 && (
+              <button
+                className="absolute -left-4 w-[50px] h-[50px] rounded-full bg-gray2 text-white top-[50%] -translate-y-[50%] flex items-center justify-center shadow-sm shadow-black"
+                onClick={() => setPage(page - 1)}
+              >
+                <FaChevronLeft />
+              </button>
+            )}
           </div>
         </div>
       )}

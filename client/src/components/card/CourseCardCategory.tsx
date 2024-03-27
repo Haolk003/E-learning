@@ -81,7 +81,7 @@ const CourseCardCategory: FC<Props> = ({
         <HoverCard.Content
           side="right"
           align="center"
-          className="min-h-[200px] w-[400px] dark:text-white text-black shadow-sm shadow-black px-5 py-4 data-[side=right]:animate-slideLeftAndFade data-[state=open]:transition-all dark:bg-gray4 bg-white rounded-md"
+          className="min-h-[200px] hidden md:block w-[400px] dark:text-white text-black shadow-sm shadow-black px-5 py-4 data-[side=right]:animate-slideLeftAndFade data-[state=open]:transition-all dark:bg-gray4 bg-white rounded-md"
         >
           <div className="">
             <h2 className="text-[16px] font-semibold leading-6">{title}</h2>
