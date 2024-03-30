@@ -185,6 +185,7 @@ const MyLearningLayout = () => {
 
             return (
               <Link
+                key={item._id}
                 href={`/course-access/${item.courseId._id}/lecture/${
                   item?.lastWatchedLecture
                     ? item.lastWatchedLecture.lectureId
@@ -215,7 +216,8 @@ const MyLearningLayout = () => {
           </p>
         ) : (
           <p className="text-2xl font-semibold mt-4">
-            Sorry, we could'nt find any result for &quot;{searchParams.get("q")}
+            Sorry, we could&apos;nt find any result for &quot;
+            {searchParams.get("q")}
             &quot;
           </p>
         ))}
